@@ -8,7 +8,7 @@ const SignIn = () => {
   const router = useRouter(); // Use router for navigation
 
   const handleSignIn = () => {
-    router.push('./(tabs)'); // Navigate to the tab layout after signing in
+    router.push('./(tabs)/profile.tsx'); 
   };
 
   return (
