@@ -64,8 +64,8 @@ const Profile = () => {
         </View>
 
         {/* Sign Out Button */}
-        <TouchableOpacity className=" bg-white p-4 rounded-lg mx-10 mt-10 border border-black">
-          <Text className="text-black text-center font-poppins-bold text-lg">Sign Out</Text>
+        <TouchableOpacity className=" bg-white p-4 rounded-lg mx-5 mt-5 border border-black">
+          <Text className="text-black text-center font-poppins text-lg">Sign Out</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

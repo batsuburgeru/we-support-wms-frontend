@@ -1,50 +1,107 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { MessageModal } from '@/components';
+import icons from '@/constants/icons';
 
 export default function RequestDetails() {
     const router = useRouter();
-    const { id, type, time, requester, date } = useLocalSearchParams(); 
+
+    // Sample data
+    const id = "REQ-20240226-001";
+    const type = "Purchase Request";
+    const time = "10:30 AM";
+    const requester = "John Doe";
+    const date = "February 26, 2025";
+    const items = [
+        { quantity: 2, name: "Laptop", price: "$1200" },
+        { quantity: 5, name: "Wireless Mouse", price: "$25" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+        { quantity: 3, name: "Keyboard", price: "$45" },
+    ];
+
+    // State for modals
+    const [modalType, setModalType] = useState<string | null>(null);
+    const [remarks, setRemarks] = useState("");
+
+    // Handle modal confirmation
+    const handleConfirm = () => {
+        console.log(`${modalType} confirmed with remarks: ${remarks}`);
+        setModalType(null);
+        setRemarks("");
+
+        // If Cancel is confirmed, navigate back
+        if (modalType === "Cancel") {
+            router.back();
+        }
+    };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">r
+        <SafeAreaView className="flex-1 bg-tabs">
             {/* Header Section */}
-            <View className="bg-gray-200 p-4">
+            <View className="bg-tabs p-4">
                 <TouchableOpacity onPress={() => router.back()}>
-                    <Text className="text-lg">{'←'}</Text>
+                    <Image source={icons.back} className="w-10 h-10"  />
                 </TouchableOpacity>
-                <Text className="text-2xl font-bold mt-2">{type}</Text>
-                <Text className="text-red-500">Request ID: {id}</Text>
-                <Text className="text-gray-500">{time}</Text>
+                <Text className="text-2xl font-poppins-bold mt-2 px-8">{type}</Text>
+                <Text className="text-primary font-poppins-semibold px-8">Request ID: {id}</Text>
             </View>
 
             {/* Details Section */}
-            <View className="bg-white m-4 p-4 rounded-lg shadow-sm">
-                <Text className="font-semibold text-lg">Request by: {requester}</Text>
-                <Text className="text-gray-500">{date}, {time}</Text>
+            <View className="bg-white rounded-lg flex-1 p-10">
+                <Text className="font-poppins-semibold text-lg">Request by: {requester}</Text>
+                <Text className="font-poppins text-black">{date},{time}</Text>
 
                 {/* Table Headers */}
                 <View className="mt-4 flex-row justify-between">
-                    <Text className="italic text-gray-500">quantity</Text>
-                    <Text className="italic text-gray-500">item</Text>
-                    <Text className="italic text-gray-500">price</Text>
+                    <Text className="font-poppins text-gray-500">Quantity</Text>
+                    <Text className="italic text-gray-500">Item</Text>
+                    <Text className="italic text-gray-500">Price</Text>
                 </View>
 
-                {/* Placeholder for items */}
-                <View className="border-t mt-2 pt-2"></View>
+                {/* List Items */}
+                <View className="border-t mt-2 pt-2">
+                    {items.map((item, index) => (
+                        <View key={index} className="flex-row justify-between mt-2">
+                            <Text>{item.quantity}</Text>
+                            <Text>{item.name}</Text>
+                            <Text>{item.price}</Text>
+                        </View>
+                    ))}
+                </View>
             </View>
 
             {/* Action Buttons */}
-            <View className="flex-row justify-around p-4">
-                <TouchableOpacity className="bg-orange-500 p-3 rounded-lg">
-                    <Text className="text-white font-bold">Approve</Text>
+            <View className="flex-row justify-around p-4 bg-white">
+                <TouchableOpacity className="bg-primary p-3 px-7 rounded-lg" onPress={() => setModalType("Approve")}>
+                    <Text className="text-white font-poppins-bold text-xl">Approve</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="bg-gray-300 p-3 rounded-lg">
-                    <Text className="font-bold">Deny</Text>
+                <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Deny")}>
+                    <Text className="font-poppins-bold text-xl">Deny</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="bg-gray-400 p-3 rounded-lg">
-                    <Text className="font-bold">Cancel</Text>
+                <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Cancel")}>
+                    <Text className="font-poppins-bold text-xl">Cancel</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Modals */}
+            {modalType && (
+                <MessageModal
+                    visible={!!modalType}
+                    title={modalType}
+                    remarks={remarks}
+                    setRemarks={setRemarks}
+                    onClose={() => {
+                        setModalType(null);
+                        setRemarks("");
+                    }}
+                    onConfirm={handleConfirm}
+                />
+            )}
         </SafeAreaView>
     );
 }

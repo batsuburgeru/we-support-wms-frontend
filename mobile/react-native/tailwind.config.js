@@ -25,7 +25,8 @@ module.exports = {
         "gray": "#282828",
         "black": "#000000",
         "input": "#A9A9A9",
-        "bgin": "#EDEDED"
+        "bgin": "#EDEDED",
+        "tabs": "#E8E8E8",
 
       }
     },

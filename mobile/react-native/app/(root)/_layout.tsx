@@ -1,22 +1,34 @@
-// import { Redirect, Slot } from "expo-router";
-// import { ActivityIndicator } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
+// import { useState } from "react";
+// import { View, ActivityIndicator } from "react-native";
+// import { Redirect, Slot, useRouter } from "expo-router";
+// import { AuthProvider, useAuth } from "../context/AuthProvider"; // ✅ Import AuthProvider
 
-// import { useGlobalContext } from "@/lib/global-provider";
+// export default function RootLayout() {
+//   return (
+//     <AuthProvider> {/* ✅ Wrap App with AuthProvider */}
+//       <AuthWrapper /> {/* ✅ Handles login state */}
+//     </AuthProvider>
+//   );
+// }
 
-// export default function AppLayout() {
-//   const { loading, isLogged } = useGlobalContext();
+// // Separate Auth Logic into Another Component
+// function AuthWrapper() {
+//   const { isLoggedIn } = useAuth(); // ✅ Get login state from context
+//   const [loading, setLoading] = useState(false);
 
+//   // Simulate loading state (You can replace this with an API call later)
 //   if (loading) {
 //     return (
-//       <SafeAreaView className="bg-white h-full flex justify-center items-center">
-//         <ActivityIndicator className="text-primary-300" size="large" />
-//       </SafeAreaView>
+//       <View className="flex-1 justify-center items-center bg-white">
+//         <ActivityIndicator size="large" color="#FF5733" />
+//       </View>
 //     );
 //   }
 
-//   if (!isLogged) {
-//     return <Redirect href="/sign-in" />;
+//   // If not logged in, redirect to SignIn page
+//   if (!isLoggedIn) {
+//     return <Redirect href="/signIn" />;
 //   }
 
 //   return <Slot />;
+// }

@@ -18,8 +18,6 @@ const TabIcon = ({
     <View className='flex-1 mt-3 flex flex-col items-center'>
         <Image
           source={focused ? focusedIcon : icon}
-          resizeMode="contain"
-          className="size-10"
         />
         <Text
           className={`${

@@ -10,7 +10,10 @@ import denied from "@/assets/icons/denied.png";
 import cancel from "@/assets/icons/cancel.png";
 import pending from "@/assets/icons/pending.png";
 import arrow from "@/assets/icons/arrow.png";
-
+import wapp from "@/assets/icons/wapp.png";
+import wden from "@/assets/icons/wden.png";
+import wcan from "@/assets/icons/wcan.png";
+import back from "@/assets/icons/back.png";
 
 
 
@@ -28,5 +31,9 @@ export default {
     denied,
     cancel,
     pending,
+    wapp,
+    wcan,
+    wden,
+    back,
 
 };
