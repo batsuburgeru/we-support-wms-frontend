@@ -4,7 +4,7 @@ const Inventory = () => {
   return (
     <main>
       <div className='flex justify-between items-center px-6 py-4'>
-        <h1 className='font-bold text-3xl'>Inventory</h1>
+        <h1>Inventory</h1>
         <div className='flex items-center'>
           <button className='bg-buttonBG border border-borderLine rounded-md py-1 px-1 hover:bg-neutral-200 transition-colors duration-200'>
             <img src="./meatball-menu.png"/>
@@ -30,14 +30,14 @@ const Inventory = () => {
               <th>Stock on Hand</th>
             </tr>
             <tr>
-              <td className='text-primary'>PR-00003</td>
+              <td className='text-brand-primary'>PR-00003</td>
               <td>Item 2</td>
               <td><img src="img-box.png" className='h-8'/></td>
               <td>SN-2025-AB123456</td>
               <td>100</td>
             </tr>
             <tr>
-              <td className='text-primary'>PR-00002</td>
+              <td className='text-brand-primary'>PR-00002</td>
               <td>Item 1</td>
               <td><img src="img-box.png" className='h-8'/></td>
               <td>SN-2025-AB124680</td>
