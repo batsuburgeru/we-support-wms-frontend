@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import { InventoryTable } from '@/components/InventoryTable';
 
 const Inventory = () => {

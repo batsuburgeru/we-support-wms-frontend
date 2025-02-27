@@ -195,7 +195,7 @@ const columns = [
 ];
 
 
-export function DataTableDemo() {
+export function PurchaseTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});

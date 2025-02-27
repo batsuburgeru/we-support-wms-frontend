@@ -1,6 +1,6 @@
 import React from 'react'
 import { EllipsisVertical } from 'lucide-react'
-import { DataTableDemo } from '@/components/PurchaseTable'
+import { PurchaseTable } from '@/components/PurchaseTable'
 import Link from 'next/link'
 
 const PurchaseList = () => {
@@ -20,7 +20,7 @@ const PurchaseList = () => {
       <hr />
       <hr className='border-borderLine'/>
       <section className='px-6'>
-        <DataTableDemo />
+        <PurchaseTable />
       </section>
     </main>
   )
