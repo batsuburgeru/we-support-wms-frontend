@@ -1,18 +1,17 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { useAuth } from './context/AuthProvider'; // Ensure the correct import path
-
+import { useAuth } from './context/AuthProvider'; 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const { login } = useAuth(); // Now correctly typed
+  const { login } = useAuth(); 
 
   const handleSignIn = () => {
     if (email && password) {
-      login(); // Update Auth State
-      router.push("../(tabs)/profile"); // Navigate to profile page
+      login(); 
+      router.push("../(tabs)/profile"); 
     } else {
       alert("Please enter email and password.");
     }

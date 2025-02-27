@@ -1,40 +1,35 @@
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
+import { DoneRequests } from '@/components/data/requests';
 import { MessageModal } from '@/components';
 import icons from '@/constants/icons';
 
 export default function RequestDetails() {
     const router = useRouter();
+    const { id } = useLocalSearchParams(); 
 
-    // Sample data
-    const id = "REQ-20240226-001";
-    const type = "Purchase Request";
-    const time = "10:30 AM";
-    const requester = "John Doe";
-    const date = "February 26, 2025";
-    const items = [
-        { quantity: 2, name: "Laptop", price: "$1200" },
-        { quantity: 5, name: "Wireless Mouse", price: "$25" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-        { quantity: 3, name: "Keyboard", price: "$45" },
-    ];
+    const request = DoneRequests.find(req => req.id === id);
 
-    // State for modals
+    if (!request) {
+        return (
+            <SafeAreaView className="flex-1 items-center justify-center">
+                <Text className="text-lg font-bold">Request not found!</Text>
+                <TouchableOpacity onPress={() => router.back()} className="bg-primary p-3 mt-4 rounded-lg">
+                    <Text className="text-white font-bold">Go Back</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        );
+    }
+
     const [modalType, setModalType] = useState<string | null>(null);
     const [remarks, setRemarks] = useState("");
 
-    // Handle modal confirmation
     const handleConfirm = () => {
         console.log(`${modalType} confirmed with remarks: ${remarks}`);
         setModalType(null);
         setRemarks("");
 
-        // If Cancel is confirmed, navigate back
         if (modalType === "Cancel") {
             router.back();
         }
@@ -45,34 +40,34 @@ export default function RequestDetails() {
             {/* Header Section */}
             <View className="bg-tabs p-4">
                 <TouchableOpacity onPress={() => router.back()}>
-                    <Image source={icons.back} className="w-10 h-10"  />
+                    <Image source={icons.back} className="w-10 h-10" />
                 </TouchableOpacity>
-                <Text className="text-2xl font-poppins-bold mt-2 px-8">{type}</Text>
-                <Text className="text-primary font-poppins-semibold px-8">Request ID: {id}</Text>
+                <Text className="text-2xl font-poppins-bold mt-2 px-8">{request.type}</Text>
+                <Text className="text-primary font-poppins-semibold px-8">Request ID: {request.id}</Text>
             </View>
 
             {/* Details Section */}
             <View className="bg-white rounded-lg flex-1 p-10">
-                <Text className="font-poppins-semibold text-lg">Request by: {requester}</Text>
-                <Text className="font-poppins text-black">{date},{time}</Text>
+                <Text className="font-poppins-semibold text-lg">Requested by: {request.requester}</Text>
+                <Text className="font-poppins text-black">{request.date}, {request.time}</Text>
 
                 {/* Table Headers */}
                 <View className="mt-4 flex-row justify-between">
                     <Text className="font-poppins text-gray-500">Quantity</Text>
-                    <Text className="italic text-gray-500">Item</Text>
-                    <Text className="italic text-gray-500">Price</Text>
+                    <Text className="font-poppins text-gray-500">Item</Text>
+                    <Text className="font-poppins text-gray-500">Price</Text>
                 </View>
 
                 {/* List Items */}
-                <View className="border-t mt-2 pt-2">
-                    {items.map((item, index) => (
+                <ScrollView className="border-t mt-2 pt-2">
+                    {request.items.map((item, index) => (
                         <View key={index} className="flex-row justify-between mt-2">
-                            <Text>{item.quantity}</Text>
-                            <Text>{item.name}</Text>
-                            <Text>{item.price}</Text>
+                            <Text className="font-poppins">{item.quantity}</Text>
+                            <Text className="font-poppins">{item.name}</Text>
+                            <Text className="font-poppins">{item.price}</Text>
                         </View>
                     ))}
-                </View>
+                </ScrollView>
             </View>
 
             {/* Action Buttons */}
