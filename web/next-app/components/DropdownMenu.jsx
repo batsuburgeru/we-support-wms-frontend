@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { EllipsisVertical } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,7 @@ export default function DropdownMenuDemo() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="p-0 border-0 bg-transparent shadow-none"><img src="./meatball-menu.png"/></Button>
+        <Button variant="outline" className="p-0 border-0 bg-transparent shadow-none"><EllipsisVertical /></Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-36">
         <DropdownMenuGroup>

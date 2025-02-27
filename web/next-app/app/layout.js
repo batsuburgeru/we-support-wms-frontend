@@ -1,7 +1,7 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
+import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       >
         <div className="flex">
           <Navbar />
-          <div className="w-screen">
+          <div className="w-screen ml-64">
             <Header />
             {children}
           </div>

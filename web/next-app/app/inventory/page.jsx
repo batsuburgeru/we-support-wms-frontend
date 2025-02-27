@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Search, EllipsisVertical } from 'lucide-react';
 
 const Inventory = () => {
   return (
@@ -7,7 +8,7 @@ const Inventory = () => {
         <h1>Inventory</h1>
         <div className='flex items-center'>
           <button className='bg-buttonBG border border-borderLine rounded-md py-1 px-1 hover:bg-neutral-200 transition-colors duration-200'>
-            <img src="./meatball-menu.png"/>
+            <EllipsisVertical />
           </button>
         </div>
       </div>
@@ -15,7 +16,7 @@ const Inventory = () => {
       <form className='flex items-center px-6 py-4'>
         <input type="text" placeholder="Search product..." className='border border-borderLine rounded-md px-4 py-1 w-72'/>
         <button className='bg-buttonBG border border-borderLine rounded-md ml-2 px-6 py-1 hover:bg-neutral-200 transition-colors duration-200'>
-          <img src="./search.png" className='w-6'/>
+          <Search />
         </button>
       </form>
       <hr className='border-borderLine'/>

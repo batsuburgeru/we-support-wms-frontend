@@ -1,9 +1,10 @@
 import React from 'react'
+import { Bell } from 'lucide-react'
 
 const Header = () => {
   return (
-    <header className='bg-navBG w-auto flex justify-end px-6 py-4'>
-        <button><img src="./bell.png"/></button>
+    <header className='bg-navBG/80 backdrop-blur-lg w-auto flex justify-end px-6 py-4 sticky top-0 z-50 '>
+        <button><Bell /></button>
         <button className='flex items-center'>
             <img src="./profile.png" className='h-16 pr-3 ml-6'/>
             <div className='text-left flex flex-col justify-center'>

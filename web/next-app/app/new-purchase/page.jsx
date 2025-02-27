@@ -1,11 +1,11 @@
 "use client"
 
-import * as React from "react"
-import DropdownMenu from "../../components/DropdownMenu"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import DropdownMenu from "@/components/DropdownMenu";
+import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -13,12 +13,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 const clients = [
   {
@@ -172,7 +172,7 @@ const NewPurchase = () => {
           </tbody>
         </table>
         <button className="bg-navBG rounded-md px-3 py-1 flex justify-center items-center mt-4 hover:bg-neutral-200 colorTransition">
-          <img src="./add-row.png" className="w-6" />
+          <CirclePlus className="mr-1"/>
           Add New Row
         </button>
       </section>
@@ -199,13 +199,13 @@ const NewPurchase = () => {
         </div>
       </section>
       <section className="w-full fixed bottom-0 px-6 bg-white py-3 shadow-[0_-5px_10px_rgba(0,0,0,0.10)] z-50">
-        <button className="bg-buttonBG px-4 py-2 rounded-md">
+        <button className="bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 colorTransition">
           Save as Draft
         </button>
-        <button className="ml-4 bg-brand-primary text-white px-4 py-2 rounded-md">
+        <button className="ml-4 bg-brand-primary text-white px-4 py-2 rounded-md hover:bg-orange-600 colorTransition">
           Get Approval
         </button>
-        <button className="ml-4 bg-buttonBG px-4 py-2 rounded-md">
+        <button className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 colorTransition">
           Cancel
         </button>
       </section>
