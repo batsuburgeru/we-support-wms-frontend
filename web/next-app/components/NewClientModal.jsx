@@ -23,13 +23,13 @@ import {
             <AlertDialogDescription>
               <form>
                 <div className="grid grid-flow-row grid-cols-3 py-4 px-2 gap-3">
-                  <label for="name" className="py-3 text-black text-black">Primary Contact</label>
+                  <label htmlFor="name" className="py-3 text-black font-medium">Primary Contact</label>
                   <input type="text" placeholder="Full Name" id="name" className="col-span-2 border border-borderLine rounded-md px-4 py-3 text-black" />
-                  <label for="organization" className="py-3 text-black text-black">Organization</label>
+                  <label htmlFor="organization" className="py-3 text-black font-medium">Organization</label>
                   <input type="text" placeholder="Organization Name" id="org" className="col-span-2 border border-borderLine rounded-md px-4 py-3 text-black" />
-                  <label for="email" className="py-3 text-black text-black">Email Address</label>
+                  <label htmlFor="email" className="py-3 text-black font-medium">Email Address</label>
                   <input type="text" placeholder="Enter email" id="email" className="col-span-2 border border-borderLine rounded-md px-4 py-3 text-black" />
-                  <label for="contactNo" className="py-3 text-black text-black">Phone</label>
+                  <label htmlFor="contactNo" className="py-3 text-black font-medium">Phone</label>
                   <input type="text" placeholder="Enter phone number" id="contactNo" className="col-span-2 border border-borderLine rounded-md px-4 py-3 text-black" />
                 </div>
               </form>

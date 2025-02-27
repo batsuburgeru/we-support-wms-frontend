@@ -36,16 +36,10 @@ const clients = [
 const NewPurchase = () => {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
-  const [moreToggle, setMoreToggle] = React.useState(false)
-
-  function toggleMenu() {
-    setMoreToggle(prevState => !prevState)
-  }
 
   return (
     <main>
       <div className='flex items-center px-6 py-4'>
-        <img src="./cart.png" className='h-12 mr-2' />
         <h1>New Purchase Requisition</h1>
       </div>
       <section className="px-6">
@@ -171,7 +165,7 @@ const NewPurchase = () => {
             </tr>
           </tbody>
         </table>
-        <button className="bg-navBG rounded-md px-3 py-1 flex justify-center items-center mt-4 hover:bg-neutral-200 colorTransition">
+        <button className="bg-navBG rounded-md px-3 py-2 flex justify-center items-center mt-4 hover:bg-neutral-200 colorTransition">
           <CirclePlus className="mr-1"/>
           Add New Row
         </button>

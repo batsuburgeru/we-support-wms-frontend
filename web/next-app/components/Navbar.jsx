@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
+import { House, PackagePlus, ShoppingBasket, Archive, UserRound } from 'lucide-react';
 
 const Navbar = () => {
 const pathname = usePathname();
@@ -12,24 +13,24 @@ const pathname = usePathname();
                 <img src="./logo.png" className='h-24'/>
             </div>
             <div className='px-2 py-8'>
-                <Link href="/" className={`flex items-center py-1 my-1 rounded-md px-2 transition-colors duration-100 ease-out ${pathname === "/" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <img src={`./home${pathname === "/" ? '-active' : ''}.png`} className='pr-3'/>
+                <Link href="/" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ease-out ${pathname === "/" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <House color={pathname === "/" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Home
                 </Link>
-                <Link href="/new-purchase" className={`flex items-center py-1 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/new-purchase" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <img src={`./new${pathname === "/new-purchase" ? '-active' : ''}.png`} className='pr-3'/>
+                <Link href="/new-purchase" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/new-purchase" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <PackagePlus color={pathname === "/new-purchase" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     New Purchase
                 </Link>
-                <Link href="/purchase-list" className={`flex items-center py-1 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <img src={`./p-list${pathname === "/purchase-list" ? '-active' : ''}.png`} className='pr-3'/>
+                <Link href="/purchase-list" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <ShoppingBasket color={pathname === "/purchase-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Purchase List
                 </Link>
-                <Link href="/inventory" className={`flex items-center py-1 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/inventory" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <img src={`./inventory${pathname === "/inventory" ? '-active' : ''}.png`} className='pr-3'/>
+                <Link href="/inventory" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/inventory" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <Archive color={pathname === "/inventory" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Inventory
                 </Link>
-                <Link href="/client" className={`flex items-center py-1 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/client" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <img src={`./client${pathname === "/client" ? '-active' : ''}.png`} className='pr-3'/>
+                <Link href="/client" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/client" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <UserRound color={pathname === "/client" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Client
                 </Link>
             </div>

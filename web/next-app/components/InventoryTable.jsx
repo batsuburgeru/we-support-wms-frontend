@@ -34,56 +34,37 @@ import {
 const data = [
   {
     id: "m5gr84i9",
-    name: "Michael Reed",
-    org: "Company XYZ",
-    contactNo: 9171234567,
-    email: "michaelreed@sample.com",
+    productCode: "PR-00003",
+    name: "Surface Pro 9",
+    images: "img-box",
+    serialNo: "SN-2025-AB123456",
+    stock: 10,
   },
   {
     id: "3u1reuv4",
-    name: "Daniel Hayes",
-    org: "Nimbus Tech",
-    contactNo: 9171234567,
-    email: "danielhayes@gmail.com",
+    productCode: "PR-00002",
+    name: "iPad Pro M4",
+    images: "img-box",
+    serialNo: "SN-2025-AB123472",
+    stock: 50,
   },
   {
     id: "derv1ws0",
-    name: "Michael Scott",
-    org: "Dunder Mifflin",
-    contactNo: 9172563214,
-    email: "mscott@email.com",
+    productCode: "PR-00001",
+    name: "Galaxy Tab S10 Ultra",
+    images: "img-box",
+    serialNo: "SN-2025-AB123480",
+    stock: 24,
   },
-  {
-    id: "5kma53ae",
-    name: "Lex Luthor",
-    org: "LexCorp",
-    contactNo: 9153254785,
-    email: "lexluthor@email.com",
-  }
 ];
 
 const columns = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
+    accessorKey: "productCode",
+    header: "Product ID",
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div>{row.getValue("productCode")}</div>
     ),
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "name",
@@ -93,59 +74,30 @@ const columns = [
     ),
   },
   {
-    accessorKey: "org",
-    header: "Organization",
+    accessorKey: "images",
+    header: "Image",
     cell: ({ row }) => (
-      <div>{row.getValue("org")}</div>
+      <img src={`./${row.getValue("images")}.png`} className="w-6"/>
     ),
   },
   {
-    accessorKey: "contactNo",
-    header: "Number",
+    accessorKey: "serialNo",
+    header: "Serial Number",
     cell: ({ row }) => (
-      <div>{row.getValue("contactNo")}</div>
+      <div>{row.getValue("serialNo")}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "stock",
+    header: "Stock on Hand",
     cell: ({ row }) => (
-      <div>{row.getValue("email")}</div>
+      <div>{row.getValue("stock")}</div>
     ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
   },
 ];
 
 
-export function ClientTable() {
+export function InventoryTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -171,7 +123,7 @@ export function ClientTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter clients..."
+          placeholder="Filter products..."
           value={(table.getColumn("name")?.getFilterValue()) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)

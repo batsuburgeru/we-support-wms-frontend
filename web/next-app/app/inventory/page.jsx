@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, EllipsisVertical } from 'lucide-react';
+import { InventoryTable } from '@/components/InventoryTable';
 
 const Inventory = () => {
   return (
@@ -13,39 +14,9 @@ const Inventory = () => {
         </div>
       </div>
       <hr />
-      <form className='flex items-center px-6 py-4'>
-        <input type="text" placeholder="Search product..." className='border border-borderLine rounded-md px-4 py-1 w-72'/>
-        <button className='bg-buttonBG border border-borderLine rounded-md ml-2 px-6 py-1 hover:bg-neutral-200 transition-colors duration-200'>
-          <Search />
-        </button>
-      </form>
       <hr className='border-borderLine'/>
-      <section>
-        <table className='w-full'>
-          <tbody>
-            <tr className='bg-navBG'>
-              <th>Product ID</th>
-              <th>Name</th>
-              <th>Images</th>
-              <th>Serial Number</th>
-              <th>Stock on Hand</th>
-            </tr>
-            <tr>
-              <td className='text-brand-primary'>PR-00003</td>
-              <td>Item 2</td>
-              <td><img src="img-box.png" className='h-8'/></td>
-              <td>SN-2025-AB123456</td>
-              <td>100</td>
-            </tr>
-            <tr>
-              <td className='text-brand-primary'>PR-00002</td>
-              <td>Item 1</td>
-              <td><img src="img-box.png" className='h-8'/></td>
-              <td>SN-2025-AB124680</td>
-              <td>0</td>
-            </tr>
-          </tbody>
-        </table>
+      <section className='px-6'>
+        <InventoryTable />
       </section>
     </main>
   )
