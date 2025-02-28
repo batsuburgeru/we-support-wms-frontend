@@ -1,5 +1,6 @@
 import DropdownMenu from "@/components/DropdownMenu";
 import ClientPopover from "@/components/ClientPopover";
+import ProductSearch from "@/components/ProductSearch";
 import { CirclePlus } from "lucide-react";
 
 const NewPurchase = () => {
@@ -32,8 +33,9 @@ const NewPurchase = () => {
       </section>
 
       <section className="px-6 mt-8">
-        <div className="bg-navBG border border-borderLine rounded-tl-lg rounded-tr-lg px-8 py-2">
+        <div className="bg-navBG border border-borderLine rounded-tl-lg rounded-tr-lg px-8 py-2 flex justify-between items-center">
           <h2 className="font-semibold text-lg">Item Table</h2>
+          <ProductSearch width={80} />
         </div>
         <table className="w-full">
           <tbody>

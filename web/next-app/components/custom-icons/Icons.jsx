@@ -35,16 +35,16 @@ export function PendingRequests() {
     return (
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="16" fill="#FFF2E5" />
-            <circle cx="16" cy="16" r="9" stroke="#F49A40" stroke-width="2" />
-            <g clip-path="url(#clip0_191_689)">
-                <path d="M16 11V13" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M18.1001 13.9L19.5501 12.45" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M19 16H21" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M18.1001 18.1L19.5501 19.55" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M16 19V21" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12.45 19.55L13.9 18.1" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M11 16H13" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12.45 12.45L13.9 13.9" stroke="#F49A40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="16" cy="16" r="9" stroke="#F49A40" strokeWidth="2" />
+            <g clipPath="url(#clip0_191_689)">
+                <path d="M16 11V13" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18.1001 13.9L19.5501 12.45" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M19 16H21" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18.1001 18.1L19.5501 19.55" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M16 19V21" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12.45 19.55L13.9 18.1" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M11 16H13" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12.45 12.45L13.9 13.9" stroke="#F49A40" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </g>
             <defs>
                 <clipPath id="clip0_191_689">
@@ -59,11 +59,11 @@ export function ReturnedRequests() {
     return (
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="16" fill="#F4EBE3" />
-            <g clip-path="url(#clip0_186_783)">
-                <path d="M14.3334 12.25L12.6667 13.9167L14.3334 15.5833" stroke="#E2AF2F" stroke-opacity="0.94902" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12.6667 13.9166H19.3334" stroke="#E2AF2F" stroke-opacity="0.94902" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M17.6667 19.75L19.3334 18.0833L17.6667 16.4166" stroke="#E2AF2F" stroke-opacity="0.94902" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M19.3334 18.0834H12.6667" stroke="#E2AF2F" stroke-opacity="0.94902" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+            <g clipPath="url(#clip0_186_783)">
+                <path d="M14.3334 12.25L12.6667 13.9167L14.3334 15.5833" stroke="#E2AF2F" strokeOpacity="0.94902" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12.6667 13.9166H19.3334" stroke="#E2AF2F" strokeOpacity="0.94902" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M17.6667 19.75L19.3334 18.0833L17.6667 16.4166" stroke="#E2AF2F" strokeOpacity="0.94902" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M19.3334 18.0834H12.6667" stroke="#E2AF2F" strokeOpacity="0.94902" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </g>
             <circle cx="16" cy="16" r="9" stroke="#E2AF2F" strokeWidth="2" />
             <defs>
@@ -73,4 +73,14 @@ export function ReturnedRequests() {
             </defs>
         </svg>
     );
+}
+
+export function LoadingIcon() {
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="8.25" cy="8.25" r="5.25" stroke="#F97333" stroke-width="2"/>
+<circle cx="8.25" cy="8.25" r="5.25" stroke="white" stroke-width="2"/>
+<path d="M13.5 8.25C13.5 8.93944 13.3642 9.62213 13.1004 10.2591C12.8365 10.896 12.4498 11.4748 11.9623 11.9623C11.4748 12.4498 10.896 12.8365 10.2591 13.1004C9.62213 13.3642 8.93944 13.5 8.25 13.5" stroke="white" stroke-width="2"/>
+<path d="M15 15L12.75 12.75" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</svg>
+
 }
