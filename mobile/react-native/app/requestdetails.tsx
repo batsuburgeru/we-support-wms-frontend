@@ -44,6 +44,9 @@ export default function RequestDetails() {
                 </TouchableOpacity>
                 <Text className="text-2xl font-poppins-bold mt-2 px-8">{request.type}</Text>
                 <Text className="text-primary font-poppins-semibold px-8">Request ID: {request.id}</Text>
+                <Text className="text-lg font-poppins-semibold px-8 mt-1">
+                Status: {request.status ? request.status : "Unknown"}
+                </Text>
             </View>
 
             {/* Details Section */}
@@ -70,18 +73,20 @@ export default function RequestDetails() {
                 </ScrollView>
             </View>
 
-            {/* Action Buttons */}
-            <View className="flex-row justify-around p-4 bg-white">
-                <TouchableOpacity className="bg-primary p-3 px-7 rounded-lg" onPress={() => setModalType("Approve")}>
-                    <Text className="text-white font-poppins-bold text-xl">Approve</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Deny")}>
-                    <Text className="font-poppins-bold text-xl">Deny</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Cancel")}>
-                    <Text className="font-poppins-bold text-xl">Cancel</Text>
-                </TouchableOpacity>
-            </View>
+            {/* Action Buttons - Only Show if Status is Pending */}
+            {request.status === "Pending" && (
+                <View className="flex-row justify-around p-4 bg-white">
+                    <TouchableOpacity className="bg-primary p-3 px-7 rounded-lg" onPress={() => setModalType("Approve")}>
+                        <Text className="text-white font-poppins-bold text-xl">Approve</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Deny")}>
+                        <Text className="font-poppins-bold text-xl">Deny</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="bg-tabs p-3 px-7 rounded-lg" onPress={() => setModalType("Cancel")}>
+                        <Text className="font-poppins-bold text-xl">Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
             {/* Modals */}
             {modalType && (
