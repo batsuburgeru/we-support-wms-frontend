@@ -8,9 +8,9 @@ const Navbar = () => {
 const pathname = usePathname();
 
     return (
-        <nav className='fixed bg-navBG border-r border-borderLine w-64 h-full px-2 py-2'>
+        <nav className='fixed bg-navBG border-r border-borderLine w-64 h-full px-2 py-4'>
             <div className='flex justify-center'>
-                <img src="./logo.png" className='h-24'/>
+                <img src="./logo.png" className='w-80'/>
             </div>
             <div className='px-2 py-8'>
                 <Link href="/" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ease-out ${pathname === "/" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
