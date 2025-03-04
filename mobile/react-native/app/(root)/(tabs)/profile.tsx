@@ -24,23 +24,31 @@ const Profile = () => {
     count: number;
     bgColor: string;
     textColor: string;
-    arrowColor?: string;
+    hideArrow?: boolean;
     onPress?: () => void;
   }
 
-  const SettingsItem = ({ icon, title, count, bgColor, textColor, arrowColor, onPress }: SettingsItemProps) => (
+  const SettingsItem = ({ icon, title, count, bgColor, textColor, hideArrow = false, onPress }: SettingsItemProps) => (
     <TouchableOpacity 
       onPress={onPress} 
-      className={`flex flex-row items-center justify-between p-4 rounded-lg ${bgColor}`}
+      disabled={!onPress} 
+      className={`flex flex-row items-center justify-between p-4 rounded-lg ${bgColor} shadow-lg`}
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 5, // Android shadow
+      }}
     >
       <View className="flex-row items-center gap-3">
-        <Image source={icon} className="w-6 h-6 opacity-70" />
+        <Image source={icon} className="w-6 h-6 opacity-70" style={{ tintColor: "#F97333" }} />
         <View>
           <Text className={`text-3xl font-poppins-bold ${textColor}`}>{count}</Text>
-          <Text className={`text-lg font-poppins-medium ${textColor} opacity-80`}>{title}</Text>
+          <Text className={`text-lg font-poppins-medium text-black opacity-80`}>{title}</Text>
         </View>
       </View>
-      <Image source={icons.arrow} className="w-5 h-5" style={{ tintColor: arrowColor }} />
+      {!hideArrow && <Image source={icons.arrow} className="w-5 h-5" style={{ tintColor: "#F97333" }} />}
     </TouchableOpacity>
   );
 
@@ -64,14 +72,15 @@ const Profile = () => {
         {/* Activity Section */}
         <View className="bg-gray-100 p-5 rounded-lg">
           <Text className="text-2xl font-poppins-bold mb-4">Your Activity</Text>
+          
           <View className="p-2 rounded-lg">
             <SettingsItem 
               title="Total requests" 
               count={pendingCount + approvedCount + deniedCount + cancelledCount} 
               icon={icons.total}
               bgColor="bg-white" 
-              textColor="text-black"
-              arrowColor='white' 
+              textColor="text-primary"
+              hideArrow={true}
             />
           </View>
 
@@ -80,9 +89,8 @@ const Profile = () => {
               title="Pending requests" 
               count={pendingCount}  
               icon={icons.pending} 
-              bgColor="bg-primary" 
-              textColor="text-white" 
-              arrowColor="white"
+              bgColor="bg-white" 
+              textColor="text-primary"
               onPress={() => router.push('/')}
             />
           </View>
@@ -92,8 +100,8 @@ const Profile = () => {
               title="Approved requests" 
               count={approvedCount} 
               icon={icons.approved} 
-              bgColor="bg-tertiary" 
-              textColor="text-black"
+              bgColor="bg-white" 
+              textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Approved" } })}
             />
           </View>
@@ -103,8 +111,8 @@ const Profile = () => {
               title="Denied requests" 
               count={deniedCount}
               icon={icons.denied} 
-              bgColor="bg-quarternary" 
-              textColor="text-black"
+              bgColor="bg-white" 
+              textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Denied" } })}
             />
           </View>
@@ -114,16 +122,15 @@ const Profile = () => {
               title="Cancelled requests" 
               count={cancelledCount}
               icon={icons.cancel} 
-              bgColor="bg-gray" 
-              textColor="text-secondary" 
-              arrowColor="#F97333"
+              bgColor="bg-white" 
+              textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Cancelled" } })}
             />
           </View>
         </View>
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg mx-5 mt-5 border border-black" onPress={handleSignOut}>
-          <Text className="text-black text-center font-poppins text-lg">
+        <TouchableOpacity className="bg-white p-4 rounded-lg mx-5 mt-5 border border-primary" onPress={handleSignOut}>
+          <Text className="text-primary text-center font-poppins-bold text-lg">
             Sign Out
           </Text>
         </TouchableOpacity>
