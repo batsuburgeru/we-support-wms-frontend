@@ -19,11 +19,11 @@ export default function History() {
     const getStatusStyle = (status: "Approved" | "Denied" | "Cancelled") => {
         switch (status) {
             case "Approved":
-                return { color: "bg-green-700", icon: icons.wapp };
+                return { color: "bg-primary", icon: icons.wapp };
             case "Denied":
-                return { color: "bg-red-700", icon: icons.wden };
+                return { color: "bg-secondary", icon: icons.wden };
             case "Cancelled":
-                return { color: "bg-yellow-600", icon: icons.wcan };
+                return { color: "bg-gray", icon: icons.wcan };
             default:
                 return { color: "bg-gray-700", icon: icons.wcan };
         }
