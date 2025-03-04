@@ -89,10 +89,6 @@ const NewPurchase = () => {
             </tr>
           </tbody>
         </table>
-        <button className="bg-navBG rounded-md px-3 py-2 flex justify-center items-center mt-4 hover:bg-neutral-200 colorTransition">
-          <CirclePlus className="mr-1"/>
-          Add New Row
-        </button>
       </section>
       <section className="px-6 mt-8 flex justify-between mb-24">
         <div>
