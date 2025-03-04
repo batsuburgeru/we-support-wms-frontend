@@ -17,7 +17,6 @@ const PurchaseList = () => {
           </button>
         </div>
       </div>
-      <hr />
       <hr className='border-borderLine'/>
       <section className='px-6'>
         <PurchaseTable />

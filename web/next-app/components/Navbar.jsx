@@ -17,8 +17,8 @@ const pathname = usePathname();
                     <House color={pathname === "/" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Home
                 </Link>
-                <Link href="/new-purchase" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/new-purchase" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <PackagePlus color={pathname === "/new-purchase" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                <Link href="/new-purchase" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/new-purchase" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <PackagePlus color={pathname === "/new-purchase" || pathname === "/purchase-cart" || pathname === "/search-results" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     New Purchase
                 </Link>
                 <Link href="/purchase-list" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
@@ -29,8 +29,8 @@ const pathname = usePathname();
                     <Archive color={pathname === "/inventory" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Inventory
                 </Link>
-                <Link href="/client" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/client" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <UserRound color={pathname === "/client" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                <Link href="/client-list" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-100 ${pathname === "/client-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <UserRound color={pathname === "/client-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Client
                 </Link>
             </div>

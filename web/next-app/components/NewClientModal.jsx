@@ -20,7 +20,8 @@ import {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>New Client</AlertDialogTitle>
-            <AlertDialogDescription>
+            <div>
+              <hr />
               <form>
                 <div className="grid grid-flow-row grid-cols-3 py-4 px-2 gap-3">
                   <label htmlFor="name" className="py-3 text-black font-medium">Primary Contact</label>
@@ -33,7 +34,7 @@ import {
                   <input type="text" placeholder="Enter phone number" id="contactNo" className="col-span-2 border border-borderLine rounded-md px-4 py-3 text-black" />
                 </div>
               </form>
-            </AlertDialogDescription>
+            </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
