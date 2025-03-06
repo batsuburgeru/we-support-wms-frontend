@@ -9,8 +9,8 @@ export default function Requests() {
     const pendingRequests = DoneRequests.filter(req => req.status === "Pending");
 
     return (
-        <SafeAreaView className="flex-1 bg-white p-4">
-            <Text className="text-4xl font-poppins-bold">Requests</Text>
+        <SafeAreaView className="flex-1 bg-white p-4 px-5">
+            <Text className="pt-5 text-4xl font-poppins-bold">Requests</Text>
             <Text className="text-2xl text-black font-poppins-semibold">
                 You have <Text className="text-primary font-poppins-semibold">{pendingRequests.length}</Text> pending requests.
             </Text>

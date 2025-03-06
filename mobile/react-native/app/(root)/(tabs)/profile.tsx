@@ -71,13 +71,13 @@ const Profile = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 ">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 0 }}
       >
         {/* Profile Header */}
-        <View className="flex-row items-center bg-white flex-1">
+        <View className="flex-row items-center bg-white flex-1 pt-5">
           <Image 
             source={images.avatar} 
             className="w-12 h-12 mx-5 my-5 rounded-full" 

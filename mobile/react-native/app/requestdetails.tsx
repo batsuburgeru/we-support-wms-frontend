@@ -38,7 +38,7 @@ export default function RequestDetails() {
     return (
         <SafeAreaView className="flex-1 bg-tabs">
             {/* Header Section */}
-            <View className="bg-tabs p-4 flex-row items-center">
+            <View className="bg-tabs p-4 flex-row items-center pt-5">
                 <TouchableOpacity onPress={() => router.back()} className="mr-2">
                     <Back width={30} height={30} />
                 </TouchableOpacity>

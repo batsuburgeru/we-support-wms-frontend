@@ -35,8 +35,8 @@ export default function History() {
     );
 
     return (
-        <SafeAreaView className="flex-1 bg-white p-4 mb-20">
-            <Text className="text-4xl font-poppins-bold">Completed Requests</Text>
+        <SafeAreaView className="flex-1 bg-white p-4 mb-20 px-5">
+            <Text className="text-4xl font-poppins-bold pt-5">Completed Requests</Text>
 
             {/* Filter Buttons */}
             <View className="flex-row justify-between my-4">
