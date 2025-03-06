@@ -13,8 +13,8 @@ const pathname = usePathname();
                 <img src="./logo.png" className='w-80'/>
             </div>
             <div className='px-2 py-8'>
-                <Link href="/" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ease-out ${pathname === "/" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <House color={pathname === "/" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                <Link href="/dashboard" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ease-out ${pathname === "/dashboard" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <House color={pathname === "/dashboard" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Home
                 </Link>
                 <Link href="/purchase-cart" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>

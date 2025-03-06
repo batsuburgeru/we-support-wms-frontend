@@ -1,7 +1,6 @@
-import DropdownMenu from "@/components/DropdownMenu";
+import CartItemDropdown from "@/components/CartItemDropdown";
 import ClientPopover from "@/components/ClientPopover";
 import ProductSearch from "@/components/ProductSearch";
-import { CirclePlus } from "lucide-react";
 
 const NewPurchase = () => {
   return (
@@ -54,7 +53,7 @@ const NewPurchase = () => {
               <th className="font-normal border-r">₱5.00</th>
               <th className="font-normal">₱50.00</th>
               <th className="font-normal flex justify-end pr-0">
-                <DropdownMenu />
+                <CartItemDropdown />
               </th>
             </tr>
             <tr className="border-b border-borderLine">
@@ -64,7 +63,7 @@ const NewPurchase = () => {
               <th className="font-normal border-r">₱5.00</th>
               <th className="font-normal">₱50.00</th>
               <th className="font-normal flex justify-end pr-0">
-                <DropdownMenu />
+                <CartItemDropdown />
               </th>
             </tr>
             <tr className="border-b border-borderLine">
@@ -74,7 +73,7 @@ const NewPurchase = () => {
               <th className="font-normal border-r">₱5.00</th>
               <th className="font-normal">₱50.00</th>
               <th className="font-normal flex justify-end pr-0">
-                <DropdownMenu />
+                <CartItemDropdown />
               </th>
             </tr>
             <tr className="border-b border-borderLine">
@@ -84,7 +83,7 @@ const NewPurchase = () => {
               <th className="font-normal border-r">₱5.00</th>
               <th className="font-normal">₱50.00</th>
               <th className="font-normal flex justify-end pr-0">
-                <DropdownMenu />
+                <CartItemDropdown />
               </th>
             </tr>
           </tbody>
