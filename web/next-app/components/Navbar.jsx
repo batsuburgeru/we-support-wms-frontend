@@ -17,8 +17,8 @@ const pathname = usePathname();
                     <House color={pathname === "/" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Home
                 </Link>
-                <Link href="/new-purchase" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/new-purchase" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <PackagePlus color={pathname === "/new-purchase" || pathname === "/purchase-cart" || pathname === "/search-results" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                <Link href="/purchase-cart" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <PackagePlus color={pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     New Purchase
                 </Link>
                 <Link href="/purchase-list" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-100 ${pathname === "/purchase-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
