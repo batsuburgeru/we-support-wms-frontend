@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
 import icons from '@/constants/icons';
 import { DoneRequests } from '@/components/data/requests';
+import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest, TotalRequest } from '@/assets/svg/iconsvg';
 
 const Profile = () => {
   const router = useRouter();
@@ -19,7 +20,8 @@ const Profile = () => {
   const cancelledCount = DoneRequests.filter(req => req.status === "Cancelled").length;
 
   interface SettingsItemProps {
-    icon: ImageSourcePropType;
+    icon?: ImageSourcePropType;
+    iconComponent?: JSX.Element;
     title: string;
     count: number;
     bgColor: string;
@@ -28,7 +30,16 @@ const Profile = () => {
     onPress?: () => void;
   }
 
-  const SettingsItem = ({ icon, title, count, bgColor, textColor, hideArrow = false, onPress }: SettingsItemProps) => (
+  const SettingsItem = ({
+    icon,
+    iconComponent,
+    title,
+    count,
+    bgColor,
+    textColor,
+    hideArrow = false,
+    onPress,
+  }: SettingsItemProps) => (
     <TouchableOpacity 
       onPress={onPress} 
       disabled={!onPress} 
@@ -42,13 +53,21 @@ const Profile = () => {
       }}
     >
       <View className="flex-row items-center gap-3">
-        <Image source={icon} className="w-6 h-6 opacity-70" style={{ tintColor: "#F97333" }} />
+        {iconComponent ? (
+          <View className="w-6 h-6">{iconComponent}</View>
+        ) : (
+          icon && <Image source={icon} className="w-6 h-6 opacity-70" style={{ tintColor: "#F97333" }} />
+        )}
         <View>
           <Text className={`text-3xl font-poppins-bold ${textColor}`}>{count}</Text>
           <Text className={`text-lg font-poppins-medium text-black opacity-80`}>{title}</Text>
         </View>
       </View>
-      {!hideArrow && <Image source={icons.arrow} className="w-5 h-5" style={{ tintColor: "#F97333" }} />}
+      {!hideArrow && (
+        <View className="w-5 h-5">
+          <Arrow />
+        </View>
+      )}
     </TouchableOpacity>
   );
 
@@ -77,7 +96,7 @@ const Profile = () => {
             <SettingsItem 
               title="Total requests" 
               count={pendingCount + approvedCount + deniedCount + cancelledCount} 
-              icon={icons.total}
+              iconComponent={<TotalRequest />}
               bgColor="bg-white" 
               textColor="text-primary"
               hideArrow={true}
@@ -88,7 +107,7 @@ const Profile = () => {
             <SettingsItem 
               title="Pending requests" 
               count={pendingCount}  
-              icon={icons.pending} 
+              iconComponent={<PendingRequest />}
               bgColor="bg-white" 
               textColor="text-primary"
               onPress={() => router.push('/')}
@@ -99,7 +118,7 @@ const Profile = () => {
             <SettingsItem 
               title="Approved requests" 
               count={approvedCount} 
-              icon={icons.approved} 
+              iconComponent={<ApprovedRequest />}
               bgColor="bg-white" 
               textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Approved" } })}
@@ -110,7 +129,7 @@ const Profile = () => {
             <SettingsItem 
               title="Denied requests" 
               count={deniedCount}
-              icon={icons.denied} 
+              iconComponent={<DeniedRequest />} 
               bgColor="bg-white" 
               textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Denied" } })}
@@ -121,7 +140,7 @@ const Profile = () => {
             <SettingsItem 
               title="Cancelled requests" 
               count={cancelledCount}
-              icon={icons.cancel} 
+              iconComponent={<CancelledRequest/>} 
               bgColor="bg-white" 
               textColor="text-primary"
               onPress={() => router.push({ pathname: "/history", params: { status: "Cancelled" } })}

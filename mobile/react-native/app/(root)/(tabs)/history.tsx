@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import icons from '@/constants/icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DoneRequests } from '@/components/data/requests';
+import {Check, Denys, Cancels} from '@/assets/svg/iconsvg';
+
 
 export default function History() {
     const router = useRouter();
@@ -19,13 +20,13 @@ export default function History() {
     const getStatusStyle = (status: "Approved" | "Denied" | "Cancelled") => {
         switch (status) {
             case "Approved":
-                return { color: "bg-primary", icon: icons.wapp };
+                return { color: "bg-primary", icon: <Check width={24} height={24} /> };
             case "Denied":
-                return { color: "bg-secondary", icon: icons.wden };
+                return { color: "bg-secondary", icon: <Denys width={24} height={24} /> };
             case "Cancelled":
-                return { color: "bg-gray", icon: icons.wcan };
+                return { color: "bg-gray", icon: <Cancels width={24} height={24} /> };
             default:
-                return { color: "bg-gray-700", icon: icons.wcan };
+                return { color: "bg-gray-700", icon: <Cancels width={24} height={24} /> };
         }
     };
 
@@ -75,11 +76,7 @@ export default function History() {
                                 <Text className="text-primary font-poppins">Request ID: {req.id}</Text>
                                 <View className={`mt-2 p-2 rounded-lg ${color} flex-row justify-between items-center`}>
                                     <Text className="text-white font-poppins">{req.status}</Text>
-                                    {typeof icon === 'string' ? (
-                                        <Text className="text-white font-poppins">{icon}</Text>
-                                    ) : (
-                                        <Image source={icon} style={{ width: 24, height: 24 }} />
-                                    )}
+                                    {icon}
                                 </View>
                             </TouchableOpacity>
                         );

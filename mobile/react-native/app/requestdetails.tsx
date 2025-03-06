@@ -1,9 +1,9 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { DoneRequests } from '@/components/data/requests';
 import { MessageModal } from '@/components';
-import icons from '@/constants/icons';
+import { Back } from '@/assets/svg/iconsvg';
 
 export default function RequestDetails() {
     const router = useRouter();
@@ -38,14 +38,17 @@ export default function RequestDetails() {
     return (
         <SafeAreaView className="flex-1 bg-tabs">
             {/* Header Section */}
-            <View className="bg-tabs p-4">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Image source={icons.back} className="w-10 h-10" />
+            <View className="bg-tabs p-4 flex-row items-center">
+                <TouchableOpacity onPress={() => router.back()} className="mr-2">
+                    <Back width={30} height={30} />
                 </TouchableOpacity>
-                <Text className="text-2xl font-poppins-bold mt-2 px-8">{request.type}</Text>
-                <Text className="text-primary font-poppins-semibold px-8">Request ID: {request.id}</Text>
-                <Text className="text-lg font-poppins-semibold px-8 mt-1">
-                Status: {request.status ? request.status : "Unknown"}
+            </View>
+    
+            <View className="pl-14">
+                <Text className="text-2xl font-poppins-bold">{request.type} </Text>
+                <Text className="text-primary font-poppins-semibold">Request ID: {request.id}</Text>
+                <Text className="text-lg font-poppins-semibold mt-1">
+                    Status: {request.status ? request.status : "Unknown"}
                 </Text>
             </View>
 
