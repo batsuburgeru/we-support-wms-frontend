@@ -1,24 +1,21 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
-
-import icons from '@/constants/icons'
+import { Dashboard, History, Requests, FDashboard, FHistory, FRequests } from '@/assets/svg/iconsvg'
 
 const TabIcon = ({ 
     focused, 
-    icon, 
-    focusedIcon,
-    title
+    Icon, 
+    FocusedIcon, 
+    title 
 }: { 
     focused: boolean; 
-    icon: any; 
-    focusedIcon: any;
-    title: string;
+    Icon: React.FC<any>; 
+    FocusedIcon: React.FC<any>; 
+    title: string; 
 }) => (
     <View className='flex-1 mt-3 flex flex-col items-center'>
-        <Image
-          source={focused ? focusedIcon : icon}
-        />
+        {focused ? <FocusedIcon width={30} height={30} /> : <Icon width={25} height={25} />}
         <Text
           className={`${
             focused
@@ -60,8 +57,8 @@ const TabsLayout = () => {
                 top: -8, 
               }} />
               <TabIcon 
-                icon={icons.dash} 
-                focusedIcon={icons.dashfoc} 
+                Icon={Dashboard} 
+                FocusedIcon={FDashboard} 
                 focused={focused} 
                 title="Dashboard" 
               />
@@ -85,8 +82,8 @@ const TabsLayout = () => {
                 top: -8,
               }} />
               <TabIcon 
-                icon={icons.request} 
-                focusedIcon={icons.reqfoc} 
+                Icon={Requests} 
+                FocusedIcon={FRequests} 
                 focused={focused} 
                 title="Requests" 
               />
@@ -110,8 +107,8 @@ const TabsLayout = () => {
                 top: -8,
               }} />
               <TabIcon 
-                icon={icons.history} 
-                focusedIcon={icons.hisfoc}
+                Icon={History} 
+                FocusedIcon={FHistory} 
                 focused={focused} 
                 title="History" 
               />
