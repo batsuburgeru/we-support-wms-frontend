@@ -3,7 +3,6 @@ import React from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
-import icons from '@/constants/icons';
 import { DoneRequests } from '@/components/data/requests';
 import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest, TotalRequest } from '@/assets/svg/iconsvg';
 

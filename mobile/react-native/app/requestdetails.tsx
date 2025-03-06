@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { DoneRequests } from '@/components/data/requests';
@@ -57,20 +57,21 @@ export default function RequestDetails() {
                 <Text className="font-poppins-semibold text-lg">Requested by: {request.requester}</Text>
                 <Text className="font-poppins text-black">{request.date}, {request.time}</Text>
 
-                {/* Table Headers */}
-                <View className="mt-4 flex-row justify-between">
-                    <Text className="font-poppins text-gray-500">Quantity</Text>
-                    <Text className="font-poppins text-gray-500">Item</Text>
-                    <Text className="font-poppins text-gray-500">Price</Text>
-                </View>
-
-                {/* List Items */}
+                {/* List Items with Images */}
                 <ScrollView className="border-t mt-2 pt-2">
                     {request.items.map((item, index) => (
-                        <View key={index} className="flex-row justify-between mt-2">
-                            <Text className="font-poppins">{item.quantity}</Text>
-                            <Text className="font-poppins">{item.name}</Text>
-                            <Text className="font-poppins">{item.price}</Text>
+                        <View key={index} className="mt-4 p-4 rounded-lg bg-tabs flex-row items-center">
+                            <Image 
+                                source={{ uri: item.image }} 
+                                style={{ width: 50, height: 50, marginRight: 10, borderRadius: 5 }} 
+                            />
+                            <View className="flex-1">
+                                <Text className="font-poppins font-bold">{item.name}</Text>
+                                <View className="flex-row justify-between mt-2">
+                                    <Text className="font-poppins">Quantity: {item.quantity}</Text>
+                                    <Text className="font-poppins">Price: {item.price}</Text>
+                                </View>
+                            </View>
                         </View>
                     ))}
                 </ScrollView>
