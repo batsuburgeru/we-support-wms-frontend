@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
@@ -8,9 +8,58 @@ import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest
 
 const Profile = () => {
   const router = useRouter();
+  const [userName, setUserName] = useState('');
 
-  const handleSignOut = () => {
-    router.push("/signIn"); 
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await fetch("http://192.168.16.220:3002/users/search-users?search=admin", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data && data.data.length > 0) {
+            setUserName(data.data[0].name); // Assuming you want the name of the first user in the list
+          } else {
+            console.error("No user data found");
+          }
+        } else {
+          console.error("Failed to fetch user name:", await response.text());
+        }
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      const response = await fetch("http://192.168.16.220:3002/users/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        console.log("Logout successful");
+        router.replace("/signIn");
+      } else {
+        console.error("Logout failed:", await response.text());
+        alert("Logout failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Failed to connect to server.");
+    }
   };
 
   const pendingCount = DoneRequests.filter(req => req.status === "Pending").length;
@@ -48,7 +97,7 @@ const Profile = () => {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 5, // Android shadow
+        elevation: 5,
       }}
     >
       <View className="flex-row items-center gap-3">
@@ -83,7 +132,7 @@ const Profile = () => {
             className="w-12 h-12 mx-5 my-5 rounded-full" 
           />
           <Text className="text-2xl font-poppins-bold">
-            Hi, [user]
+            Hi, {userName}
           </Text>
         </View>
 
