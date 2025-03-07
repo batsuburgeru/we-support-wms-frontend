@@ -29,6 +29,11 @@ const Loading = () => {
         <SkeletonLoader />
         <SkeletonLoader />
         <SkeletonLoader />
+        <SkeletonLoader />
+        <SkeletonLoader />
+        <SkeletonLoader />
+        <SkeletonLoader />
+        <SkeletonLoader />
       </div>
     </div>
   )

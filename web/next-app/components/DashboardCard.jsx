@@ -21,7 +21,7 @@ const chooseIcon = (iconType) => {
 const DashboardCard = (props) => {
   const IconComponent = chooseIcon(props.icon)
   return (
-    <div className='bg-white rounded-2xl p-6'>
+    <div className='bg-white rounded-2xl p-4 2xl:p-6'>
       <div className='flex items-center gap-3 mb-5'>
         <IconComponent />
         <h2>{props.title}</h2>
@@ -33,7 +33,7 @@ const DashboardCard = (props) => {
             <TrendingUp color="#27C153" />
             +6.53%
           </p>
-          <p>from last week</p>
+          <p className='text-right'>from last week</p>
         </div>}
       </div>
     </div>
