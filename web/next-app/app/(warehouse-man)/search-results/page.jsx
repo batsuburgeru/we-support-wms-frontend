@@ -6,14 +6,14 @@ import Link from 'next/link';
 
 const searchResults = async ({ searchParams }) => {
   const query = searchParams.query || '';
-  const response = await fetch("https://jsonplaceholder.typicode.com/users");
+  const response = await fetch("http://localhost:3002/products/view-products");
   const users = await response.json();
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(query.toLowerCase()) ||
-    user.username.toLowerCase().includes(query.toLowerCase()) ||
-    user.email.toLowerCase().includes(query.toLowerCase()) ||
-    user.phone.includes(query)
+    user.sku.toLowerCase().includes(query.toLowerCase()) ||
+    user.description.toLowerCase().includes(query.toLowerCase()) ||
+    user.category_id.includes(query)
   );
 
   const filteredCards = filteredUsers.map((user) => (

@@ -8,7 +8,7 @@ const Navbar = () => {
 const pathname = usePathname();
 
     return (
-        <nav className='fixed bg-navBG border-r border-borderLine w-64 h-full px-2 py-4'>
+        <nav className='fixed bg-navBG border-r border-borderLine w-64 h-full px-2 py-4 z-50'>
             <div className='flex justify-center'>
                 <img src="./logo.png" className='w-80'/>
             </div>

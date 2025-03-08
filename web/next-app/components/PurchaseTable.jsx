@@ -36,7 +36,7 @@ const data = [
     id: "m5gr84i9",
     orderNum: "PR-00004",
     reqNum: 12345679,
-    date: "February 21, 2025",
+    date: "March 7, 2051",
     createdBy: "John Doe",
     status: "Approved",
     amount: 100.00
@@ -45,7 +45,7 @@ const data = [
     id: "3u1reuv4",
     orderNum: "PR-00003",
     reqNum: 12345678,
-    date: "February 21, 2025",
+    date: "November 23, 1601",
     createdBy: "Ethan Carter",
     status: "Pending",
     amount: 100.00
@@ -54,7 +54,7 @@ const data = [
     id: "derv1ws0",
     orderNum: "PR-00002",
     reqNum: 12345677,
-    date: "February 21, 2025",
+    date: "April 02, 1992",
     createdBy: "Ethan Carter",
     status: "Draft",
     amount: 100.00
@@ -63,7 +63,7 @@ const data = [
     id: "5kma53ae",
     orderNum: "PR-00001",
     reqNum: 12345676,
-    date: "February 21, 2025",
+    date: "February 22, 2025",
     createdBy: "Ethan Carter",
     status: "Denied",
     amount: 100.00
@@ -104,7 +104,7 @@ const columns = [
     accessorKey: "orderNum",
     header: "Purchase Order #",
     cell: ({ row }) => (
-      <div className="text-brand-primary">{row.getValue("orderNum")}</div>
+      <div>{row.getValue("orderNum")}</div>
     ),
   },
   {
@@ -118,7 +118,7 @@ const columns = [
         <ArrowUpDown />
       </Button>
     ),
-    cell: ({ row }) => <div className="text-brand-primary">#{row.getValue("reqNum")}</div>,
+    cell: ({ row }) => <div>#{row.getValue("reqNum")}</div>,
   },
   {
     accessorKey: "date",
@@ -221,7 +221,7 @@ export function PurchaseTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter orders..."
+          placeholder="Filter by date..."
           value={(table.getColumn("date")?.getFilterValue()) ?? ""}
           onChange={(event) =>
             table.getColumn("date")?.setFilterValue(event.target.value)

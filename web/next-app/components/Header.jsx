@@ -4,7 +4,7 @@ import { Bell } from 'lucide-react'
 
 const Header = () => {
   return (
-    <header className='bg-navBG/80 backdrop-blur-lg w-auto flex justify-end px-6 py-4 sticky top-0 z-50 '>
+    <header className='bg-navBG/80 backdrop-blur-lg w-auto flex justify-end px-6 py-4 sticky top-0'>
         <button><Bell /></button>
         <ProfileMenu />
     </header>
