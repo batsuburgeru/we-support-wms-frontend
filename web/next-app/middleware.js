@@ -1,60 +1,64 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose'; // Importing jose's jwtVerify function
 
-// 1. Specify protected and public routes
+const SECRET_KEY = new TextEncoder().encode(process.env.SECRET_KEY); // Encoding the secret key
+
 const protectedRoutes = [
-    '/dashboard', 
-    '/inventory', 
+    '/dashboard',
+    '/inventory',
     '/account-settings',
     '/client-list',
     '/purchase-cart',
     '/purchase-list',
     '/search-results'
-]
-const publicRoutes = ['/login', '/register']
+];
+const publicRoutes = ['/login', '/register'];
 
-function parseJwt (token) {
-  return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+// 1. Helper function to parse JWT using jose
+async function parseJwt(token) {
+    try {
+        const { payload } = await jwtVerify(token, SECRET_KEY); // Verify and decode the JWT
+        return payload; // Returns the JWT payload (decoded token)
+    } catch (err) {
+        console.error("JWT verification error:", err.message);
+        return null;
+    }
 }
 
 export default async function middleware(req) {
-  const token = req.cookies.token;
-  const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
+    const path = req.nextUrl.pathname;
+    const isProtectedRoute = protectedRoutes.includes(path);
+    const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get('session')?.value
-  const session = cookie ? parseJwt(cookie) : null
+    // 2. Get token from cookies
+    const token = cookies().get('token')?.value;
+    if (!token) {
+        console.warn("No token found in cookies");
+    }
 
-  // 4. Extract userRole from the token
-  const userRole = session?.userRole
+    // 3. Decode the JWT token using jose
+    const session = token ? await parseJwt(token) : null;
+    const userRole = session?.role || null;
 
-  // 5. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !userRole) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
-  }
+    console.log("Middleware Debug:", { token, session, userRole, path });
 
-  // 6. Redirect to /dashboard if the user is authenticated
-  if (
-    isPublicRoute &&
-    userRole &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
-  }
+    // 4. Redirect unauthenticated users from protected routes
+    if (isProtectedRoute && !userRole) {
+        return NextResponse.redirect(new URL('/login', req.url));
+    }
 
-  // 7. Authorize user based on userRole
-  if (isProtectedRoute && userRole) {
-    // Add your authorization logic here
-    if (userRole !== 'Admin') 
-      { return NextResponse.redirect(new URL('/login', req.nextUrl)) }
-  }
+    // 5. Redirect authenticated users away from public routes
+    if (isPublicRoute && userRole) {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
 
-  return NextResponse.next()
+    return NextResponse.next();
 }
 
-// Routes Middleware should not run on
+// 6️⃣ Ensure the middleware is compatible with the Edge Runtime
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+  runtime: 'nodejs', // Use Node.js runtime instead
+};
+

@@ -1,10 +1,12 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import the useRouter hook
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter(); // Initialize the useRouter hook
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -13,7 +15,7 @@ const LoginForm = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email, password: password }),
+      body: JSON.stringify({ email, password }),
       credentials: "include"
     })
     .then(response => response.json())
@@ -21,7 +23,9 @@ const LoginForm = () => {
       if (result && result.data) {
         const user = result.data;
         console.log('User logged in successfully:', user);
-        // Redirect to dashboard or perform any other actions
+
+        // Navigate to the dashboard
+        router.push('/dashboard'); // Client-side redirection
       } else {
         console.log('Login failed:', result.message);
       }
