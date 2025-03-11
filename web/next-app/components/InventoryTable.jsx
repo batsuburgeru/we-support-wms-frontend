@@ -21,39 +21,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const data = [
-  {
-    id: "m5gr84i9",
-    productCode: "PR-00003",
-    name: "Surface Pro 9",
-    images: "img-box",
-    serialNo: "SN-2025-AB123456",
-    stock: 10,
-  },
-  {
-    id: "3u1reuv4",
-    productCode: "PR-00002",
-    name: "iPad Pro M4",
-    images: "img-box",
-    serialNo: "SN-2025-AB123472",
-    stock: 50,
-  },
-  {
-    id: "derv1ws0",
-    productCode: "PR-00001",
-    name: "Galaxy Tab S10 Ultra",
-    images: "img-box",
-    serialNo: "SN-2025-AB123480",
-    stock: 24,
-  },
-];
-
 const columns = [
   {
-    accessorKey: "productCode",
+    accessorKey: "category_id",
     header: "Product ID",
     cell: ({ row }) => (
-      <div>{row.getValue("productCode")}</div>
+      <div>{row.getValue("category_id")}</div>
     ),
   },
   {
@@ -67,21 +40,21 @@ const columns = [
     accessorKey: "images",
     header: "Image",
     cell: ({ row }) => (
-      <img src={`./${row.getValue("images")}.png`} className="w-6"/>
+      <img src={`./img-box.png`} className="w-6"/>
     ),
   },
   {
-    accessorKey: "serialNo",
+    accessorKey: "sku",
     header: "Serial Number",
     cell: ({ row }) => (
-      <div>{row.getValue("serialNo")}</div>
+      <div>{row.getValue("sku")}</div>
     ),
   },
   {
-    accessorKey: "stock",
+    accessorKey: "stock_quantity",
     header: "Stock on Hand",
     cell: ({ row }) => (
-      <div>{row.getValue("stock")}</div>
+      <div>{row.getValue("stock_quantity")}</div>
     ),
   },
 ];
@@ -91,6 +64,25 @@ export function InventoryTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState([]);
+  
+  React.useEffect(() => {
+    fetch("http://localhost:3002/products/view-products", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result && result.data) {
+        setData(result.data);
+        } else {
+        console.log('Retrieve failed:', result.message);
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
 
   const table = useReactTable({
     data,

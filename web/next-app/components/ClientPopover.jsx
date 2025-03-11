@@ -43,7 +43,7 @@ export default function ClientPopover() {
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-96 justify-between border-borderLine active:border-brand-primary"
+                className="w-96 justify-between border-borderLine"
               >
                 {value
                   ? clients.find((client) => client.value === value)?.name

@@ -1,52 +1,7 @@
 import { Calendar } from 'lucide-react';
-import DashboardCard from '@/components/DashboardCard';
+import DashboardCards from '@/components/DashboardCards';
 
-export default function Home() {
-  const cardData = [
-    {
-      id: 1,
-      title: 'Purchase Orders',
-      icon: 'AllOrders',
-      value: 106,
-      weeklyIncrease: 6.53
-    },
-    {
-      id: 2,
-      title: 'Approved Requests',
-      icon: 'ApprovedRequests',
-      value: 50,
-      weeklyIncrease: null
-    },
-    {
-      id: 3,
-      title: 'Denied Requests',
-      icon: 'DeniedRequests',
-      value: 25,
-      weeklyIncrease: null
-    },
-    {
-      id: 4,
-      title: 'Pending Requests',
-      icon: 'PendingRequests',
-      value: 14,
-      weeklyIncrease: null
-    },
-    {
-      id: 5,
-      title: 'Returned Requests',
-      icon: 'ReturnedRequests',
-      value: 20,
-      weeklyIncrease: null
-    }
-  ]
-
-  const requestCards = cardData.map(card => (
-    <DashboardCard 
-      key={card.id}
-      {...card}
-    />
-  ))
-
+export default function Dashboard() {
   return (
       <main className="bg-dashboard h-screen">
         <div className='px-6 flex items-center py-4'>
@@ -60,8 +15,8 @@ export default function Home() {
             Today
           </button>
         </div>
-        <section className='grid gap-4 grid-flow-col px-6'>
-          {requestCards}
+        <section>
+          <DashboardCards />
         </section>
       </main>
   );

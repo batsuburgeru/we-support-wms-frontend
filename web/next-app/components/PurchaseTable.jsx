@@ -31,45 +31,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const data = [
-  {
-    id: "m5gr84i9",
-    orderNum: "PR-00004",
-    reqNum: 12345679,
-    date: "March 7, 2051",
-    createdBy: "John Doe",
-    status: "Approved",
-    amount: 100.00
-  },
-  {
-    id: "3u1reuv4",
-    orderNum: "PR-00003",
-    reqNum: 12345678,
-    date: "November 23, 1601",
-    createdBy: "Ethan Carter",
-    status: "Pending",
-    amount: 100.00
-  },
-  {
-    id: "derv1ws0",
-    orderNum: "PR-00002",
-    reqNum: 12345677,
-    date: "April 02, 1992",
-    createdBy: "Ethan Carter",
-    status: "Draft",
-    amount: 100.00
-  },
-  {
-    id: "5kma53ae",
-    orderNum: "PR-00001",
-    reqNum: 12345676,
-    date: "February 22, 2025",
-    createdBy: "Ethan Carter",
-    status: "Denied",
-    amount: 100.00
-  }
-];
-
 const statusStyles = {
   Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
   Pending: "bg-bgPending text-txtPending text-center rounded-sm w-max px-2 py-1",
@@ -121,17 +82,17 @@ const columns = [
     cell: ({ row }) => <div>#{row.getValue("reqNum")}</div>,
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_at",
     header: "Order Date",
     cell: ({ row }) => (
-      <div>{row.getValue("date")}</div>
+      <div>{row.getValue("created_at").slice(0,10)}</div>
     ),
   },
   {
-    accessorKey: "createdBy",
+    accessorKey: "created_by",
     header: "Created By",
     cell: ({ row }) => (
-      <div>{row.getValue("createdBy")}</div>
+      <div>{row.getValue("created_by")}</div>
     ),
   },
   {
@@ -199,6 +160,25 @@ export function PurchaseTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:3002/purchaseRequests/view-purchase-requests", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result && result.data) {
+        setData(result.data);
+        } else {
+        console.log('Retrieve failed:', result.message);
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
 
   const table = useReactTable({
     data,
@@ -222,9 +202,9 @@ export function PurchaseTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by date..."
-          value={(table.getColumn("date")?.getFilterValue()) ?? ""}
+          value={(table.getColumn("created_at")?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("date")?.setFilterValue(event.target.value)
+            table.getColumn("created_at")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
