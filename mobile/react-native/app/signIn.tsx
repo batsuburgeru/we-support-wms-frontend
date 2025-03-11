@@ -1,13 +1,11 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-// import { useAuth } from './context/AuthProvider'; 
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  // const { login } = useAuth(); 
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -16,21 +14,21 @@ const SignIn = () => {
     }
   
     try {
-      const response = await fetch("http://192.168.16.220:3002/users/login", {
+      const response = await fetch("http://192.168.1.4:3002/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // ✅ Allow receiving cookies (JWT)
+        credentials: "include", 
         body: JSON.stringify({ email, password }),
       });
   
       const data = await response.json();
-      console.log("Server response:", data); // ✅ Check the full response
+      console.log("Server response:", data); 
   
       if (response.ok) {
         if (data.token) {
-          console.log("JWT Token:", data.token); // ✅ Check if token is received
+          console.log("JWT Token:", data.token); 
         } 
         router.replace("/profile");
       } else {
