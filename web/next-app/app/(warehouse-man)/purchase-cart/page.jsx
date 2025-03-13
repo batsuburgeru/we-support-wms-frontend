@@ -15,21 +15,6 @@ const NewPurchase = () => {
           <h2 className="mr-20">Client Name*</h2>
           <ClientPopover />
         </div>
-
-        <div className="flex items-center mt-4">
-          <h2 className="mr-11">Purchase Order #</h2>
-          <input type="number" placeholder="Order Number" className='border border-borderLine rounded-md px-4 py-1 w-80' />
-        </div>
-
-        <div className="flex items-center mt-4">
-          <h2 className="mr-[102px]">Request #</h2>
-          <input type="number" placeholder="Request Number" className='border border-borderLine rounded-md px-4 py-1 w-80' />
-        </div>
-
-        <div className="flex items-center mt-4">
-          <h2 className="mr-[147px]">Date</h2>
-          <input type="text" placeholder="February 21, 2025" className='border border-borderLine rounded-md px-4 py-1 w-80' />
-        </div>
       </section>
 
       <section className="px-6 mt-8">

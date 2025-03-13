@@ -13,7 +13,7 @@ const protectedRoutes = [
     '/purchase-list',
     '/search-results'
 ];
-const publicRoutes = ['/login', '/register'];
+const publicRoutes = ['/login', '/'];
 
 // 1. Helper function to parse JWT using jose
 async function parseJwt(token) {
@@ -32,7 +32,7 @@ export default async function middleware(req) {
     const isPublicRoute = publicRoutes.includes(path);
 
     // 2. Get token from cookies
-    const token = cookies().get('token')?.value;
+    const token = await cookies().get('token')?.value;
     if (!token) {
         console.warn("No token found in cookies");
     }
@@ -41,7 +41,7 @@ export default async function middleware(req) {
     const session = token ? await parseJwt(token) : null;
     const userRole = session?.role || null;
 
-    console.log("Middleware Debug:", { token, session, userRole, path });
+    // console.log("Middleware Debug:", { token, session, userRole, path });
 
     // 4. Redirect unauthenticated users from protected routes
     if (isProtectedRoute && !userRole) {
@@ -56,7 +56,7 @@ export default async function middleware(req) {
     return NextResponse.next();
 }
 
-// 6️⃣ Ensure the middleware is compatible with the Edge Runtime
+// Ensure the middleware is compatible with the Edge Runtime
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
   runtime: 'nodejs', // Use Node.js runtime instead

@@ -1,7 +1,6 @@
 import React from 'react'
 
 const ProductCard = (props) => {
-    console.log(props)
   return (
     <div className='border border-borderLine rounded-2xl p-4 w-[238px] flex-col flex justify-between'>
         <img src="./img.png" className='ml-auto mr-auto rounded-xl'/>

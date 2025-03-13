@@ -1,55 +1,64 @@
-import React from 'react';
+'use client'; 
+
+import React, { useState, useEffect } from 'react';
 import ProductSearch from '@/components/ProductSearch';
 import ProductCard from '@/components/ProductCard';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation'; 
 
-const searchResults = async ({ searchParams }) => {
-  const query = searchParams.query || '';
-  const response = await fetch("http://localhost:3002/products/view-products");
-  const users = await response.json();
+const SearchResults = () => {
+  const searchParams = useSearchParams(); 
+  const query = searchParams?.get('query') || '';
+  const [users, setUsers] = useState([]);
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(query.toLowerCase()) ||
-    user.sku.toLowerCase().includes(query.toLowerCase()) ||
-    user.description.toLowerCase().includes(query.toLowerCase()) ||
-    user.category_id.includes(query)
-  );
-
-  const filteredCards = filteredUsers.map((user) => (
-    <ProductCard 
-      key={user.id} 
-      {...user}
-    />
-  ))
+  useEffect(() => {
+    fetch(`http://localhost:3002/products/search-products?search=${query}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result && result.data) {
+          setUsers(result.data);
+        } else {
+          console.error('Retrieve failed:', result.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, [query]); 
 
   return (
     <main>
-      <section className='flex flex-col px-6 py-4 gap-4'>
-        <h1>New Purchase Requisition</h1>
-        <div className='flex justify-between items-center'>
-          <ProductSearch width={'[500px]'}/>
+      <section className="flex flex-col px-6 py-4 gap-4">
+        <h1>Search Results</h1>
+        <div className="flex justify-between items-center">
+          <ProductSearch width="[500px]" />
           <Link href="/purchase-cart">
             <ShoppingCart size={30} />
           </Link>
         </div>
       </section>
       <hr />
-      <section className='px-6 flex items-end justify-between py-4'>
+      <section className="px-6 flex items-end justify-between py-4">
         <div>
           <h2>{query}</h2>
-          <p>20 items found for "{query}"</p>
+          <p>{users.length} items found for "{query}"</p>
         </div>
         <div>
           <p>Sort by:</p>
         </div>
       </section>
       <hr />
-      <section className='py-4 px-6 grid grid-flow-row grid-cols-3 gap-6 xl:grid-cols-4 2xl:grid-cols-5'>
-        {filteredCards}
+      <section className="py-4 px-6 grid grid-flow-row grid-cols-3 gap-6 xl:grid-cols-4 2xl:grid-cols-5">
+        {users.map((user) => (
+          <ProductCard key={user.id} {...user} />
+        ))}
       </section>
     </main>
   );
-}
+};
 
-export default searchResults;
+export default SearchResults;

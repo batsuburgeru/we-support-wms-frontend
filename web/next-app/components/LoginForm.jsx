@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Import the useRouter hook
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); // Initialize the useRouter hook
+  const router = useRouter(); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -22,10 +22,7 @@ const LoginForm = () => {
     .then(result => {
       if (result && result.data) {
         const user = result.data;
-        console.log('User logged in successfully:', user);
-
-        // Navigate to the dashboard
-        router.push('/dashboard'); // Client-side redirection
+        router.push('/dashboard'); 
       } else {
         console.log('Login failed:', result.message);
       }
