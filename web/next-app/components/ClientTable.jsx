@@ -31,37 +31,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const data = [
-  {
-    id: "m5gr84i9",
-    name: "Michael Reed",
-    org: "Company XYZ",
-    contactNo: 9171234567,
-    email: "michaelreed@sample.com",
-  },
-  {
-    id: "3u1reuv4",
-    name: "Daniel Hayes",
-    org: "Nimbus Tech",
-    contactNo: 9171234567,
-    email: "danielhayes@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    name: "Michael Scott",
-    org: "Dunder Mifflin",
-    contactNo: 9172563214,
-    email: "mscott@email.com",
-  },
-  {
-    id: "5kma53ae",
-    name: "Lex Luthor",
-    org: "LexCorp",
-    contactNo: 9153254785,
-    email: "lexluthor@email.com",
-  }
-];
-
 const columns = [
   {
     id: "select",
@@ -93,17 +62,10 @@ const columns = [
     ),
   },
   {
-    accessorKey: "org",
-    header: "Organization",
+    accessorKey: "role",
+    header: "Role",
     cell: ({ row }) => (
-      <div>{row.getValue("org")}</div>
-    ),
-  },
-  {
-    accessorKey: "contactNo",
-    header: "Number",
-    cell: ({ row }) => (
-      <div>{row.getValue("contactNo")}</div>
+      <div>{row.getValue("role")}</div>
     ),
   },
   {
@@ -149,6 +111,25 @@ export function ClientTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState([]);
+  
+  React.useEffect(() => {
+    fetch("http://localhost:3002/users/view-users", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result && result.data) {
+        setData(result.data);
+        } else {
+        console.log('Retrieve failed:', result.message);
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
 
   const table = useReactTable({
     data,

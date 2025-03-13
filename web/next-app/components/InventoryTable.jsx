@@ -23,10 +23,10 @@ import {
 
 const columns = [
   {
-    accessorKey: "category_id",
+    accessorKey: "id",
     header: "Product ID",
     cell: ({ row }) => (
-      <div>{row.getValue("category_id")}</div>
+      <div>{row.getValue("id")}</div>
     ),
   },
   {

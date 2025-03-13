@@ -62,14 +62,7 @@ const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: "orderNum",
-    header: "Purchase Order #",
-    cell: ({ row }) => (
-      <div>{row.getValue("orderNum")}</div>
-    ),
-  },
-  {
-    accessorKey: "reqNum",
+    accessorKey: "id",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -79,7 +72,7 @@ const columns = [
         <ArrowUpDown />
       </Button>
     ),
-    cell: ({ row }) => <div>#{row.getValue("reqNum")}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
   },
   {
     accessorKey: "created_at",
