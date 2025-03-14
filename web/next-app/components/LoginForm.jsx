@@ -1,12 +1,32 @@
 "use client";
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); 
+  const [invalidCreds, setInvalidCreds] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  
+  const router = useRouter();
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInvalidCreds(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [invalidCreds]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoginError(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [loginError]);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,17 +44,18 @@ const LoginForm = () => {
         const user = result.data;
         router.push('/dashboard'); 
       } else {
-        console.log('Login failed:', result.message);
+        setInvalidCreds(true);
       }
     })
     .catch(error => {
       console.log('Error during login:', error);
+      setLoginError(true);
     });
   };
 
   return (
     <div className='w-full h-screen flex'>
-      <div className='w-1/2 h-full flex flex-col justify-center p-20'>
+      <div className='w-1/2 h-full flex flex-col justify-center px-20'>
         <div className='header'>
           <h1 className='text-4xl font-bold'>Welcome Back</h1>
           <p className='text-base text-brand-secondary mt-2'>Please enter your details</p>
@@ -63,16 +84,13 @@ const LoginForm = () => {
             />
           </div>
 
-          <div className='w-full flex items-center justify-between'>
-            <div className='flex items-center'>
-              <input type="checkbox" name="rememberMe" className='w-4 h-4 mr-2 cursor-pointer'/>
-              <p className='text-sm'>Remember Me</p>
-            </div>
-
-            <Link href="" className='text-sm font-medium cursor-pointer underline text-brand-primary'>Forgot Password?</Link>
+          <div className='flex justify-end'>
+            <Link href="/forgot-password" className='text-sm font-medium cursor-pointer underline text-brand-primary'>Forgot Password?</Link>
           </div>
-
+          
           <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center'>Sign in</button>
+          {invalidCreds && <p className='text-center text-sm text-red-600 font-medium pt-4'>Invalid username or password.</p>}
+          {loginError && <p className='text-center text-sm text-red-600 font-medium pt-4'>Sorry, we could not log you in at this time. Please try again later.</p>}
         </form>
       </div>
 
