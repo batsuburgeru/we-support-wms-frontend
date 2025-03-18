@@ -19,22 +19,29 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const clients = [
-  {
-    value: "johndoe",
-    name: "John Doe",
-    email: "john.doe@gmail.com",
-  },
-  {
-    value: "michaelreed",
-    name: "Michael Reed",
-    email: "michael.reed@gmail.com",
-  }
-]
-
 export default function ClientPopover() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+
+    const [clients, setClients] = React.useState([]);
+      
+    React.useEffect(() => {
+      fetch("http://localhost:3002/users/view-users", {
+          method: 'GET',
+          credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(result => {
+          if (result && result.data) {
+          setClients(result.data);
+          } else {
+          console.log('Retrieve failed:', result.message);
+          }
+      })
+      .catch(error => {
+          console.log('Error:', error);
+      });
+    }, []);
     
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -46,7 +53,7 @@ export default function ClientPopover() {
                 className="w-96 justify-between border-borderLine"
               >
                 {value
-                  ? clients.find((client) => client.value === value)?.name
+                  ? clients.find((client) => client.id === value)?.name
                   : "Select a client"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
@@ -59,8 +66,8 @@ export default function ClientPopover() {
                   <CommandGroup>
                     {clients.map((client) => (
                       <CommandItem
-                        key={client.value}
-                        value={client.value}
+                        key={client.id}
+                        value={client.id}
                         onSelect={(currentValue) => {
                           setValue(currentValue === value ? "" : currentValue)
                           setOpen(false)
@@ -73,7 +80,7 @@ export default function ClientPopover() {
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === client.value ? "opacity-100" : "opacity-0"
+                            value === client.id ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>

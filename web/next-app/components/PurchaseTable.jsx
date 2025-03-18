@@ -107,13 +107,11 @@ const columns = [
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-PH", {
         style: "currency",
         currency: "PHP",
       }).format(amount);
-
+  
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
@@ -156,22 +154,36 @@ export function PurchaseTable() {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:3002/purchaseRequests/view-purchase-requests", {
-        method: 'GET',
-        credentials: 'include'
+    fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
+      method: "GET",
+      credentials: "include",
     })
-    .then(response => response.json())
-    .then(result => {
+      .then((response) => response.json())
+      .then((result) => {
         if (result && result.data) {
-        setData(result.data);
+          const transformedData = result.data.map((item) => {
+            const totalAmount = item.prItems.reduce((sum, prItem) => {
+              return sum + parseFloat(prItem.total_price);
+            }, 0);
+  
+            return {
+              id: item.purchaseRequest.id,
+              created_by: item.purchaseRequest.created_by,
+              status: item.purchaseRequest.status,
+              created_at: item.purchaseRequest.created_at,
+              updated_at: item.purchaseRequest.updated_at,
+              amount: totalAmount,
+            };
+          });
+          setData(transformedData);
         } else {
-        console.log('Retrieve failed:', result.message);
+          console.log("Retrieve failed:", result.message);
         }
-    })
-    .catch(error => {
-        console.log('Error:', error);
-    });
-  }, []);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }, []); 
 
   const table = useReactTable({
     data,

@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 const SearchResults = () => {
   const searchParams = useSearchParams(); 
   const query = searchParams?.get('query') || '';
-  const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:3002/products/search-products?search=${query}`, {
@@ -20,7 +20,7 @@ const SearchResults = () => {
       .then((response) => response.json())
       .then((result) => {
         if (result && result.data) {
-          setUsers(result.data);
+          setProducts(result.data);
         } else {
           console.error('Retrieve failed:', result.message);
         }
@@ -42,19 +42,14 @@ const SearchResults = () => {
         </div>
       </section>
       <hr />
-      <section className="px-6 flex items-end justify-between py-4">
-        <div>
+      <section className="px-6 py-4">
           <h2>{query}</h2>
-          <p>{users.length} items found for "{query}"</p>
-        </div>
-        <div>
-          <p>Sort by:</p>
-        </div>
+          <p>{products.length} items found for "{query}"</p>
       </section>
       <hr />
       <section className="py-4 px-6 grid grid-flow-row grid-cols-3 gap-6 xl:grid-cols-4 2xl:grid-cols-5">
-        {users.map((user) => (
-          <ProductCard key={user.id} {...user} />
+        {products.map((product) => (
+          <ProductCard key={product.id} {...product} />
         ))}
       </section>
     </main>
