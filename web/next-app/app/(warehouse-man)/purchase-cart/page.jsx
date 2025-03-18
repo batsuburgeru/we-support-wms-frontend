@@ -1,6 +1,6 @@
-import CartItemDropdown from "@/components/CartItemDropdown";
 import ClientPopover from "@/components/ClientPopover";
 import ProductSearch from "@/components/ProductSearch";
+import { PurchaseCartTable } from "@/components/PurchaseCartTable";
 
 const NewPurchase = () => {
   return (
@@ -18,61 +18,7 @@ const NewPurchase = () => {
       </section>
 
       <section className="px-6 mt-8">
-        <div className="bg-navBG border border-borderLine rounded-tl-lg rounded-tr-lg px-8 py-2 flex justify-between items-center">
-          <h2 className="font-semibold text-lg">Item Table</h2>
-        </div>
-        <table className="w-full">
-          <tbody>
-            <tr className="border-b-2 border-borderLine">
-              <th className="font-medium border-r">ITEM DETAILS</th>
-              <th className="font-medium border-r">QUANTITY</th>
-              <th className="font-medium border-r">UNIT</th>
-              <th className="font-medium border-r">ESTIMATED COST</th>
-              <th className="font-medium">AMOUNT COST</th>
-              <th className="font-medium"></th>
-            </tr>
-            <tr className="border-b border-borderLine">
-              <th className="font-normal border-r flex items-center"><img src="./img-box.png" className="w-6 mr-1" />Laptop</th>
-              <th className="font-normal border-r"><input type="number" placeholder="1"></input></th>
-              <th className="font-normal border-r">Pcs</th>
-              <th className="font-normal border-r">₱5.00</th>
-              <th className="font-normal">₱50.00</th>
-              <th className="font-normal flex justify-end pr-0">
-                <CartItemDropdown />
-              </th>
-            </tr>
-            <tr className="border-b border-borderLine">
-              <th className="font-normal border-r flex items-center"><img src="./img-box.png" className="w-6 mr-1" />Laptop</th>
-              <th className="font-normal border-r"><input type="number" placeholder="1"></input></th>
-              <th className="font-normal border-r">Pcs</th>
-              <th className="font-normal border-r">₱5.00</th>
-              <th className="font-normal">₱50.00</th>
-              <th className="font-normal flex justify-end pr-0">
-                <CartItemDropdown />
-              </th>
-            </tr>
-            <tr className="border-b border-borderLine">
-              <th className="font-normal border-r flex items-center"><img src="./img-box.png" className="w-6 mr-1" />Laptop</th>
-              <th className="font-normal border-r"><input type="number" placeholder="1"></input></th>
-              <th className="font-normal border-r">Pcs</th>
-              <th className="font-normal border-r">₱5.00</th>
-              <th className="font-normal">₱50.00</th>
-              <th className="font-normal flex justify-end pr-0">
-                <CartItemDropdown />
-              </th>
-            </tr>
-            <tr className="border-b border-borderLine">
-              <th className="font-normal border-r flex items-center"><img src="./img-box.png" className="w-6 mr-1" />Laptop</th>
-              <th className="font-normal border-r"><input type="number" placeholder="1"></input></th>
-              <th className="font-normal border-r">Pcs</th>
-              <th className="font-normal border-r">₱5.00</th>
-              <th className="font-normal">₱50.00</th>
-              <th className="font-normal flex justify-end pr-0">
-                <CartItemDropdown />
-              </th>
-            </tr>
-          </tbody>
-        </table>
+        <PurchaseCartTable />
       </section>
       <section className="px-6 mt-8 flex justify-between mb-24">
         <div>
