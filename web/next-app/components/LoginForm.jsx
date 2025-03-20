@@ -88,7 +88,7 @@ const LoginForm = () => {
             <Link href="/forgot-password" className='text-sm font-medium cursor-pointer underline text-brand-primary'>Forgot Password?</Link>
           </div>
           
-          <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center'>Sign in</button>
+          <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>Sign in</button>
           {invalidCreds && <p className='text-center text-sm text-red-600 font-medium pt-4'>Invalid username or password.</p>}
           {loginError && <p className='text-center text-sm text-red-600 font-medium pt-4'>Sorry, we could not log you in at this time. Please try again later.</p>}
         </form>

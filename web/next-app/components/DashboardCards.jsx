@@ -11,7 +11,7 @@ const DashboardCards = () => {
     const [returnedArrayNum, setReturnedArrayNum] = useState(0);
 
     useEffect(() => {
-        fetch("http://localhost:3002/purchaseRequests/view-purchase-requests", {
+        fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
             method: 'GET',
             credentials: 'include'
         })
