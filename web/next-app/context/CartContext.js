@@ -5,19 +5,19 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(savedCart);
+    setItems(savedCart);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    localStorage.setItem("cart", JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (product) => {
-    setCartItems((prevItems) => {
+    setItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
         return prevItems.map((item) =>
@@ -39,7 +39,7 @@ export function CartProvider({ children }) {
   };
 
   const incrementQuantity = (id) => {
-    setCartItems((prevItems) =>
+    setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id
           ? {
@@ -53,7 +53,7 @@ export function CartProvider({ children }) {
   };
 
   const decrementQuantity = (id) => {
-    setCartItems((prevItems) =>
+    setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id
           ? {
@@ -67,12 +67,16 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
+
+  const clearCart = () => {
+    setItems([]);
+  }
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, incrementQuantity, decrementQuantity, removeFromCart }}
+      value={{ items, addToCart, incrementQuantity, decrementQuantity, removeFromCart, clearCart }}
     >
       {children}
     </CartContext.Provider>

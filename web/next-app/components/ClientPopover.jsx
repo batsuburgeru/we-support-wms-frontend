@@ -19,10 +19,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function ClientPopover() {
+export default function ClientPopover({ value, setValue }) {
     const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
-
     const [clients, setClients] = React.useState([]);
       
     React.useEffect(() => {

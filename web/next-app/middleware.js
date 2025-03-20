@@ -18,8 +18,8 @@ const publicRoutes = ['/login', '/'];
 // 1. Helper function to parse JWT using jose
 async function parseJwt(token) {
     try {
-        const { payload } = await jwtVerify(token, SECRET_KEY); // Verify and decode the JWT
-        return payload; // Returns the JWT payload (decoded token)
+        const { payload } = await jwtVerify(token, SECRET_KEY);
+        return payload;
     } catch (err) {
         console.error("JWT verification error:", err.message);
         return null;
@@ -32,7 +32,7 @@ export default async function middleware(req) {
     const isPublicRoute = publicRoutes.includes(path);
 
     // 2. Get token from cookies
-    const token = await cookies().get('token')?.value;
+    const token = cookies().get('token')?.value;
     if (!token) {
         console.warn("No token found in cookies");
     }
