@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +20,8 @@ interface SettingsItemProps {
   onPress?: () => void;
 }
 
+
+
 const Profile = () => {
   const router = useRouter();
   const [userName, setUserName] = useState<string>('');
@@ -28,7 +30,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const response = await fetch("http://192.168.1.4:3002/users/search-users?search=admin", {
+        const response = await fetch("http://192.168.1.5:3002/users/search-users?search=admin", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -49,9 +51,21 @@ const Profile = () => {
       }
     };
 
+    const confirmSignOut = () => {
+      Alert.alert(
+        "Confirm Logout",
+        "Are you sure you want to log out?",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Yes", onPress: handleSignOut }
+        ],
+        { cancelable: true }
+      );
+    };
+
     const fetchRequests = async () => {
       try {
-        const response = await fetch("http://192.168.1.4:3002/purchaseRequests/view-purchase-requests", {
+        const response = await fetch("http://192.168.1.5:3002/purchaseRequests/read-purchase-requests", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -78,7 +92,7 @@ const Profile = () => {
 
   const handleSignOut = async () => {
     try {
-      const response = await fetch("http://192.168.1.4:3002/users/logout", {
+      const response = await fetch("http://192.168.1.5:3002/users/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
