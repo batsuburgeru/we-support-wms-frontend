@@ -74,6 +74,14 @@ export default function RequestDetails() {
                             </View>
                         </View>
                     ))}
+
+                    {/* Note Section */}
+                    {request.note && (
+                        <View className="mt-4 p-4 bg-gray-200 rounded-lg">
+                            <Text className="font-poppins-bold text-lg">Note:</Text>
+                            <Text className="font-poppins text-black mt-1">{request.note}</Text>
+                        </View>
+                    )}
                 </ScrollView>
             </View>
 
