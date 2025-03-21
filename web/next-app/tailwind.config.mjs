@@ -26,6 +26,8 @@ export default {
 			'bgDraft': '#D9DCE1',
 			'txtDenied': '#FF0000',
 			'bgDenied': '#EDB5B5',
+			'bgReturned': '#F7EAFF',
+			'txtReturned': '#AF37FF',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

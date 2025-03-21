@@ -120,12 +120,12 @@ export function ClientTable() {
     })
     .then(response => response.json())
     .then(result => {
-        if (result && result.data) {
-        setData(result.data);
-        } else {
-        console.log('Retrieve failed:', result.message);
-        }
-    })
+      if (result && result.users) {
+          setData(result.users);
+      } else {
+          console.log("Retrieve failed:", result.message || "No data property");
+      }
+    })  
     .catch(error => {
         console.log('Error:', error);
     });

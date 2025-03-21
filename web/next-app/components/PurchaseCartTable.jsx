@@ -36,7 +36,7 @@ const columns = [
 ];
 
 export function PurchaseCartTable() {
-  const { items, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+  const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
 
   return (
     <div className="w-full">
@@ -52,8 +52,8 @@ export function PurchaseCartTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.length ? (
-              items.map((item, index) => (
+            {cartItems.length ? (
+              cartItems.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
@@ -88,7 +88,7 @@ export function PurchaseCartTable() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center">
-                  No items in cart. Add an item by searching.
+                  No Items in cart. Add an item by searching.
                 </TableCell>
               </TableRow>
             )}

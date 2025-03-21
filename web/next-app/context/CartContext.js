@@ -5,22 +5,22 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setItems(savedCart);
+    setCartItems(savedCart);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(items));
-  }, [items]);
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
+    setCartItems((prevcartItems) => {
+      const existingItem = prevcartItems.find((item) => item.id === product.id);
       if (existingItem) {
-        return prevItems.map((item) =>
+        return prevcartItems.map((item) =>
           item.id === product.id
             ? {
                 ...item,
@@ -31,7 +31,7 @@ export function CartProvider({ children }) {
         );
       } else {
         return [
-          ...prevItems,
+          ...prevcartItems,
           { ...product, quantity: 1, total_price: parseFloat(product.unit_price) },
         ];
       }
@@ -39,8 +39,8 @@ export function CartProvider({ children }) {
   };
 
   const incrementQuantity = (id) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
+    setCartItems((prevcartItems) =>
+      prevcartItems.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -53,8 +53,8 @@ export function CartProvider({ children }) {
   };
 
   const decrementQuantity = (id) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
+    setCartItems((prevcartItems) =>
+      prevcartItems.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -67,16 +67,16 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setCartItems((prevcartItems) => prevcartItems.filter((item) => item.id !== id));
   };
 
   const clearCart = () => {
-    setItems([]);
+    setCartItems([]);
   }
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, incrementQuantity, decrementQuantity, removeFromCart, clearCart }}
+      value={{ cartItems, addToCart, incrementQuantity, decrementQuantity, removeFromCart, clearCart }}
     >
       {children}
     </CartContext.Provider>

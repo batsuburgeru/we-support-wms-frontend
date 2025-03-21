@@ -40,9 +40,9 @@ const LoginForm = () => {
     })
     .then(response => response.json())
     .then(result => {
-      if (result && result.data) {
-        const user = result.data;
-        router.push('/dashboard'); 
+      if (result && result.token) {
+        const user = result.token;
+        router.push('/dashboard');
       } else {
         setInvalidCreds(true);
       }
