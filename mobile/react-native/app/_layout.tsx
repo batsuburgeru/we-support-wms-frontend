@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SplashScreen, Stack} from 'expo-router';
-import "../global.css";
+import { SplashScreen, Stack, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import "../global.css";
 
-export default function RootLayout ()  {
-  const [fontsLoaded] = useFonts( {
+export default function RootLayout() {
+  const router = useRouter();
+
+  const [fontsLoaded] = useFonts({
     "Poppins-Bold": require('../assets/fonts/Poppins-Bold.ttf'),
     "Poppins-ExtraBold": require('../assets/fonts/Poppins-ExtraBold.ttf'),
     "Poppins-ExtraLight": require('../assets/fonts/Poppins-ExtraLight.ttf'),
@@ -16,15 +17,14 @@ export default function RootLayout ()  {
     "Poppins-Thin": require('../assets/fonts/Poppins-Thin.ttf'),
   });
 
-  useEffect (() => {
+  useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
+      router.replace('/signIn'); 
     }
-  },[fontsLoaded]);
+  }, [fontsLoaded]);
 
-  if(!fontsLoaded) return null;
+  if (!fontsLoaded) return null;
 
-  return <Stack  screenOptions={{ headerShown: false }}/>
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
-
-
