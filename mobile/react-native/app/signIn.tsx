@@ -30,6 +30,9 @@ const SignIn = () => {
         if (data.token) {
           console.log("JWT Token:", data.token); 
         } 
+        if (data.user && data.user.name) {
+          localStorage.setItem('userName', data.user.name); // Save user's name
+        }
         router.replace("/profile");
       } else {
         alert(data.message || "Login failed. Check credentials.");
@@ -40,8 +43,6 @@ const SignIn = () => {
     }
   };
   
-  
-
   return (
     <View className="flex-1 justify-center items-center bg-white px-8">
       <Image 

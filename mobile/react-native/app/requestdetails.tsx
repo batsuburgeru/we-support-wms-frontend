@@ -1,15 +1,85 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { DoneRequests } from '@/components/data/requests';
-import { MessageModal } from '@/components';
+import { useState, useEffect } from 'react';
 import { Back } from '@/assets/svg/iconsvg';
+import { MessageModal } from '@/components';
+
+interface RequestItem {
+    name: string;
+    quantity: number;
+    price: string;
+    image: string | null;
+}
+
+interface RequestDetails {
+    id: string;
+    type: string;
+    status: string;
+    requester: string;
+    date: string;
+    time: string;
+    items: RequestItem[];
+    note: string;
+}
 
 export default function RequestDetails() {
     const router = useRouter();
     const { id } = useLocalSearchParams(); 
 
-    const request = DoneRequests.find(req => req.id === id);
+    const [request, setRequest] = useState<RequestDetails | null>(null); // Explicitly typed state
+    const [modalType, setModalType] = useState<string | null>(null);
+    const [remarks, setRemarks] = useState("");
+
+    useEffect(() => {
+        const fetchRequestDetails = async () => {
+            try {
+                const API_URL = 'http://192.168.1.5:3002/purchaseRequests/read-purchase-requests';
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                console.log("API Response:", data); // Debugging log
+
+                if (data && Array.isArray(data.data)) {
+                    const matchedRequest = data.data.find((req: any) => req.purchaseRequest.id === id);
+                    if (matchedRequest) {
+                        setRequest({
+                            id: matchedRequest.purchaseRequest.id,
+                            type: "Purchase Request",
+                            status: matchedRequest.purchaseRequest.status,
+                            requester: matchedRequest.purchaseRequest.created_by,
+                            date: new Date(matchedRequest.purchaseRequest.created_at).toLocaleDateString(),
+                            time: new Date(matchedRequest.purchaseRequest.created_at).toLocaleTimeString(),
+                            items: matchedRequest.prItems.map((item: { product_id: string; quantity: number; unit_price: string }) => ({
+                                name: `Product ID: ${item.product_id}`, // Replace with actual product name if available
+                                quantity: item.quantity,
+                                price: `$${item.unit_price}`,
+                                image: null, // Replace with a valid image URL if available
+                            })),
+                            note: matchedRequest.deliveryNote?.note || "",
+                        });
+                    } else {
+                        console.error("No matching request found for ID:", id);
+                    }
+                } else {
+                    console.error("Invalid response format from the server.");
+                }
+            } catch (error) {
+                console.error("Error fetching request details:", error);
+            }
+        };
+
+        fetchRequestDetails();
+    }, [id]);
+
+    const handleConfirm = () => {
+        console.log(`${modalType} confirmed with remarks: ${remarks}`);
+        setModalType(null);
+        setRemarks("");
+
+        if (modalType === "Cancel") {
+            router.back();
+        }
+    };
 
     if (!request) {
         return (
@@ -22,19 +92,6 @@ export default function RequestDetails() {
         );
     }
 
-    const [modalType, setModalType] = useState<string | null>(null);
-    const [remarks, setRemarks] = useState("");
-
-    const handleConfirm = () => {
-        console.log(`${modalType} confirmed with remarks: ${remarks}`);
-        setModalType(null);
-        setRemarks("");
-
-        if (modalType === "Cancel") {
-            router.back();
-        }
-    };
-
     return (
         <SafeAreaView className="flex-1 bg-tabs">
             {/* Header Section */}
@@ -45,7 +102,7 @@ export default function RequestDetails() {
             </View>
     
             <View className="pl-14">
-                <Text className="text-2xl font-poppins-bold">{request.type} </Text>
+                <Text className="text-2xl font-poppins-bold">{request.type}</Text>
                 <Text className="text-primary font-poppins-semibold">Request ID: {request.id}</Text>
                 <Text className="text-lg font-poppins-semibold mt-1">
                     Status: {request.status ? request.status : "Unknown"}
@@ -59,12 +116,12 @@ export default function RequestDetails() {
 
                 {/* List Items with Images */}
                 <ScrollView className="border-t mt-2 pt-2">
-                    {request.items.map((item, index) => (
+                    {request.items.map((item: RequestItem, index: number) => (
                         <View key={index} className="mt-4 p-4 rounded-lg bg-tabs flex-row items-center">
-                            <Image 
-                                source={{ uri: item.image }} 
-                                style={{ width: 50, height: 50, marginRight: 10, borderRadius: 5 }} 
-                            />
+                            {/* <Image 
+                             source={item.image ? { uri: item.image } : require('@/assets/images/fallback.png')} 
+                             style={{ width: 50, height: 50, marginRight: 10, borderRadius: 5 }} 
+                            /> */}
                             <View className="flex-1">
                                 <Text className="font-poppins font-bold">{item.name}</Text>
                                 <View className="flex-row justify-between mt-2">

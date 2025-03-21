@@ -6,6 +6,7 @@ import images from '@/constants/images';
 import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest, TotalRequest } from '@/assets/svg/iconsvg';
 
 interface RequestItem {
+  id: string;
   status: "Pending" | "Approved" | "Rejected" | "Processed";
 }
 
@@ -20,8 +21,6 @@ interface SettingsItemProps {
   onPress?: () => void;
 }
 
-
-
 const Profile = () => {
   const router = useRouter();
   const [userName, setUserName] = useState<string>('');
@@ -30,51 +29,42 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const response = await fetch("http://192.168.1.5:3002/users/search-users?search=admin", {
+        const response = await fetch("http://192.168.1.5:3002/users/display-user-info", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          credentials: "include", // Include cookies for session tracking
         });
 
         if (response.ok) {
           const data = await response.json();
-          if (data.data && data.data.length > 0) {
-            setUserName(data.data[0].name);
+          if (data.userInfo && data.userInfo.name) {
+            setUserName(data.userInfo.name); // Set the user's name
           } else {
-            console.error("No user data found");
+            console.error("No user information found");
           }
         } else {
-          console.error("Failed to fetch user name:", await response.text());
+          console.error("Failed to fetch user information:", await response.text());
         }
       } catch (error) {
-        console.error("Error fetching user name:", error);
+        console.error("Error fetching user information:", error);
       }
-    };
-
-    const confirmSignOut = () => {
-      Alert.alert(
-        "Confirm Logout",
-        "Are you sure you want to log out?",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Yes", onPress: handleSignOut }
-        ],
-        { cancelable: true }
-      );
     };
 
     const fetchRequests = async () => {
       try {
-        const response = await fetch("http://192.168.1.5:3002/purchaseRequests/read-purchase-requests", {
+        const response = await fetch("http://192.168.1.5:3002/purchaseRequests/view-purchase-requests", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
         });
-    
+
         if (response.ok) {
           const data = await response.json();
-          if (data && Array.isArray(data.data)) {  // <- Check `data.data`
-            setRequests(data.data);  // <- Assign `data.data`
+          if (data && Array.isArray(data.data)) {
+            setRequests(data.data.map((req: any) => ({
+              id: req.id,
+              status: req.status,
+            }))); // Assign the list of requests with only necessary fields
           } else {
             console.error("Invalid response format for requests");
           }
@@ -84,7 +74,7 @@ const Profile = () => {
       } catch (error) {
         console.error("Error fetching requests:", error);
       }
-    };    
+    };
 
     fetchUserName();
     fetchRequests();
@@ -111,6 +101,7 @@ const Profile = () => {
     }
   };
 
+  // Counts based on status
   const pendingCount = requests.filter(req => req.status === "Pending").length;
   const approvedCount = requests.filter(req => req.status === "Approved").length;
   const deniedCount = requests.filter(req => req.status === "Rejected").length;
