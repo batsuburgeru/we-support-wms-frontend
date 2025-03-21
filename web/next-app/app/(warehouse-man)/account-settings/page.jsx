@@ -1,9 +1,45 @@
-import React from 'react';
+"use client"
+
+import { useState, useEffect } from 'react';
 import { Copy } from 'lucide-react';
 import LanguageSelect from '@/components/LanguageSelect';
 import TimezoneSelect from '@/components/TimezoneSelect';
+import { redirect } from 'next/navigation';
 
 const AccountSettings = () => {
+  const [userProfile, setUserProfile] = useState([]);
+      
+  useEffect(() => {
+    fetch("http://localhost:3002/users/display-user-info", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result && result.userInfo) {
+          setUserProfile(result.userInfo);
+      } else {
+          console.log("Retrieve failed:", result.message || "No user profile property");
+      }
+    })  
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
+
+  const handleLogout = (event) => {
+    event.preventDefault();
+    fetch("http://localhost:3002/users/logout", {
+      method: 'POST',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    redirect('/login')
+    .catch(error => {
+      console.log('Error during logout:', error);
+    });
+  };
+
   return (
     <main className="bg-dashboard h-screen">
       <div className='px-6 flex items-center py-4'>
@@ -15,12 +51,11 @@ const AccountSettings = () => {
           <div className='flex pb-4 gap-2 items-center'>
             <img src="./profile.png" />
             <div>
-              <h2 className='font-semibold text-lg'>John Doe</h2>
+              <h2 className='font-semibold text-lg'>{userProfile.name}</h2>
               <div className='flex gap-2'>
-                <p className='font-light text-sm'>johndoe@gmail.com</p>
-                <button><Copy size={15} /></button>
+                <p className='font-light text-sm'>{userProfile.email}</p>
+                <button><Copy size={15} onClick={() => navigator.clipboard.writeText(userProfile.email)} /></button>
               </div>
-              <button className='font-light text-sm border border-borderLine rounded-md px-1 mt-1'>Change Avatar</button>
             </div>
           </div>
           <hr />
@@ -34,7 +69,7 @@ const AccountSettings = () => {
               Timezone:
             </p>
             <TimezoneSelect />
-            <button className='bg-brand-secondary text-white rounded-md py-1 mt-4'>Log out of all other devices</button>
+            <button className='bg-brand-secondary text-white rounded-md py-1 mt-4 hover:bg-orange-600 active:bg-orange-700 colorTransition' onClick={handleLogout}>Log out</button>
           </div>
         </section>
         <section className='flex bg-white p-6 rounded-xl gap-10'>
@@ -43,24 +78,16 @@ const AccountSettings = () => {
             <p className='text-sm'>Information used to log into the system</p>
           </div>
           <form className='w-3/5 flex flex-col gap-2'>
-            <div className='flex gap-4'>
-              <div>
-                <label htmlFor="FirstName">First name:</label>
-                <input type="text" id="FirstName" name="First Name" required className='border border-borderLine rounded-sm mt-2 py-1 px-2 w-full' />
-              </div>
-              <div>
-                <label htmlFor="LastName">Last name:</label>
-                <input type="text" id="LastName" name="Last Name" required className='border border-borderLine rounded-sm mt-2 py-1 px-2 w-full' />
-              </div>
-            </div>
-            <label htmlFor="Username">Username:</label>
+            <label htmlFor="Username">Name:</label>
             <input type="text" id="Username" name="Username" required className='border border-borderLine rounded-sm py-1 px-2' />
-            <label htmlFor="phoneNumber">Phone number:</label>
-            <input type="number" id="phoneNumber" name="phoneNumber" required className='border border-borderLine rounded-sm py-1 px-2' />
             <label htmlFor="Email">Email:</label>
             <input type="text" id="Email" name="Email" required className='border border-borderLine rounded-sm py-1 px-2' />
+            <label htmlFor="phoneNumber">Password:</label>
+            <input type="number" id="phoneNumber" name="phoneNumber" required className='border border-borderLine rounded-sm py-1 px-2' />
+            <label htmlFor="phoneNumber">Confirm Password:</label>
+            <input type="number" id="phoneNumber" name="phoneNumber" required className='border border-borderLine rounded-sm py-1 px-2' />
             <div className='flex justify-end mt-2'>
-              <button type="submit" className='bg-brand-secondary text-white rounded-md px-6 py-1'>Save Changes</button>
+              <button type="submit" className='bg-brand-secondary text-white rounded-md px-6 py-1 hover:bg-orange-600 active:bg-orange-700 colorTransition'>Save Changes</button>
             </div>
           </form>
         </section>

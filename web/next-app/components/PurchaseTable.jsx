@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,120 +34,123 @@ import {
 const statusStyles = {
   Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
   Pending: "bg-bgPending text-txtPending text-center rounded-sm w-max px-2 py-1",
-  Denied: "bg-bgDenied text-txtDenied text-center rounded-sm w-max px-2 py-1",
+  Rejected: "bg-bgDenied text-txtDenied text-center rounded-sm w-max px-2 py-1",
+  Returned: "bg-bgReturned text-txtReturned text-center rounded-sm w-max px-2 py-1",
   Draft: "bg-bgDraft text-txtDraft text-center rounded-sm w-max px-2 py-1",
 };
 
-const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Request #
-        <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "created_at",
-    header: "Order Date",
-    cell: ({ row }) => (
-      <div>{row.getValue("created_at").slice(0,10)}</div>
-    ),
-  },
-  {
-    accessorKey: "created_by",
-    header: "Created By",
-    cell: ({ row }) => (
-      <div>{row.getValue("created_by")}</div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue("status");
-      const statusClassName = statusStyles[status] || "";
-    
-      return (
-        <div className={statusClassName}>
-          {status}
-        </div>
-      );
-    }
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-PH", {
-        style: "currency",
-        currency: "PHP",
-      }).format(amount);
-  
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-
 export function PurchaseTable() {
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "id",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Request #
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({ row }) => <div>{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "created_at",
+      header: "Order Date",
+      cell: ({ row }) => (
+        <div>{row.getValue("created_at").slice(0,10)}</div>
+      ),
+    },
+    {
+      accessorKey: "created_by",
+      header: "Created By",
+      cell: ({ row }) => (
+        <div>{row.getValue("created_by")}</div>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status");
+        const statusClassName = statusStyles[status] || "";
+      
+        return (
+          <div className={statusClassName}>
+            {status}
+          </div>
+        );
+      }
+    },
+    {
+      accessorKey: "amount",
+      header: () => <div className="text-right">Amount</div>,
+      cell: ({ row }) => {
+        const amount = parseFloat(row.getValue("amount"));
+        const formatted = new Intl.NumberFormat("en-PH", {
+          style: "currency",
+          currency: "PHP",
+        }).format(amount);
+    
+        return <div className="text-right font-medium">{formatted}</div>;
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const payment = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(payment.id)}
+              >
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                Edit Request
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+                Delete Request
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+  
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
@@ -183,7 +186,29 @@ export function PurchaseTable() {
       .catch((error) => {
         console.log("Error:", error);
       });
-  }, []); 
+  }, []);
+
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3002/purchaseRequests/delete-purchase-request/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Deletion Response:", result);
+
+        if (result && result.purchaseRequest) {
+          // Update the data state to remove the deleted item
+          setData((prevData) =>
+            prevData.filter((item) => item.id !== result.purchaseRequest.id)
+          );
+          console.log(result.message); 
+        } else {
+          console.error("Retrieve failed:", result.message || "Invalid response format");
+        }
+      })
+      .catch((error) => console.error("Error during deletion:", error));
+  };
 
   const table = useReactTable({
     data,

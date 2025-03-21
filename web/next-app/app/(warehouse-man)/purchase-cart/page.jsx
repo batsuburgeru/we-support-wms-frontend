@@ -24,7 +24,6 @@ const NewPurchase = () => {
     unit_price: parseFloat(unit_price)
   }));
 
-  // LOCAL STORAGE FOR CLIENT
   useEffect(() => {
     const savedClient = localStorage.getItem("client");
     const parsedClient = savedClient ? JSON.parse(savedClient) : []; 
@@ -62,7 +61,7 @@ const NewPurchase = () => {
     const action = event.nativeEvent.submitter.value;
 
     const payload = {
-      status: action === 'save-draft' ? "Approved" : "Pending",
+      status: action === 'save-draft' ? "Draft" : "Pending",
       approved_by: approved_by,
       sap_sync_status: 1,
       note: note,
@@ -84,7 +83,6 @@ const NewPurchase = () => {
       return response.json();
     })
     .then((data) => {
-      console.log("Success:", data);
       setNote(""); 
       clearCart(); 
       setApproved_By('');
@@ -143,23 +141,23 @@ const NewPurchase = () => {
         <button
           type="submit"
           name="action"
-          value="save-draft"
-          className="bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 colorTransition"
-        >
-          Save as Draft
-        </button>
-        <button
-          type="submit"
-          name="action"
           value="get-approval"
-          className="ml-4 bg-brand-primary text-white px-4 py-2 rounded-md hover:bg-orange-600 colorTransition"
+          className="bg-brand-secondary text-white px-4 py-2 rounded-md hover:bg-orange-600 active:bg-orange-700 colorTransition"
         >
           Get Approval
         </button>
         <button
+          type="submit"
+          name="action"
+          value="save-draft"
+          className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
+        >
+          Save as Draft
+        </button>
+        <button
           onClick={handleCancel}
           type="button" 
-          className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 colorTransition"
+          className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
         >
           Cancel
         </button>

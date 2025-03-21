@@ -28,13 +28,6 @@ const DashboardCard = (props) => {
       </div>
       <div className='flex justify-between'>
       <h1 className='font-semibold'>{props.value}</h1>
-        {props.weeklyIncrease && <div className='flex flex-col items-end text-sm'>
-          <p className='flex text-right font-bold text-txtApproved'>
-            <TrendingUp color="#27C153" />
-            +6.53%
-          </p>
-          <p className='text-right'>from last week</p>
-        </div>}
       </div>
     </div>
   )

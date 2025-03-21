@@ -83,7 +83,7 @@ const DashboardCards = () => {
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:3002/purchaseRequests/filter-purchase-requests?search=Processed", {
+        fetch("http://localhost:3002/purchaseRequests/filter-purchase-requests?search=Returned", {
             method: 'GET',
             credentials: 'include'
         })
@@ -106,35 +106,30 @@ const DashboardCards = () => {
           title: 'Purchase Orders',
           icon: 'AllOrders',
           value: allArrayNum,
-          weeklyIncrease: 6.53
         },
         {
           id: 2,
           title: 'Approved Requests',
           icon: 'ApprovedRequests',
           value: approvedArrayNum,
-          weeklyIncrease: null
         },
         {
           id: 3,
           title: 'Denied Requests',
           icon: 'DeniedRequests',
           value: deniedArrayNum,
-          weeklyIncrease: null
         },
         {
           id: 4,
           title: 'Pending Requests',
           icon: 'PendingRequests',
           value: pendingArrayNum,
-          weeklyIncrease: null
         },
         {
           id: 5,
           title: 'Returned Requests',
           icon: 'ReturnedRequests',
           value: returnedArrayNum,
-          weeklyIncrease: null
         }
     ]
 

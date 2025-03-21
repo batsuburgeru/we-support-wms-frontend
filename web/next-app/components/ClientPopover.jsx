@@ -30,8 +30,8 @@ export default function ClientPopover({ value, setValue }) {
       })
       .then(response => response.json())
       .then(result => {
-          if (result && result.data) {
-          setClients(result.data);
+          if (result && result.users) {
+          setClients(result.users);
           } else {
           console.log('Retrieve failed:', result.message);
           }

@@ -57,7 +57,7 @@ export function PurchaseCartTable() {
                 <TableRow key={index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
-                    <div className="flex cartItems-center">
+                    <div className="flex items-center">
                       <button
                         className="px-2 py-1 border border-gray-300 rounded-l"
                         onClick={() => decrementQuantity(item.id)}
