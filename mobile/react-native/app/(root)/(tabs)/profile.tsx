@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType, Alert } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,164 +6,191 @@ import images from '@/constants/images';
 import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest, TotalRequest } from '@/assets/svg/iconsvg';
 
 interface RequestItem {
-  id: string;
-  status: "Pending" | "Approved" | "Rejected" | "Processed";
+    id: string;
+    status: "Pending" | "Approved" | "Rejected" | "Returned";
 }
 
 interface SettingsItemProps {
-  icon?: ImageSourcePropType;
-  iconComponent?: JSX.Element;
-  title: string;
-  count: number;
-  bgColor: string;
-  textColor: string;
-  hideArrow?: boolean;
-  onPress?: () => void;
+    icon?: ImageSourcePropType;
+    iconComponent?: JSX.Element;
+    title: string;
+    count: number;
+    bgColor: string;
+    textColor: string;
+    hideArrow?: boolean;
+    onPress?: () => void;
 }
 
 const Profile = () => {
-  const router = useRouter();
-  const [userName, setUserName] = useState<string>('');
-  const [requests, setRequests] = useState<RequestItem[]>([]);
+    const router = useRouter();
+    const [userName, setUserName] = useState<string>('');
+    const [requests, setRequests] = useState<RequestItem[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+    // Fetch user information
     const fetchUserName = async () => {
-      try {
-        const response = await fetch("http://192.168.1.5:3002/users/display-user-info", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // Include cookies for session tracking
-        });
+        try {
+            const response = await fetch("http://192.168.1.5:3002/users/display-user-info", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data.userInfo && data.userInfo.name) {
-            setUserName(data.userInfo.name); // Set the user's name
-          } else {
-            console.error("No user information found");
-          }
-        } else {
-          console.error("Failed to fetch user information:", await response.text());
+            if (response.ok) {
+                const data = await response.json();
+                if (data.userInfo && data.userInfo.name) {
+                    setUserName(data.userInfo.name);
+                } else {
+                    console.error("No user information found");
+                }
+            } else {
+                console.error("Failed to fetch user information:", await response.text());
+            }
+        } catch (error) {
+            console.error("Error fetching user information:", error);
         }
-      } catch (error) {
-        console.error("Error fetching user information:", error);
-      }
     };
 
+    // Fetch purchase requests
     const fetchRequests = async () => {
-      try {
-        const response = await fetch("http://192.168.1.5:3002/purchaseRequests/view-purchase-requests", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        });
+        try {
+            const response = await fetch("http://192.168.1.5:3002/purchaseRequests/view-purchase-requests", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data && Array.isArray(data.data)) {
-            setRequests(data.data.map((req: any) => ({
-              id: req.id,
-              status: req.status,
-            }))); // Assign the list of requests with only necessary fields
-          } else {
-            console.error("Invalid response format for requests");
-          }
-        } else {
-          console.error("Failed to fetch requests:", await response.text());
+            if (response.ok) {
+                const data = await response.json();
+                if (data && Array.isArray(data.data)) {
+                    setRequests(data.data.map((req: any) => ({
+                        id: req.id,
+                        status: req.status,
+                    })));
+                } else {
+                    console.error("Invalid response format for requests");
+                }
+            } else {
+                console.error("Failed to fetch requests:", await response.text());
+            }
+        } catch (error) {
+            console.error("Error fetching requests:", error);
         }
-      } catch (error) {
-        console.error("Error fetching requests:", error);
-      }
     };
 
-    fetchUserName();
-    fetchRequests();
-  }, []);
+    // Handle page refresh
+    const onRefresh = async () => {
+        setRefreshing(true);
+        try {
+            await fetchRequests();
+        } catch (error) {
+            console.error("Error refreshing requests:", error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
-  const handleSignOut = async () => {
-    try {
-      const response = await fetch("http://192.168.1.5:3002/users/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
+    // Periodically refresh requests
+    useEffect(() => {
+        fetchUserName();
+        fetchRequests();
 
-      if (response.ok) {
-        console.log("Logout successful");
-        router.replace("/signIn");
-      } else {
-        console.error("Logout failed:", await response.text());
-        alert("Logout failed. Try again.");
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      alert("Failed to connect to server.");
-    }
-  };
+        const interval = setInterval(() => {
+            fetchRequests();
+        }, 10000); // Refresh every 30 seconds
 
-  // Counts based on status
-  const pendingCount = requests.filter(req => req.status === "Pending").length;
-  const approvedCount = requests.filter(req => req.status === "Approved").length;
-  const deniedCount = requests.filter(req => req.status === "Rejected").length;
-  const cancelledCount = requests.filter(req => req.status === "Processed").length;
-  const totalCount = pendingCount + approvedCount + deniedCount + cancelledCount;
+        return () => clearInterval(interval);
+    }, []);
 
-  return (
-    <SafeAreaView className="flex-1">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 0 }}>
-        <View className="flex-row items-center bg-white flex-1 pt-5">
-          <Image source={images.avatar} className="w-12 h-12 mx-5 my-5 rounded-full" />
-          <Text className="text-2xl font-poppins-bold">Hi, {userName}</Text>
-        </View>
+    // Handle user sign-out
+    const handleSignOut = async () => {
+        try {
+            const response = await fetch("http://192.168.1.5:3002/users/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
 
-        <View className="bg-gray-100 p-5 rounded-lg">
-          <Text className="text-2xl font-poppins-bold mb-4">Your Activity</Text>
+            if (response.ok) {
+                console.log("Logout successful");
+                router.replace("/signIn");
+            } else {
+                console.error("Logout failed:", await response.text());
+                alert("Logout failed. Try again.");
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
+            alert("Failed to connect to server.");
+        }
+    };
 
-          {[{
-            title: "Total requests", count: totalCount, iconComponent: <TotalRequest />,
-          }, {
-            title: "Pending requests", count: pendingCount, iconComponent: <PendingRequest />, onPress: () => router.push('/')
-          }, {
-            title: "Approved requests", count: approvedCount, iconComponent: <ApprovedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Approved" } })
-          }, {
-            title: "Denied requests", count: deniedCount, iconComponent: <DeniedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Denied" } })
-          }, {
-            title: "Cancelled requests", count: cancelledCount, iconComponent: <CancelledRequest/>, onPress: () => router.push({ pathname: "/history", params: { status: "Cancelled" } })
-          }].map((item, index) => (
-            <View key={index} className="p-2 rounded-lg">
-              <SettingsItem {...item} bgColor="bg-white" textColor="text-primary" hideArrow={!item.onPress} />
-            </View>
-          ))}
-        </View>
+    // Counts based on status
+    const pendingCount = requests.filter(req => req.status === "Pending").length;
+    const approvedCount = requests.filter(req => req.status === "Approved").length;
+    const deniedCount = requests.filter(req => req.status === "Returned").length;
+    const cancelledCount = requests.filter(req => req.status === "Rejected").length;
+    const totalCount = pendingCount + approvedCount + deniedCount + cancelledCount;
 
-        <TouchableOpacity className="bg-white p-4 rounded-lg mx-5 mt-5 border border-primary" onPress={handleSignOut}>
-          <Text className="text-primary text-center font-poppins-bold text-lg">Sign Out</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    return (
+        <SafeAreaView className="flex-1">
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 10, paddingHorizontal: 0 }}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
+                <View className="flex-row items-center bg-white flex-1 pt-5">
+                    <Image source={images.avatar} className="w-12 h-12 mx-5 my-5 rounded-full" />
+                    <Text className="text-2xl font-poppins-bold">Hi, {userName}</Text>
+                </View>
+
+                <View className="bg-gray-100 p-5 rounded-lg">
+                    <Text className="text-2xl font-poppins-bold mb-4">Your Activity</Text>
+
+                    {[{
+                        title: "Total requests", count: totalCount, iconComponent: <TotalRequest />,
+                    }, {
+                        title: "Pending requests", count: pendingCount, iconComponent: <PendingRequest />, onPress: () => router.push('/')
+                    }, {
+                        title: "Approved requests", count: approvedCount, iconComponent: <ApprovedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Approved" } })
+                    }, {
+                        title: "Returned requests", count: deniedCount, iconComponent: <DeniedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Returned" } })
+                    }, {
+                        title: "Rejected requests", count: cancelledCount, iconComponent: <CancelledRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Rejected" } })
+                    }].map((item, index) => (
+                        <View key={index} className="p-2 rounded-lg">
+                            <SettingsItem {...item} bgColor="bg-white" textColor="text-primary" hideArrow={!item.onPress} />
+                        </View>
+                    ))}
+                </View>
+
+                <TouchableOpacity className="bg-white p-4 rounded-lg mx-5 mt-5 border border-primary" onPress={handleSignOut}>
+                    <Text className="text-primary text-center font-poppins-bold text-lg">Sign Out</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </SafeAreaView>
+    );
 };
 
 const SettingsItem: React.FC<SettingsItemProps> = ({
-  icon,
-  iconComponent,
-  title,
-  count,
-  bgColor,
-  textColor,
-  hideArrow = false,
-  onPress,
+    icon,
+    iconComponent,
+    title,
+    count,
+    bgColor,
+    textColor,
+    hideArrow = false,
+    onPress,
 }) => (
-  <TouchableOpacity onPress={onPress} disabled={!onPress} className={`flex flex-row items-center justify-between p-4 rounded-lg ${bgColor} shadow-lg`}>
-    <View className="flex-row items-center gap-3">
-      {iconComponent ? <View className="w-6 h-6">{iconComponent}</View> : icon && <Image source={icon} className="w-6 h-6 opacity-70" />}
-      <View>
-        <Text className={`text-3xl font-poppins-bold ${textColor}`}>{count}</Text>
-        <Text className="text-lg font-poppins-medium text-black opacity-80">{title}</Text>
-      </View>
-    </View>
-    {!hideArrow && <View className="w-5 h-5"><Arrow /></View>}
-  </TouchableOpacity>
+    <TouchableOpacity onPress={onPress} disabled={!onPress} className={`flex flex-row items-center justify-between p-4 rounded-lg ${bgColor} shadow-lg`}>
+        <View className="flex-row items-center gap-3">
+            {iconComponent ? <View className="w-6 h-6">{iconComponent}</View> : icon && <Image source={icon} className="w-6 h-6 opacity-70" />}
+            <View>
+                <Text className={`text-3xl font-poppins-bold ${textColor}`}>{count}</Text>
+                <Text className="text-lg font-poppins-medium text-black opacity-80">{title}</Text>
+            </View>
+        </View>
+        {!hideArrow && <View className="w-5 h-5"><Arrow /></View>}
+    </TouchableOpacity>
 );
 
 export default Profile;
