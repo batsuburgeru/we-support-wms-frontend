@@ -14,7 +14,7 @@ interface MessageModalProps {
 
 const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, setRemarks, onClose, id }) => {
     const [loading, setLoading] = useState(false);
-    const router = useRouter(); // Use routing to navigate back to index.tsx
+    const router = useRouter(); 
 
     const subtitle =
         title === "Approve"
