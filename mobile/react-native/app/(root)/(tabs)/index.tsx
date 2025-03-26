@@ -7,6 +7,7 @@ interface Request {
     type: string;
     status: string;
     time: string;
+    date: string;
     created_at: string;
 }
 
@@ -29,7 +30,8 @@ export default function Requests() {
                     id: request.id,
                     type: "Purchase Request",
                     status: request.status,
-                    time: new Date(request.created_at).toLocaleString(),
+                    date: new Date(request.created_at).toLocaleDateString(),
+                    time: new Date(request.created_at).toLocaleTimeString(),
                 }));
 
                 setPendingRequests(reshapedData.filter(req => req.status === "Pending"));
@@ -85,9 +87,19 @@ export default function Requests() {
                         >
                             <View className="flex-row justify-between">
                                 <Text className="font-poppins-bold text-lg">{req.type}</Text>
-                                <Text className="text-black font-poppins-semibold">{req.time}</Text>
+                                <Text className="text-black font-poppins-semibold">{req.date}</Text>
                             </View>
-                            <Text className="text-primary font-poppins-semibold">Request ID: {req.id}</Text>
+                            <View className="flex-row justify-between items-center flex-wrap">
+                            <Text className="text-primary font-poppins-semibold flex-shrink">
+                            Request ID:
+                            </Text>
+                            <Text className="text-black font-poppins-semibold">
+                            {req.time}
+                            </Text>
+                            <Text className="text-primary font-poppins-semibold">
+                            {req.id}
+                            </Text>
+                            </View>
                         </TouchableOpacity>
                     ))
                 ) : (

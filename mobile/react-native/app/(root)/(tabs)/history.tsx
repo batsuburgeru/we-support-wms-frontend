@@ -7,7 +7,8 @@ import { Check, Denys, Cancels } from '@/assets/svg/iconsvg';
 interface PurchaseRequest {
     id: string;
     status: "Approved" | "Returned" | "Rejected";
-    created_at: string;
+    time: string;
+    date: string;
     type: string;
 }
 
@@ -36,7 +37,8 @@ export default function History() {
                 const mappedRequests = result.map((item: any) => ({
                     id: item.purchaseRequest.id,
                     status: item.purchaseRequest.status,
-                    created_at: item.purchaseRequest.created_at,
+                    date: new Date(item.purchaseRequest.created_at).toLocaleDateString(),
+                    time: new Date(item.purchaseRequest.created_at).toLocaleTimeString(),
                     type: "Purchase Request",
                 }));
                 setRequests(mappedRequests);
@@ -129,17 +131,25 @@ export default function History() {
                                     className="bg-tabs rounded-lg p-4 mb-2"
                                     onPress={() => router.push(`/requestdetails?id=${req.id}`)}
                                 >
-                                    <View className="flex-row justify-between">
-                                        <Text className="text-lg font-poppins-bold">{req.type}</Text>
-                                        <Text className="text-black font-poppins-semibold">
-                                            {new Date(req.created_at).toLocaleString()}
-                                        </Text>
-                                    </View>
-                                    <Text className="text-primary font-poppins-semibold">Request ID: {req.id}</Text>
-                                    <View className={`mt-2 p-2 rounded-lg ${color} flex-row justify-between items-center`}>
-                                        <Text className="text-white font-poppins-bold">{displayText}</Text>
+                                <View className="flex-row justify-between">
+                                <Text className="font-poppins-bold text-lg">{req.type}</Text>
+                                <Text className="text-black font-poppins-semibold">{req.date}</Text>
+                                </View>
+                                <View className="flex-row justify-between items-center flex-wrap">
+                                <Text className="text-primary font-poppins-bold flex-shrink">
+                                Request ID:
+                                </Text>
+                                <Text className="text-black font-poppins-semibold">
+                                {req.time}
+                                </Text>
+                                <Text className="text-primary font-poppins-bold">
+                                {req.id}
+                                </Text>
+                                </View>
+                                <View className={`mt-2 p-2 rounded-lg ${color} flex-row justify-between items-center`}>
+                                    <Text className="text-white font-poppins-bold">{displayText}</Text>
                                         {icon}
-                                    </View>
+                                </View>
                                 </TouchableOpacity>
                             );
                         })
