@@ -10,7 +10,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,6 +31,7 @@ import Link from 'next/link';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
+import { useCart } from "@/context/CartContext";
 
 const statusStyles = {
   Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
@@ -118,7 +118,7 @@ export function PurchaseTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <Link href={`/purchase-details/${row.original.id}`}>
+                <Link href={`/purchase-details/${row.original.id}`} className="w-full">
                   View Details
                 </Link>
               </DropdownMenuItem>
@@ -126,8 +126,8 @@ export function PurchaseTable() {
               {status === "Draft" && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
                 Get Approval
               </DropdownMenuItem>}
-              {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem>
-                <Link href={`/edit-purchase-request/${rowId}`}>
+              {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem onClick={()=>clearCart()}>
+                <Link href={`/edit-purchase-request/${rowId}`} className="w-full">
                   Edit
                 </Link>
               </DropdownMenuItem>}
@@ -145,6 +145,7 @@ export function PurchaseTable() {
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
+  const { clearCart } = useCart();
 
   React.useEffect(() => {
     fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
@@ -314,10 +315,6 @@ export function PurchaseTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"

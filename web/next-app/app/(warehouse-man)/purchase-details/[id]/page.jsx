@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCart } from "@/context/CartContext";
 
 const columns = [
   {
@@ -39,6 +40,7 @@ export default function PurchaseRequest({ params }) {
   const resolvedParams = use(params); // Unwrapping the Promise
   const { id } = resolvedParams; // Accessing the unwrapped params object
   const [data, setData] = useState([]); // State to hold the transformed data
+  const { clearCart } = useCart();
 
   useEffect(() => {
     async function fetchData() {
@@ -124,7 +126,9 @@ export default function PurchaseRequest({ params }) {
           </div>}
         </div>
         <div className="flex">
-          {(data.status === "Pending" || data.status === "Draft"|| data.status === "Returned") && <Link href={`/edit-purchase-request/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1"><Pencil /></Link>}
+          {(data.status === "Pending" || data.status === "Draft"|| data.status === "Returned") && <Link href={`/edit-purchase-request/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1" onClick={()=>clearCart()}>
+            <Pencil />
+          </Link>}
           <Link href="/purchase-list" className="border border-borderLine rounded-sm h-fit p-1 mx-1"><X /></Link>
         </div>
       </div>

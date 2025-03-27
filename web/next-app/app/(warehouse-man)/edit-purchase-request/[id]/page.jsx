@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Trash2 } from 'lucide-react';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 const columns = [
   {
@@ -46,6 +46,7 @@ const EditPurchase = ({ params }) => {
   const { id } = resolvedParams; 
   const [data, setData] = useState([]); 
   const [hasAddedToCart, setHasAddedToCart] = useState(false);
+  const router = useRouter();
 
   const items = cartItems.map(({id, quantity, unit_price}) => ({
     product_id: id,
@@ -82,12 +83,14 @@ const EditPurchase = ({ params }) => {
               // Transform data
               return {
                 id: purchaseRequest.id,
+                approved_by_name: purchaseRequest.approved_by_name,
                 note: deliveryNote.note,
                 pr_items: prItems.map((item) => ({
                   product_id: item.product_id,
                   quantity: item.quantity,
                   unit_price: parseFloat(item.unit_price),
                   total_price: parseFloat(item.total_price),
+                  product_name: item.product_name
                 })),
                 total_amount: totalAmount,
                 total_qty: totalQty,
@@ -113,7 +116,7 @@ const EditPurchase = ({ params }) => {
       data.pr_items.forEach((item) => {
         addToCart({
           id: item.product_id,
-          name: item.name,
+          name: item.product_name,
           unit_price: item.unit_price,
           unit: "Pcs",
           quantity: item.quantity,
@@ -163,7 +166,6 @@ const EditPurchase = ({ params }) => {
       alert("Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.");
     });
   };
-  console.log(data)
 
   return (
     <main>
@@ -282,6 +284,13 @@ const EditPurchase = ({ params }) => {
           className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
         >
           Cancel
+        </button>
+        <button
+          onClick={() => router.back()}
+          type="button" 
+          className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
+        >
+          Go Back
         </button>
       </form>
     </main>

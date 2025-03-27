@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import ProductSearch from '@/components/ProductSearch';
 import ProductCard from '@/components/ProductCard';
 import { ShoppingCart } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation'; 
+import { useRouter, useSearchParams } from 'next/navigation'; 
 
 const SearchResults = () => {
   const searchParams = useSearchParams(); 
   const query = searchParams?.get('query') || '';
   const [products, setProducts] = useState([]);
+  const router = useRouter(); // Use this hook to navigate
 
   useEffect(() => {
     fetch(`http://localhost:3002/products/search-products?search=${query}`, {
@@ -36,9 +36,9 @@ const SearchResults = () => {
         <h1>Search Results</h1>
         <div className="flex justify-between items-center">
           <ProductSearch width="[500px]" />
-          <Link href="/purchase-cart">
+          <button onClick={() => router.back()}> {/* Use router.back() here */}
             <ShoppingCart size={30} />
-          </Link>
+          </button>
         </div>
       </section>
       <hr />
