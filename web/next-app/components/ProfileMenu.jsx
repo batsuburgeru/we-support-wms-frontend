@@ -50,7 +50,7 @@ export default function ProfileMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className='flex items-center'>
-            <img src="./profile.png" className='h-16 pr-3 ml-6'/>
+            <img src="/profile.png" className='h-16 pr-3 ml-6'/>
             <div className='text-left flex flex-col justify-center'>
                 <h1 className='text-xl font-medium'>{userProfile.name}</h1>
                 <p className='text-sm font-light'>{userProfile.role}</p>

@@ -35,7 +35,7 @@ const columns = [
   },
 ];
 
-export function PurchaseCartTable() {
+export function PurchaseDetailsCart() {
   const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
 
   return (

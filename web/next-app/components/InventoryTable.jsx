@@ -73,8 +73,8 @@ export function InventoryTable() {
     })
     .then(response => response.json())
     .then(result => {
-        if (result && result.data) {
-        setData(result.data);
+        if (result && result.products) {
+        setData(result.products);
         } else {
         console.log('Retrieve failed:', result.message);
         }
@@ -158,10 +158,6 @@ export function InventoryTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"

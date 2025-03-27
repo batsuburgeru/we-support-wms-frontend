@@ -14,16 +14,26 @@ const DashboardUpcomingRestockCard = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result && result.data) {
+        if (result) {
           // Transform the data to extract product_id and quantity from prItems
-          const transformedData = result.data.flatMap((item) =>
+          const transformedData = result.flatMap((item) =>
             item.prItems.map((prItem) => ({
               id: prItem.id,
-              product_id: prItem.product_id,
+              product_name: prItem.product_name,
               quantity: prItem.quantity,
             }))
           );
-          setData(transformedData);
+          const combinedData = Array.from(
+            transformedData.reduce((map, item) => {
+              if (!map.has(item.product_name)) {
+                map.set(item.product_name, { product_name: item.product_name, quantity: 0 });
+              }
+              map.get(item.product_name).quantity += item.quantity;
+              return map;
+            }, new Map()).values()
+          );
+          
+          setData(combinedData);
         } else {
           console.log("Retrieve failed:", result.message);
         }
@@ -34,8 +44,8 @@ const DashboardUpcomingRestockCard = () => {
   }, []);
 
   const listOfRestock = data.map((listItem, index) => (
-    <li key={listItem.id} className={`${index >= visibleCount ? "hidden" : "block"} py-1 border-b border-gray-200 flex justify-between`}>
-      <span>{listItem.product_id}</span>
+    <li key={listItem.product_name} className={`${index >= visibleCount ? "hidden" : "block"} py-1 border-b border-gray-200 flex justify-between`}>
+      <span>{listItem.product_name}</span>
       <span className='font-semibold'>{listItem.quantity}</span>
     </li>
   ))
@@ -52,12 +62,12 @@ const DashboardUpcomingRestockCard = () => {
         {listOfRestock}
       </ul>
       <div className='flex justify-center'>
-        <button 
+        {data.length > 5 && <button 
           className='bg-brand-secondary hover:bg-orange-600 active:bg-orange-700 colorTransition px-2 py-1 rounded-md text-white mt-4'
           onClick={toggleList}
         >
           {`Show ${expanded ? 'Less' : 'All'}`}
-        </button>
+        </button>}
       </div>
     </div>
   )
