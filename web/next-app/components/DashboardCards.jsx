@@ -17,8 +17,8 @@ const DashboardCards = () => {
         })
         .then(response => response.json())
         .then(result => {
-            if (result && result.data) {
-            setAllArrayNum(result.data.length);
+            if (result) {
+            setAllArrayNum(result.length);
             } else {
             console.log('Retrieve failed:', result.message);
             }

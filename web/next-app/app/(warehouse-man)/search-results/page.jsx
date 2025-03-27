@@ -19,8 +19,8 @@ const SearchResults = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result && result.data) {
-          setProducts(result.data);
+        if (result && result.product) {
+          setProducts(result.product);
         } else {
           console.error('Retrieve failed:', result.message);
         }

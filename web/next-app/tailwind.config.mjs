@@ -25,7 +25,7 @@ export default {
 			'txtDraft': '#777277',
 			'bgDraft': '#D9DCE1',
 			'txtDenied': '#FF0000',
-			'bgDenied': '#EDB5B5',
+			'bgDenied': '#FFEBEA',
 			'bgReturned': '#F7EAFF',
 			'txtReturned': '#AF37FF',
   			background: 'hsl(var(--background))',

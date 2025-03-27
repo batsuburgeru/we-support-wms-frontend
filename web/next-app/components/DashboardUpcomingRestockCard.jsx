@@ -14,12 +14,12 @@ const DashboardUpcomingRestockCard = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result && result.data) {
+        if (result) {
           // Transform the data to extract product_id and quantity from prItems
-          const transformedData = result.data.flatMap((item) =>
+          const transformedData = result.flatMap((item) =>
             item.prItems.map((prItem) => ({
               id: prItem.id,
-              product_id: prItem.product_id,
+              product_name: prItem.product_name,
               quantity: prItem.quantity,
             }))
           );
@@ -35,7 +35,7 @@ const DashboardUpcomingRestockCard = () => {
 
   const listOfRestock = data.map((listItem, index) => (
     <li key={listItem.id} className={`${index >= visibleCount ? "hidden" : "block"} py-1 border-b border-gray-200 flex justify-between`}>
-      <span>{listItem.product_id}</span>
+      <span>{listItem.product_name}</span>
       <span className='font-semibold'>{listItem.quantity}</span>
     </li>
   ))

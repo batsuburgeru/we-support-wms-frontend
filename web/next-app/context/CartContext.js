@@ -8,12 +8,12 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const savedCart = JSON.parse(localStorage.getItem("new-cart")) || [];
     setCartItems(savedCart);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
+    localStorage.setItem("new-cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = (product) => {

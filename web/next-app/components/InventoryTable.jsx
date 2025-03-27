@@ -73,8 +73,8 @@ export function InventoryTable() {
     })
     .then(response => response.json())
     .then(result => {
-        if (result && result.data) {
-        setData(result.data);
+        if (result && result.products) {
+        setData(result.products);
         } else {
         console.log('Retrieve failed:', result.message);
         }

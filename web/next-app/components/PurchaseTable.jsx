@@ -16,11 +16,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -30,6 +28,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from 'next/link';
+import toast, { toastConfig } from 'react-simple-toasts';
+import 'react-simple-toasts/dist/style.css';
+import 'react-simple-toasts/dist/theme/dark.css';
 
 const statusStyles = {
   Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
@@ -40,29 +42,11 @@ const statusStyles = {
 };
 
 export function PurchaseTable() {
+  toastConfig({
+    theme: 'dark',
+  });
+
   const columns = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: "id",
       header: ({ column }) => (
@@ -80,14 +64,14 @@ export function PurchaseTable() {
       accessorKey: "created_at",
       header: "Order Date",
       cell: ({ row }) => (
-        <div>{row.getValue("created_at").slice(0,10)}</div>
+        <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>
       ),
     },
     {
-      accessorKey: "created_by",
+      accessorKey: "created_by_name",
       header: "Created By",
       cell: ({ row }) => (
-        <div>{row.getValue("created_by")}</div>
+        <div>{row.getValue("created_by_name")}</div>
       ),
     },
     {
@@ -121,7 +105,8 @@ export function PurchaseTable() {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
+        const status = row.getValue("status");
+        const rowId = row.getValue("id");
 
         return (
           <DropdownMenu>
@@ -132,17 +117,22 @@ export function PurchaseTable() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                View Details
+              <DropdownMenuItem>
+                <Link href={`/purchase-details/${row.original.id}`}>
+                  View Details
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Edit Request
-              </DropdownMenuItem>
+              {status === "Draft" && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
+                Get Approval
+              </DropdownMenuItem>}
+              {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem>
+                <Link href={`/edit-purchase-request/${rowId}`}>
+                  Edit
+                </Link>
+              </DropdownMenuItem>}
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
-                Delete Request
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -163,15 +153,15 @@ export function PurchaseTable() {
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result && result.data) {
-          const transformedData = result.data.map((item) => {
+        if (result && result) {
+          const transformedData = result.map((item) => {
             const totalAmount = item.prItems.reduce((sum, prItem) => {
               return sum + parseFloat(prItem.total_price);
             }, 0);
   
             return {
               id: item.purchaseRequest.id,
-              created_by: item.purchaseRequest.created_by,
+              created_by_name: item.purchaseRequest.created_by_name,
               status: item.purchaseRequest.status,
               created_at: item.purchaseRequest.created_at,
               updated_at: item.purchaseRequest.updated_at,
@@ -198,7 +188,6 @@ export function PurchaseTable() {
         console.log("Deletion Response:", result);
 
         if (result && result.purchaseRequest) {
-          // Update the data state to remove the deleted item
           setData((prevData) =>
             prevData.filter((item) => item.id !== result.purchaseRequest.id)
           );
@@ -209,6 +198,41 @@ export function PurchaseTable() {
       })
       .catch((error) => console.error("Error during deletion:", error));
   };
+
+  const submitFromDrafts = (id) => {
+    const payload = {
+      status: "Pending",
+      note: "",
+    };
+  
+    fetch(`http://localhost:3002/purchaseRequests/update-purchase-request-status/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Update Status:", result);
+  
+        if (result && result.purchaseRequest) {
+          toast("Draft purchase request has now been submitted for approval.")
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.id === result.purchaseRequest.id
+                ? { ...item, status: result.purchaseRequest.status }
+                : item
+            )
+          );
+        } else {
+          console.error("Update failed:", result.message || "Invalid response format");
+        }
+      })
+      .catch((error) => console.error("Error during submission:", error));
+  };
+  
 
   const table = useReactTable({
     data,
@@ -268,7 +292,13 @@ export function PurchaseTable() {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {cell.column.id !== "actions" ? (
+                        <Link href={`/purchase-details/${data[row.id].id}`}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Link>
+                      ) : (
+                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

@@ -53,6 +53,8 @@ const NewPurchase = () => {
     setNote('');
     clearCart();
     setApproved_By('');
+    localStorage.setItem("client", JSON.stringify(""));
+    localStorage.setItem("note", JSON.stringify(""));
   };
   
   function handleSubmit(event) {
@@ -82,7 +84,9 @@ const NewPurchase = () => {
       }
       return response.json();
     })
-    .then((data) => {
+    .then(() => {
+      localStorage.setItem("client", JSON.stringify(""));
+      localStorage.setItem("note", JSON.stringify(""));
       setNote(""); 
       clearCart(); 
       setApproved_By('');
