@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { House, PackagePlus, ShoppingBasket, Archive, UserRound } from 'lucide-react';
+import { House, PackagePlus, ShoppingBasket, Archive, UserRound, Building } from 'lucide-react';
 import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
@@ -32,8 +32,12 @@ const { clearCart } = useCart();
                     Inventory
                 </Link>
                 <Link href="/client-list" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/client-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <UserRound color={pathname === "/client-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
-                    Client
+                    <Building color={pathname === "/client-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                    Clients
+                </Link>
+                <Link href="/user-list" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/user-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <UserRound color={pathname === "/user-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                    Users
                 </Link>
             </div>
         </nav>
