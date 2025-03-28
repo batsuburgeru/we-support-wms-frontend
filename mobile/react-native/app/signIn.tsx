@@ -14,7 +14,7 @@ const SignIn = () => {
     }
   
     try {
-      const response = await fetch("http://192.168.1.5:3002/users/login", {
+      const response = await fetch("http://192.168.1.11:3002/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,9 +79,9 @@ const SignIn = () => {
         />
       </View>
 
-      <TouchableOpacity className="self-end mt-2">
+      {/* <TouchableOpacity className="self-end mt-2">
         <Text className="text-lg text-primary font-poppins">Forgot password?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Sign In Button */}
       <TouchableOpacity className="w-full bg-primary p-4 rounded-lg mt-6" onPress={handleSignIn}>
