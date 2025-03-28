@@ -74,7 +74,7 @@ export function PurchaseCartTable() {
                     </div>
                   </TableCell>
                   <TableCell>{`₱${item.unit_price}`}</TableCell>
-                  <TableCell>{`₱${item.total_price.toFixed(2)}`}</TableCell>
+                  <TableCell>{`₱${item.total_price}`}</TableCell>
                   <TableCell>
                     <button
                       className="px-2 py-1 text-white rounded"

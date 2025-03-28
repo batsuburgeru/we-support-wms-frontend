@@ -84,6 +84,7 @@ export default function PurchaseRequest({ params }) {
                   total_price: parseFloat(item.total_price),
                 })),
                 total_amount: totalAmount,
+                total_qty: totalQty
               };
             }
             return null; // Return null if the data format doesn't match
@@ -149,7 +150,7 @@ export default function PurchaseRequest({ params }) {
           </div>
           <div className="grid grid-flow-col grid-cols-2 text-left w-1/2 mb-4">
             <h3>CLIENT NAME</h3>
-            <h4>{data.created_by_name}</h4>
+            <h4>{data.approved_by_name}</h4>
           </div>
         </div>
         <div className="w-full">
