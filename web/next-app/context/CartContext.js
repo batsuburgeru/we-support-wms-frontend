@@ -19,24 +19,34 @@ export function CartProvider({ children }) {
   const addToCart = (product) => {
     setCartItems((prevcartItems) => {
       const existingItem = prevcartItems.find((item) => item.id === product.id);
+      const quantity = product.quantity || 1; // Ensure a default quantity of 1 if undefined
+  
       if (existingItem) {
+        // Update the existing item's quantity and total price
         return prevcartItems.map((item) =>
           item.id === product.id
             ? {
                 ...item,
-                quantity: item.quantity + 1,
-                total_price: (item.quantity + 1) * parseFloat(item.unit_price),
+                quantity: item.quantity + quantity, // Add validated quantity
+                total_price: (item.quantity + quantity) * parseFloat(item.unit_price), // Update total price
               }
             : item
         );
       } else {
+        // Add the product as a new item with its initial quantity and total price
         return [
           ...prevcartItems,
-          { ...product, quantity: 1, total_price: parseFloat(product.unit_price) },
+          { 
+            ...product, 
+            quantity, // Use validated quantity
+            total_price: quantity * parseFloat(product.unit_price || 0), // Default unit_price to 0 if undefined
+          },
         ];
       }
     });
   };
+  
+
 
   const incrementQuantity = (id) => {
     setCartItems((prevcartItems) =>

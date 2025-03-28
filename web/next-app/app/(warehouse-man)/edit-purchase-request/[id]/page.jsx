@@ -54,6 +54,14 @@ const EditPurchase = ({ params }) => {
     unit_price: parseFloat(unit_price)
   }));
 
+  const totalCartCost = cartItems.reduce((sum, cartItem) => {
+    return sum + parseFloat(cartItem.total_price);
+  }, 0);
+
+  const totalCartQty = cartItems.reduce((sum, cartItem) => {
+    return sum + parseFloat(cartItem.quantity);
+  }, 0);cartItems
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -70,15 +78,7 @@ const EditPurchase = ({ params }) => {
           // Transform data
           const transformedData = (result) => {
             if (result && result) {
-              const { purchaseRequest, deliveryNote, prItems } = result.data;
-          
-              // Calculate total amount from prItems
-              const totalAmount = prItems.reduce((sum, prItem) => {
-                return sum + parseFloat(prItem.total_price);
-              }, 0);
-              const totalQty = prItems.reduce((sum, prItem) => {
-                return sum + parseFloat(prItem.quantity);
-              }, 0);
+              const { purchaseRequest, deliveryNote, prItems } = result.data;      
           
               // Transform data
               return {
@@ -92,8 +92,6 @@ const EditPurchase = ({ params }) => {
                   total_price: parseFloat(item.total_price),
                   product_name: item.product_name
                 })),
-                total_amount: totalAmount,
-                total_qty: totalQty,
               };
             }
             return null; // Return null if the data format doesn't match
@@ -110,8 +108,9 @@ const EditPurchase = ({ params }) => {
     fetchData();
   }, [id]); 
 
+  
+
   useEffect(() => {
-    // Add items to the cart only if they haven't been added yet
     if (data && data.pr_items && !hasAddedToCart) {
       data.pr_items.forEach((item) => {
         addToCart({
@@ -119,12 +118,13 @@ const EditPurchase = ({ params }) => {
           name: item.product_name,
           unit_price: item.unit_price,
           unit: "Pcs",
-          quantity: item.quantity,
+          quantity: item.quantity, 
         });
       });
-      setHasAddedToCart(true); // Prevent re-adding
+      setHasAddedToCart(true); 
     }
-  }, [data, addToCart, hasAddedToCart]);
+  }, [data, addToCart, hasAddedToCart]);  
+
 
   toastConfig({
     theme: 'dark',
@@ -206,7 +206,7 @@ const EditPurchase = ({ params }) => {
                       >
                         -
                       </button>
-                      <span className="px-3">{item.quantity}</span>
+                      <span className="px-3">{item.quantity}</span> {/* Make sure this is updated */}
                       <button
                         className="px-2 py-1 border border-gray-300 rounded-r"
                         onClick={() => incrementQuantity(item.id)}
@@ -216,7 +216,7 @@ const EditPurchase = ({ params }) => {
                     </div>
                   </TableCell>
                   <TableCell>{`₱${item.unit_price}`}</TableCell>
-                  <TableCell>{`₱${item.total_price.toFixed(2)}`}</TableCell>
+                  <TableCell>{`₱${item.total_price}`}</TableCell>
                   <TableCell>
                     <button
                       className="px-2 py-1 text-white rounded"
@@ -257,16 +257,16 @@ const EditPurchase = ({ params }) => {
           <div className="flex justify-between">
             <div>
               <p className="font-medium mb-2">Sub Total</p>
-              <p className="font-medium text-sm">Total Quantity: {data.total_qty}</p>
+              <p className="font-medium text-sm">Total Quantity: {totalCartQty}</p>
             </div>
             <p className="font-medium">
-              ₱{data.total_amount}
+              ₱{totalCartCost}
             </p>
           </div>
           <hr />
           <div className="flex justify-between">
             <h2 className="font-semibold">Total</h2>
-            <h2 className="font-semibold">₱{data.total_amount}</h2>
+            <h2 className="font-semibold">₱{totalCartCost}</h2>
           </div>
         </div>
       </section>
