@@ -23,17 +23,17 @@ import {
 
 const columns = [
   {
-    accessorKey: "id",
-    header: "Product ID",
-    cell: ({ row }) => (
-      <div>{row.getValue("id")}</div>
-    ),
-  },
-  {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
       <div>{row.getValue("name")}</div>
+    ),
+  },
+  {
+    accessorKey: "id",
+    header: "Product ID",
+    cell: ({ row }) => (
+      <div>{row.getValue("id")}</div>
     ),
   },
   {

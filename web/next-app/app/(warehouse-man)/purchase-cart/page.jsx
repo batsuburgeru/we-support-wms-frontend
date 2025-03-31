@@ -107,16 +107,15 @@ const NewPurchase = () => {
     <main>
       <div className='flex justify-center px-6 py-4 flex-col gap-4'>
         <h1>New Purchase Requisition</h1>
-        <ProductSearch width={'[500px]'} />
-      </div>
-      <hr className='border-borderLine'/>
-      <section className="px-6 pt-4">
         <div className="flex items-center">
           <h2 className="mr-20">Client Name*</h2>
           <ClientPopover value={approved_by} setValue={setApproved_By} />
         </div>
+      </div>
+      <hr className='border-borderLine'/>
+      <section className="px-6 pt-4">
+        <ProductSearch width={'[500px]'} workflow="new" />
       </section>
-
       <section className="px-6 mt-8">
         <PurchaseCartTable />
       </section>

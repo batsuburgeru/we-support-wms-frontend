@@ -20,11 +20,11 @@ const { clearCart } = useCart();
                     Home
                 </Link>
                 <Link onClick={() => clearCart()} href="/purchase-cart" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <PackagePlus color={pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                    <PackagePlus color={pathname === "/purchase-cart" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     New Purchase
                 </Link>
-                <Link href="/purchase-list" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
-                    <ShoppingBasket color={pathname === "/purchase-list" ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
+                <Link href="/purchase-list" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-list" || pathname.startsWith("/purchase-details") || pathname.startsWith("/edit-purchase-request") ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                    <ShoppingBasket color={pathname === "/purchase-list" || pathname.startsWith("/purchase-details") || pathname.startsWith("/edit-purchase-request") ? '#FFF' : '#282828'} className='pr-3 pl-1 w-max'/>
                     Purchase List
                 </Link>
                 <Link href="/inventory" className={`flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/inventory" || pathname === "/inventory-add" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>

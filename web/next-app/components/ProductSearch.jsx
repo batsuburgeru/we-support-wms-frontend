@@ -3,11 +3,11 @@ import { Search } from 'lucide-react';
 
 const ProductSearch = (props) => {
   return (
-    <form action="/search-results" method="get" className="flex items-center">
+    <form action={`/search-results/${props.workflow}`} method="get" className="flex items-center">
       <input
         name="query"
         type="text"
-        placeholder="Search item"
+        placeholder="Search item or leave blank to show all items..."
         className={`bg-white px-2 py-1 rounded-l-md w-${props.width} border border-borderLine border-r-0`}
       />
       <button type="submit">

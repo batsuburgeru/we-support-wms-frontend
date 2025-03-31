@@ -49,23 +49,22 @@ export function PurchaseTable() {
   const columns = [
     {
       accessorKey: "id",
+      header: "Request #",
+      cell: ({ row }) => (<div>{row.getValue("id")}</div>
+      ),
+    },
+    {
+      accessorKey: "created_at",
       header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Request #
+          Order Date
           <ArrowUpDown />
         </Button>
       ),
-      cell: ({ row }) => <div>{row.getValue("id")}</div>,
-    },
-    {
-      accessorKey: "created_at",
-      header: "Order Date",
-      cell: ({ row }) => (
-        <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>,
     },
     {
       accessorKey: "created_by_name",
@@ -141,7 +140,7 @@ export function PurchaseTable() {
     },
   ];
   
-  const [sorting, setSorting] = React.useState([]);
+  const [sorting, setSorting] = React.useState([{ id: "created_at", desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
@@ -256,10 +255,10 @@ export function PurchaseTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter by date..."
-          value={(table.getColumn("created_at")?.getFilterValue()) ?? ""}
+          placeholder="Filter by status..."
+          value={(table.getColumn("status")?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("created_at")?.setFilterValue(event.target.value)
+            table.getColumn("status")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
