@@ -3,6 +3,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Check, Denys, Cancels } from '@/assets/svg/iconsvg';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 interface PurchaseRequest {
     id: string;
@@ -10,6 +11,58 @@ interface PurchaseRequest {
     time: string;
     date: string;
     type: string;
+}
+
+export function SearchableDropdown() {
+    const [open, setOpen] = useState<boolean>(false);
+    const [value, setValue] = useState<string | null>(null);
+    const [items, setItems] = useState<{ label: string; value: string }[]>([
+        { label: 'Option 1', value: 'option1' },
+        { label: 'Option 2', value: 'option2' },
+        { label: 'Option 3', value: 'option3' },
+        { label: 'Option 4', value: 'option4' },
+        { label: 'Option 5', value: 'option5' },
+    ]);
+
+    return (
+        <View style={{ margin: 16 }}>
+            <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                searchable={true}
+                placeholder="Select an option"
+                searchPlaceholder="Search options..."
+                style={{
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
+                    borderRadius: 8,
+                    backgroundColor: '#ffffff',
+                    paddingHorizontal: 10,
+                }} // Dropdown appearance
+                dropDownContainerStyle={{
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
+                    borderRadius: 8,
+                    backgroundColor: '#f9f9f9',
+                }} // Dropdown container style
+                textStyle={{
+                    fontSize: 16,
+                    color: '#333333',
+                }} // Dropdown text style
+                searchTextInputStyle={{
+                    borderWidth: 1,
+                    borderColor: '#cccccc',
+                    borderRadius: 8,
+                    paddingHorizontal: 10,
+                    color: '#333333',
+                }} // Search input style
+            />
+        </View>
+    );
 }
 
 export default function History() {
@@ -30,9 +83,9 @@ export default function History() {
     const fetchRequests = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://192.168.1.11:3002/purchaseRequests/read-purchase-requests');
+            const response = await fetch('http://172.16.48.90:3002/purchaseRequests/read-purchase-requests');
             const result = await response.json();
-
+    
             if (Array.isArray(result)) {
                 const mappedRequests = result.map((item: any) => ({
                     id: item.purchaseRequest.id,
@@ -40,8 +93,14 @@ export default function History() {
                     date: new Date(item.purchaseRequest.created_at).toLocaleDateString(),
                     time: new Date(item.purchaseRequest.created_at).toLocaleTimeString(),
                     type: "Purchase Request",
+                    created_at: item.purchaseRequest.created_at, // Include created_at for sorting
                 }));
-                setRequests(mappedRequests);
+    
+                // Sort the data in descending order based on created_at
+                const sortedData = mappedRequests
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()); // Sort descending
+    
+                setRequests(sortedData); // Update state with sorted data
             } else {
                 console.error("Unexpected data format:", result);
             }
@@ -62,7 +121,7 @@ export default function History() {
         fetchRequests();
 
         const interval = setInterval(() => {
-            fetchRequests(); // Automatically refresh data every 10 seconds
+            fetchRequests();  
         }, 10000);
 
         return () => clearInterval(interval);
@@ -88,7 +147,7 @@ export default function History() {
     return (
         <SafeAreaView className="flex-1 bg-white p-4 mb-20 px-5">
             <Text className="text-4xl font-poppins-bold pt-5">Completed Requests</Text>
-
+            <SearchableDropdown/>
             {/* Filter Buttons */}
             <View className="flex-row justify-between my-4">
                 {["All", "Approved", "Returned", "Rejected"].map((status) => (
