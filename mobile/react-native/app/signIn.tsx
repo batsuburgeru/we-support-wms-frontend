@@ -87,6 +87,15 @@ const SignIn = () => {
       <TouchableOpacity className="w-full bg-primary p-4 rounded-lg mt-6" onPress={handleSignIn}>
         <Text className="text-white text-center font-poppins-bold text-2xl">Sign In</Text>
       </TouchableOpacity>
+
+            {/* or Input */}
+      {/* <View className="w-full mt-2">
+        <Text className="text-lg font-poppins text-primary mb-1">----------- Or -----------</Text>
+        <TouchableOpacity className="w-full bg-primary p-4 rounded-lg mt-6" onPress={handleSignIn}>
+        <Text className="text-white text-center font-poppins-bold text-2xl">Sign in with Google</Text>
+        </TouchableOpacity>
+      </View> */}
+      
     </View>
   );
 };
