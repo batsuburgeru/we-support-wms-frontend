@@ -8,14 +8,12 @@ import { useState, useEffect } from 'react';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
-import { useRouter } from 'next/navigation';
 
 const NewPurchase = () => {
   toastConfig({
     theme: 'dark',
   });
 
-  const router = useRouter();
   const [note, setNote] = useState('');
   const [approved_by, setApproved_By] = useState('');
   const { cartItems, clearCart } = useCart();

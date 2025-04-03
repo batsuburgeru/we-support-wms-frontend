@@ -54,7 +54,7 @@ import 'react-simple-toasts/dist/theme/dark.css';
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="bg-brand-primary hover:bg-orange-600">New User</Button>
+          <Button className="bg-brand-secondary hover:bg-orange-600 active:bg-orange-700 colorTransition">New User</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
         <AlertDialogDescription className='sr-only'>Add User Modal</AlertDialogDescription>
@@ -111,7 +111,7 @@ import 'react-simple-toasts/dist/theme/dark.css';
                 </div>
                 <div className="flex justify-end gap-2">
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className="bg-brand-secondary hover:bg-brand-primary" type="submit">
+                  <AlertDialogAction className="bg-brand-secondary hover:bg-orange-600 active:bg-orange-700 colorTransition" type="submit">
                     Add
                   </AlertDialogAction>
                 </div>

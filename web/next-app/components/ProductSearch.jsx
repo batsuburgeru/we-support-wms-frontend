@@ -11,7 +11,7 @@ const ProductSearch = (props) => {
         className={`bg-white px-2 py-1 rounded-l-md w-${props.width} border border-borderLine border-r-0`}
       />
       <button type="submit">
-        <Search color="#FFF" size={34} className="bg-brand-secondary p-1 rounded-r-md" />
+        <Search color="#FFF" size={34} className="bg-brand-secondary hover:bg-orange-600 active:bg-orange-700 colorTransition p-1 rounded-r-md" />
       </button>
     </form>
   );

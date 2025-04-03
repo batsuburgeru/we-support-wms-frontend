@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
   return (
         <div className="flex">
           <Navbar />
-          <div className="w-screen ml-64">
+          <div className="w-screen md:ml-64 ml-16">
             <Header />
             {children}
           </div>

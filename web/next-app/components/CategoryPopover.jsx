@@ -1,4 +1,4 @@
-"use client"
+"use category"
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -21,17 +21,17 @@ import {
 
 export default function CategoryPopover({ value, setValue }) {
     const [open, setOpen] = React.useState(false)
-    const [clients, setClients] = React.useState([]);
+    const [categories, setCategories] = React.useState([]);
       
     React.useEffect(() => {
-      fetch("http://localhost:3002/users/view-users", {
+      fetch("http://localhost:3002/categories/view-categories", {
           method: 'GET',
           credentials: 'include'
       })
       .then(response => response.json())
       .then(result => {
-          if (result && result.users) {
-          setClients(result.users);
+          if (result && result.categories) {
+          setCategories(result.categories);
           } else {
           console.log('Retrieve failed:', result.message);
           }
@@ -51,34 +51,34 @@ export default function CategoryPopover({ value, setValue }) {
                 className="w-96 justify-between border-borderLine"
               >
                 {value
-                  ? clients.find((client) => client.id === value)?.name
-                  : "Select a client"}
+                  ? categories.find((category) => category.id === value)?.name
+                  : "Select a category"}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-96 p-0">
               <Command>
-                <CommandInput placeholder="Select a client" className="h-9" />
+                <CommandInput placeholder="Select a category" className="h-9" />
                 <CommandList>
-                  <CommandEmpty>No client found.</CommandEmpty>
+                  <CommandEmpty>No category found.</CommandEmpty>
                   <CommandGroup>
-                    {clients.map((client) => (
+                    {categories.map((category) => (
                       <CommandItem
-                        key={client.id}
-                        value={client.id}
+                        key={category.id}
+                        value={category.id}
                         onSelect={(currentValue) => {
                           setValue(currentValue === value ? "" : currentValue)
                           setOpen(false)
                         }}
                       >
                         <div className="flex flex-col">
-                          <span className="font-semibold text-lg">{client.name}</span>
-                          <span className="font-light text-sm">{client.email}</span>
+                          <span className="font-semibold text-lg">{category.name}</span>
+                          <span className="font-light text-sm text-ellipsis overflow-hidden txtOverflowPopover">{category.description}</span>
                         </div>
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === client.id ? "opacity-100" : "opacity-0"
+                            value === category.id ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>
