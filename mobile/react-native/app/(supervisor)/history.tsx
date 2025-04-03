@@ -83,7 +83,7 @@ export default function History() {
     const fetchRequests = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://172.16.48.90:3002/purchaseRequests/read-purchase-requests');
+            const response = await fetch('http://192.168.1.9:3002/purchaseRequests/read-purchase-requests');
             const result = await response.json();
     
             if (Array.isArray(result)) {

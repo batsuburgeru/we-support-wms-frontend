@@ -30,12 +30,18 @@ const Profile = () => {
     // Fetch user information
     const fetchUserName = async () => {
         try {
-            const response = await fetch("http://172.16.48.90:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.1.9:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
-
+    
+            if (response.status === 401) {
+                console.warn("Unauthorized: No token or invalid token. Signing out...");
+                handleSignOut(); // Auto logout if token is invalid
+                return;
+            }
+    
             if (response.ok) {
                 const data = await response.json();
                 if (data.userInfo && data.userInfo.name) {
@@ -50,11 +56,23 @@ const Profile = () => {
             console.error("Error fetching user information:", error);
         }
     };
+    
+    // Call fetchUserName when the component loads
+    useEffect(() => {
+        fetchUserName();
+        fetchRequests();
+    
+        const interval = setInterval(() => {
+            fetchRequests();
+        }, 10000); // Refresh every 10 seconds
+    
+        return () => clearInterval(interval);
+    }, []);
 
     // Fetch purchase requests
     const fetchRequests = async () => {
         try {
-            const response = await fetch("http://172.16.48.90:3002/purchaseRequests/view-purchase-requests", {
+            const response = await fetch("http://192.168.1.9:3002/purchaseRequests/view-purchase-requests", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -105,7 +123,7 @@ const Profile = () => {
     // Handle user sign-out
     const handleSignOut = async () => {
         try {
-            const response = await fetch("http://172.16.48.90:3002/users/logout", {
+            const response = await fetch("http://192.168.1.9:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -113,7 +131,7 @@ const Profile = () => {
 
             if (response.ok) {
                 console.log("Logout successful");
-                router.replace("/signIn");
+                router.replace("/");
             } else {
                 console.error("Logout failed:", await response.text());
                 alert("Logout failed. Try again.");
@@ -149,7 +167,7 @@ const Profile = () => {
                     {[{
                         title: "Total requests", count: totalCount, iconComponent: <TotalRequest />,
                     }, {
-                        title: "Pending requests", count: pendingCount, iconComponent: <PendingRequest />, onPress: () => router.push('/')
+                        title: "Pending requests", count: pendingCount, iconComponent: <PendingRequest />, onPress: () => router.push('/request')
                     }, {
                         title: "Approved requests", count: approvedCount, iconComponent: <ApprovedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Approved" } })
                     }, {
