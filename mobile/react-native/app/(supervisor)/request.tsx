@@ -136,16 +136,14 @@ export default function Requests() {
             <SearchableDropdown />
 
             <ScrollView
-                className="mt-4 mb-20"
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshRequests} />}
-            >
+                className="mt-4 mb-20 px-5"
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshRequests} />}>
                 {pendingRequests.length > 0 ? (
                     pendingRequests.map((req) => (
                         <TouchableOpacity
                             key={req.id}
                             className="bg-tabs rounded-lg p-4 mb-2"
-                            onPress={() => router.push(`/requestdetails?id=${req.id}`)}
-                        >
+                            onPress={() => router.push(`/requestdetails?id=${req.id}`)}>
                             <View className="flex-row justify-between">
                                 <Text className="font-poppins-bold text-lg">{req.type}</Text>
                                 <Text className="text-black font-poppins-semibold">{req.date}</Text>
