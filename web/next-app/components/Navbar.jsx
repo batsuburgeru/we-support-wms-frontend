@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 import { House, PackagePlus, ShoppingBasket, Archive, UserRound, Building } from 'lucide-react';
 import { useCart } from "@/context/CartContext";
 
-const Navbar = () => {
-const pathname = usePathname();
-const { clearCart } = useCart();
+const Navbar = ({ userRole }) => {
+    const pathname = usePathname();
+    const { clearCart } = useCart();
 
     return (
         <nav className='fixed bg-navBG border-r border-borderLine md:w-64 w-fit h-full px-2 py-4 z-50'>
@@ -35,10 +35,10 @@ const { clearCart } = useCart();
                     <Building color={pathname === "/client-list" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Clients</span>
                 </Link>
-                <Link href="/user-list" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/user-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                {userRole === "Admin" && <Link href="/user-list" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/user-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <UserRound color={pathname === "/user-list" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Users</span>
-                </Link>
+                </Link>}
             </div>
         </nav>
     )

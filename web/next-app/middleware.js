@@ -11,9 +11,19 @@ const protectedRoutes = [
     '/client-list',
     '/purchase-cart',
     '/purchase-list',
-    '/search-results'
+    '/search-results',
+    '/edit-purchase-request',
+    'inventory-add',
+    '/purchase-details',
+    '/user-list'
 ];
-const publicRoutes = ['/login', '/'];
+
+const publicRoutes = ['/login', '/', '/register'];
+
+const adminRoutes = [
+    '/inventory-add',
+    '/user-list',
+];
 
 // 1. Helper function to parse JWT using jose
 async function parseJwt(token) {
@@ -30,6 +40,7 @@ export default async function middleware(req) {
     const path = req.nextUrl.pathname;
     const isProtectedRoute = protectedRoutes.includes(path);
     const isPublicRoute = publicRoutes.includes(path);
+    const isAdminRoute = adminRoutes.includes(path);
 
     // 2. Get token from cookies
     const token = cookies().get('token')?.value;
@@ -50,6 +61,10 @@ export default async function middleware(req) {
 
     // 5. Redirect authenticated users away from public routes
     if (isPublicRoute && userRole) {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    if (isAdminRoute && userRole !== "Admin") {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 

@@ -96,8 +96,8 @@ const NewPurchase = () => {
       );
     })
     .catch((error) => {
-      console.error("Error:", error);
-      alert("Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.");
+      console.log("Error:", error);
+      toast("⚠️ Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.", { maxVisibleToasts: 3 });
     });
   };
 
@@ -161,7 +161,7 @@ const NewPurchase = () => {
           type="button" 
           className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
         >
-          Cancel
+          Clear
         </button>
       </form>
     </main>

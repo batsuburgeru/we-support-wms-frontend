@@ -32,6 +32,7 @@ import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 import { useCart } from "@/context/CartContext";
+import { RotateCw } from 'lucide-react'
 
 const statusStyles = {
   Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
@@ -145,6 +146,9 @@ export function PurchaseTable() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
   const { clearCart } = useCart();
+  const [showAlert, setShowAlert] = React.useState(false);
+  const [deletingId, setDeletingId] = React.useState(null);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
   React.useEffect(() => {
     fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
@@ -176,10 +180,15 @@ export function PurchaseTable() {
       .catch((error) => {
         console.log("Error:", error);
       });
-  }, []);
+  }, [refreshKey]);
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:3002/purchaseRequests/delete-purchase-request/${id}`, {
+    setDeletingId(id); // Set the ID for the row being deleted
+    setShowAlert(true); // Show the confirmation dialog
+  };
+
+  const confirmDelete = () => {
+    fetch(`http://localhost:3002/purchaseRequests/delete-purchase-request/${deletingId}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -191,12 +200,21 @@ export function PurchaseTable() {
           setData((prevData) =>
             prevData.filter((item) => item.id !== result.purchaseRequest.id)
           );
-          console.log(result.message); 
+          toast("Item successfully deleted");
         } else {
-          console.error("Retrieve failed:", result.message || "Invalid response format");
+          console.error("Delete failed:", result.message || "Invalid response format");
         }
       })
-      .catch((error) => console.error("Error during deletion:", error));
+      .catch((error) => console.error("Error during deletion:", error))
+      .finally(() => {
+        setShowAlert(false); // Hide the confirmation dialog
+        setDeletingId(null); // Reset the deleting ID
+      });
+  };
+
+  const cancelDelete = () => {
+    setShowAlert(false); // Hide the confirmation dialog
+    setDeletingId(null); // Reset the deleting ID
   };
 
   const submitFromDrafts = (id) => {
@@ -253,7 +271,10 @@ export function PurchaseTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
+        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 transition-colors duration-200">
+          <RotateCw color="#696969" size={20} />
+        </button>
         <Input
           placeholder="Filter by status..."
           value={(table.getColumn("status")?.getFilterValue()) ?? ""}
@@ -263,6 +284,7 @@ export function PurchaseTable() {
           className="max-w-sm"
         />
       </div>
+      
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -333,6 +355,28 @@ export function PurchaseTable() {
           </Button>
         </div>
       </div>
+      {showAlert && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-md w-96 text-left">
+            <h2 className="text-md font-semibold mb-1">Are you sure you want to delete this request?</h2>
+            <p className="mb-6">This action is irreversible.</p>
+            <div className="space-x-2 flex justify-end">
+              <Button
+                onClick={cancelDelete}
+                className="bg-white border border-borderLine px-4 py-2 rounded-md hover:bg-gray-200 active:bg-gray-300 text-black"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={confirmDelete}
+                className="bg-brand-secondary text-white px-4 py-2 rounded-md hover:bg-orange-600 active:bg-orange-700"
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

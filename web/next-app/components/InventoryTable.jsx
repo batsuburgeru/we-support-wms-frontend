@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { RotateCw } from 'lucide-react'
 
 const columns = [
   {
@@ -65,6 +66,7 @@ export function InventoryTable() {
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
+  const [refreshKey, setRefreshKey] = React.useState(0);
   
   React.useEffect(() => {
     fetch("http://localhost:3002/products/view-products", {
@@ -82,7 +84,7 @@ export function InventoryTable() {
     .catch(error => {
         console.log('Error:', error);
     });
-  }, []);
+  }, [refreshKey]);
 
   const table = useReactTable({
     data,
@@ -103,7 +105,10 @@ export function InventoryTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
+        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 transition-colors duration-200">
+          <RotateCw color="#696969" size={20} />
+        </button>
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn("name")?.getFilterValue()) ?? ""}

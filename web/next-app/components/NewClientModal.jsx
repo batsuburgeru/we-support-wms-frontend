@@ -16,7 +16,7 @@ import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
   
-export function NewClientModal(props) {
+export function NewClientModal() {
   toastConfig({
     theme: 'dark',
   });
@@ -41,7 +41,6 @@ export function NewClientModal(props) {
     if (result && result.user) {
       const user = result.user;
       toast('User successfully registered!');
-      props.setChangeIndicator(prevState => !prevState);
     } else {
       console.log('User Registration failed:', result.message);
     }

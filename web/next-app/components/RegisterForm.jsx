@@ -41,6 +41,7 @@ const LoginForm = () => {
     .then(response => response.json())
     .then(result => {
       if (result && result.token) {
+        const user = result.token;
         router.push('/dashboard');
       } else {
         setInvalidCreds(true);
@@ -56,8 +57,8 @@ const LoginForm = () => {
     <div className='w-full h-screen flex'>
       <div className='w-1/2 h-full flex flex-col justify-center px-20'>
         <div className='header'>
-          <h1 className='text-4xl font-bold'>Welcome Back</h1>
-          <p className='text-base text-brand-secondary mt-2'>Please enter your details</p>
+          <h1 className='text-4xl font-bold'>Create your account</h1>
+          <p className='text-base text-brand-secondary mt-2'>Let’s get you all set up so you can access your personal account.</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -83,15 +84,27 @@ const LoginForm = () => {
               placeholder="Enter your password"
               className='border border-borderLine rounded-md p-2 my-2 focus:outline-none focus:border-[#F97333]'
             />
+
+            <label htmlFor="confirmPassword" className='text-1xl font-semibold mt-5'>Confirm Password</label>
+            <input 
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password again"
+              className='border border-borderLine rounded-md p-2 my-2 focus:outline-none focus:border-[#F97333]'
+            />
           </div>
 
-          {/* <div className='flex justify-end'>
-            <Link href="/forgot-password" className='text-sm font-medium cursor-pointer underline text-brand-primary'>Forgot Password?</Link>
-          </div> */}
+          <div className='flex justify-start'>
+            <input type="checkbox" id="tosAgreement" name="tosAgreement" value="tosAgreement" />
+            <label htmlFor="tosAgreement" className='font-medium ml-2'>I agree to all the <span className='font-semibold text-brand-primary'>Terms</span> and <span className='font-semibold text-brand-primary'>Privacy Policies</span></label>
+          </div>
           
-          <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>Sign in</button>
+          <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>Create Account</button>
           <div className='flex justify-center font-medium mt-6'>
-            <span>Don't have an account yet?</span> <Link href="/register" className='ml-1 text-brand-primary'>Create Account</Link>
+            <span>Already have an account?</span> <Link href="/login" className='ml-1 text-brand-primary'>Login</Link>
           </div>
           <div className='absolute'>
             {invalidCreds && <p className='text-center text-sm text-red-600 font-medium pt-4'>Invalid username or password.</p>}
