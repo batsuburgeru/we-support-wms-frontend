@@ -43,6 +43,14 @@ h1 {
     text-overflow: ellipsis;
 }
 
+.txtOverflowPopover {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @layer base {
   :root {
         --background: 0 0% 100%;

@@ -8,6 +8,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [invalidCreds, setInvalidCreds] = useState(false);
   const [loginError, setLoginError] = useState(false);
+  const [success, setSuccess] = useState(false);
   
   const router = useRouter();
   
@@ -41,7 +42,9 @@ const LoginForm = () => {
     .then(response => response.json())
     .then(result => {
       if (result && result.token) {
-        const user = result.token;
+        setInvalidCreds(false);
+        setLoginError(false);
+        setSuccess(true);
         router.push('/dashboard');
       } else {
         setInvalidCreds(true);
@@ -63,20 +66,22 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit}>
           <div className='w-full flex flex-col my-8'>
-            <h2 className='text-1xl font-semibold'>Email Address</h2>
+            <label htmlFor="email" className='text-1xl font-semibold'>Email Address</label>
             <input 
               type="email"
               name="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className='border border-borderLine rounded-md p-2 my-2 focus:outline-none focus:border-brand-secondary'
             />
 
-            <h2 className='text-1xl font-semibold mt-5'>Password</h2>
+            <label htmlFor="password" className='text-1xl font-semibold mt-5'>Password</label>
             <input 
               type="password"
               name="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
@@ -90,8 +95,12 @@ const LoginForm = () => {
           
           <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>Sign in</button>
           <div className='absolute'>
-            {invalidCreds && <p className='text-center text-sm text-red-600 font-medium pt-4'>Invalid username or password.</p>}
-            {loginError && <p className='text-center text-sm text-red-600 font-medium pt-4'>Sorry, we could not log you in at this time. Please try again later.</p>}
+            {invalidCreds && <p className='text-center text-sm text-red-600 font-medium pt-2'>Invalid username or password.</p>}
+            {loginError && <p className='text-center text-sm text-red-600 font-medium pt-2'>Sorry, we could not log you in at this time. Please try again later.</p>}
+            {success && <p className='text-center text-sm text-orange-600 font-medium pt-2'>Logging you in. Please wait...</p>}
+          </div>
+          <div className='flex justify-center font-medium mt-12'>
+            <span>Don't have an account yet?</span> <Link href="/register" className='ml-1 text-brand-primary'>Create Account</Link>
           </div>
         </form>
       </div>

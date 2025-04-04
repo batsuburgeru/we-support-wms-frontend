@@ -1,21 +1,20 @@
 import React from 'react';
-import { EllipsisVertical } from 'lucide-react';
 import { InventoryTable } from '@/components/InventoryTable';
 import Link from 'next/link';
+import { verifySession } from '@/app/lib/dal';
 
-const Inventory = () => {
+async function Inventory() {
+  const session = await verifySession();
+  
   return (
     <main>
       <div className='flex justify-between items-center px-6 py-4'>
         <h1>Inventory</h1>
-        <div className='flex items-center'>
-          <Link href="/inventory-add" className='bg-brand-primary text-white font-medium mr-4 py-2 px-4 text-sm rounded-md hover:bg-orange-600 colorTransition'>
+        {session.userRole === "Admin" && <div className='flex items-center'>
+          <Link href="/inventory-add" className='bg-brand-secondary text-white font-medium py-2 px-4 text-sm rounded-md hover:bg-orange-600 active:bg-orange-700 colorTransition'>
             Add New Item
           </Link>
-          <button className='bg-buttonBG rounded-md py-1 px-1 hover:bg-neutral-200 transition-colors duration-200'>
-            <EllipsisVertical />
-          </button>
-        </div>
+        </div>}
       </div>
       <hr />
       <hr className='border-borderLine'/>

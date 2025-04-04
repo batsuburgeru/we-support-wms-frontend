@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Trash2 } from 'lucide-react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const columns = [
   {
@@ -108,8 +108,6 @@ const EditPurchase = ({ params }) => {
     fetchData();
   }, [id]); 
 
-  
-
   useEffect(() => {
     if (data && data.pr_items && !hasAddedToCart) {
       data.pr_items.forEach((item) => {
@@ -133,7 +131,7 @@ const EditPurchase = ({ params }) => {
   function handleCancel() {
     localStorage.setItem("client", JSON.stringify(""));
     localStorage.setItem("note", JSON.stringify(""));
-    redirect('/purchase-list')
+    router.back();
   };
   
   function handleSubmit(event) {
@@ -160,6 +158,7 @@ const EditPurchase = ({ params }) => {
     })
     .then(() => {
       toast("Changes saved successfully.");
+      router.back();
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -171,7 +170,7 @@ const EditPurchase = ({ params }) => {
     <main>
       <div className='flex justify-center px-6 py-4 flex-col gap-4'>
         <h1>Edit Purchase Requisition</h1>
-        <ProductSearch width={'[500px]'} />
+        <ProductSearch width={'[500px]'} workflow={id} />
       </div>
       <hr className='border-borderLine'/>
       <section className="px-6 pt-4">
@@ -284,13 +283,6 @@ const EditPurchase = ({ params }) => {
           className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
         >
           Cancel
-        </button>
-        <button
-          onClick={() => router.back()}
-          type="button" 
-          className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
-        >
-          Go Back
         </button>
       </form>
     </main>
