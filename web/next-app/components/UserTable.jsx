@@ -9,12 +9,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -27,87 +29,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from 'next/link';
+import { RotateCw } from 'lucide-react';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
-import { useCart } from "@/context/CartContext";
-import { RotateCw } from 'lucide-react'
 
-const statusStyles = {
-  Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
-  Pending: "bg-bgPending text-txtPending text-center rounded-sm w-max px-2 py-1",
-  Rejected: "bg-bgDenied text-txtDenied text-center rounded-sm w-max px-2 py-1",
-  Returned: "bg-bgReturned text-txtReturned text-center rounded-sm w-max px-2 py-1",
-  Draft: "bg-bgDraft text-txtDraft text-center rounded-sm w-max px-2 py-1",
-};
-
-export function PurchaseTable() {
+export function UserTable(props) {
   toastConfig({
-    theme: 'dark',
-  });
+      theme: 'dark',
+    });
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "Request #",
-      cell: ({ row }) => (<div>{row.getValue("id")}</div>
-      ),
-    },
-    {
-      accessorKey: "created_at",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Order Date
-          <ArrowUpDown />
-        </Button>
-      ),
-      cell: ({ row }) => <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>,
-    },
-    {
-      accessorKey: "created_by_name",
-      header: "Created By",
+      accessorKey: "name",
+      header: "Name",
       cell: ({ row }) => (
-        <div>{row.getValue("created_by_name")}</div>
+        <div>{row.getValue("name")}</div>
       ),
     },
     {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => {
-        const status = row.getValue("status");
-        const statusClassName = statusStyles[status] || "";
-      
-        return (
-          <div className={statusClassName}>
-            {status}
-          </div>
-        );
-      }
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => (
+        <div>{row.getValue("role")}</div>
+      ),
     },
     {
-      accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"));
-        const formatted = new Intl.NumberFormat("en-PH", {
-          style: "currency",
-          currency: "PHP",
-        }).format(amount);
-    
-        return <div className="text-right font-medium">{formatted}</div>;
-      },
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => (
+        <div>{row.getValue("email")}</div>
+      ),
     },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const status = row.getValue("status");
-        const rowId = row.getValue("id");
-
+        const payment = row.original;
+  
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -118,19 +77,10 @@ export function PurchaseTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <Link href={`/purchase-details/${row.original.id}`} className="w-full">
-                  View Details
-                </Link>
+                View Details
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {status === "Draft" && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
-                Get Approval
-              </DropdownMenuItem>}
-              {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem onClick={()=>clearCart()}>
-                <Link href={`/edit-purchase-request/${rowId}`} className="w-full">
-                  Edit
-                </Link>
-              </DropdownMenuItem>}
+              <DropdownMenuItem>Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
               </DropdownMenuItem>
@@ -140,47 +90,32 @@ export function PurchaseTable() {
       },
     },
   ];
-  
-  const [sorting, setSorting] = React.useState([{ id: "created_at", desc: true }]);
+
+  const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
-  const { clearCart } = useCart();
+  const [refreshKey, setRefreshKey] = React.useState(0);
   const [showAlert, setShowAlert] = React.useState(false);
   const [deletingId, setDeletingId] = React.useState(null);
-  const [refreshKey, setRefreshKey] = React.useState(0);
-
-  React.useEffect(() => {
-    fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result && result) {
-          const transformedData = result.map((item) => {
-            const totalAmount = item.prItems.reduce((sum, prItem) => {
-              return sum + parseFloat(prItem.total_price);
-            }, 0);
   
-            return {
-              id: item.purchaseRequest.id,
-              created_by_name: item.purchaseRequest.created_by_name,
-              status: item.purchaseRequest.status,
-              created_at: item.purchaseRequest.created_at,
-              updated_at: item.purchaseRequest.updated_at,
-              amount: totalAmount,
-            };
-          });
-          setData(transformedData);
-        } else {
-          console.log("Retrieve failed:", result.message);
-        }
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
-  }, [refreshKey]);
+  React.useEffect(() => {
+    fetch("http://localhost:3002/users/view-users", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result && result.users) {
+          setData(result.users);
+      } else {
+          console.log("Retrieve failed:", result.message || "No data property");
+      }
+    })  
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, [props.changeIndicator, refreshKey]);
 
   const handleDelete = (id) => {
     setDeletingId(id); // Set the ID for the row being deleted
@@ -188,7 +123,7 @@ export function PurchaseTable() {
   };
 
   const confirmDelete = () => {
-    fetch(`http://localhost:3002/purchaseRequests/delete-purchase-request/${deletingId}`, {
+    fetch(`http://localhost:3002/users/delete-user/${deletingId}`, {
       method: "DELETE",
       credentials: "include",
     })
@@ -196,11 +131,11 @@ export function PurchaseTable() {
       .then((result) => {
         console.log("Deletion Response:", result);
 
-        if (result && result.purchaseRequest) {
+        if (result && result.user) {
           setData((prevData) =>
-            prevData.filter((item) => item.id !== result.purchaseRequest.id)
+            prevData.filter((item) => item.id !== result.user.id)
           );
-          toast("Item successfully deleted");
+          toast("User successfully deleted");
         } else {
           console.error("Delete failed:", result.message || "Invalid response format");
         }
@@ -216,41 +151,6 @@ export function PurchaseTable() {
     setShowAlert(false); // Hide the confirmation dialog
     setDeletingId(null); // Reset the deleting ID
   };
-
-  const submitFromDrafts = (id) => {
-    const payload = {
-      status: "Pending",
-      note: "",
-    };
-  
-    fetch(`http://localhost:3002/purchaseRequests/update-purchase-request-status/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Update Status:", result);
-  
-        if (result && result.purchaseRequest) {
-          toast("Draft purchase request has now been submitted for approval.")
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.id === result.purchaseRequest.id
-                ? { ...item, status: result.purchaseRequest.status }
-                : item
-            )
-          );
-        } else {
-          console.error("Update failed:", result.message || "Invalid response format");
-        }
-      })
-      .catch((error) => console.error("Error during submission:", error));
-  };
-  
 
   const table = useReactTable({
     data,
@@ -276,15 +176,14 @@ export function PurchaseTable() {
           <RotateCw color="#696969" size={20} />
         </button>
         <Input
-          placeholder="Filter by status..."
-          value={(table.getColumn("status")?.getFilterValue()) ?? ""}
+          placeholder="Filter by name..."
+          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("status")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
       </div>
-      
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -314,13 +213,7 @@ export function PurchaseTable() {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {cell.column.id !== "actions" ? (
-                        <Link href={`/purchase-details/${data[row.id].id}`}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </Link>
-                      ) : (
-                        flexRender(cell.column.columnDef.cell, cell.getContext())
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -358,7 +251,7 @@ export function PurchaseTable() {
       {showAlert && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-md shadow-md w-96 text-left">
-            <h2 className="text-md font-semibold mb-1">Are you sure you want to delete this request?</h2>
+            <h2 className="text-md font-semibold mb-1">Are you sure you want to delete this user?</h2>
             <p className="mb-6">This action is irreversible.</p>
             <div className="space-x-2 flex justify-end">
               <Button

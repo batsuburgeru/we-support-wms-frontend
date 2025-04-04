@@ -8,14 +8,12 @@ import { useState, useEffect } from 'react';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
-import { useRouter } from 'next/navigation';
 
 const NewPurchase = () => {
   toastConfig({
     theme: 'dark',
   });
 
-  const router = useRouter();
   const [note, setNote] = useState('');
   const [approved_by, setApproved_By] = useState('');
   const { cartItems, clearCart } = useCart();
@@ -98,8 +96,8 @@ const NewPurchase = () => {
       );
     })
     .catch((error) => {
-      console.error("Error:", error);
-      alert("Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.");
+      console.log("Error:", error);
+      toast("⚠️ Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.", { maxVisibleToasts: 3 });
     });
   };
 
@@ -107,16 +105,15 @@ const NewPurchase = () => {
     <main>
       <div className='flex justify-center px-6 py-4 flex-col gap-4'>
         <h1>New Purchase Requisition</h1>
-        <ProductSearch width={'[500px]'} />
-      </div>
-      <hr className='border-borderLine'/>
-      <section className="px-6 pt-4">
         <div className="flex items-center">
           <h2 className="mr-20">Client Name*</h2>
           <ClientPopover value={approved_by} setValue={setApproved_By} />
         </div>
+      </div>
+      <hr className='border-borderLine'/>
+      <section className="px-6 pt-4">
+        <ProductSearch width={'[500px]'} workflow="new" />
       </section>
-
       <section className="px-6 mt-8">
         <PurchaseCartTable />
       </section>
@@ -164,7 +161,7 @@ const NewPurchase = () => {
           type="button" 
           className="ml-4 bg-buttonBG px-4 py-2 rounded-md hover:bg-neutral-200 active:bg-neutral-300 colorTransition"
         >
-          Cancel
+          Clear
         </button>
       </form>
     </main>

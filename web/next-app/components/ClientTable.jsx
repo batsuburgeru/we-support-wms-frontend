@@ -20,7 +20,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -30,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { RotateCw } from 'lucide-react'
 
 const columns = [
   {
@@ -85,11 +85,12 @@ const columns = [
 ];
 
 
-export function ClientTable(props) {
+export function ClientTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
+  const [refreshKey, setRefreshKey] = React.useState(0);
   
   React.useEffect(() => {
     fetch("http://localhost:3002/users/view-users", {
@@ -107,7 +108,7 @@ export function ClientTable(props) {
     .catch(error => {
         console.log('Error:', error);
     });
-  }, [props.changeIndicator]);
+  }, [refreshKey]);
 
   const table = useReactTable({
     data,
@@ -128,7 +129,10 @@ export function ClientTable(props) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
+        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 transition-colors duration-200">
+          <RotateCw color="#696969" size={20} />
+        </button>
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn("name")?.getFilterValue()) ?? ""}

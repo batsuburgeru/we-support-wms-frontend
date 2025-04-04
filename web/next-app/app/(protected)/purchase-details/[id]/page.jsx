@@ -78,7 +78,7 @@ export default function PurchaseRequest({ params }) {
                 created_at: purchaseRequest.created_at.slice(0,10) + " | " + purchaseRequest.created_at.slice(11,19),
                 note: deliveryNote.note,
                 pr_items: prItems.map((item) => ({
-                  product_id: item.product_id,
+                  product_name: item.product_name,
                   quantity: item.quantity,
                   unit_price: parseFloat(item.unit_price),
                   total_price: parseFloat(item.total_price),
@@ -142,7 +142,7 @@ export default function PurchaseRequest({ params }) {
             <span className="font-semibold">{data.status}</span>
           </div>
         </div>
-        <h2>Purchase Order# <span className="font-medium">{data.id}</span></h2>
+        <h2>Purchase Order# <span className="font-medium text-brand-primary">{data.id}</span></h2>
         <div className="mt-10 mb-10">
           <div className="grid grid-flow-col grid-cols-2 text-left w-1/2 mb-4">
             <h3>ORDER DATE</h3>
@@ -175,7 +175,7 @@ export default function PurchaseRequest({ params }) {
               ) : data.pr_items.length > 0 ? (
                 data.pr_items.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell>{item.product_id}</TableCell>
+                    <TableCell>{item.product_name}</TableCell>
                     <TableCell>
                       <span className="px-3">{item.quantity}</span>
                     </TableCell>

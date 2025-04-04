@@ -5,8 +5,15 @@ import { Copy } from 'lucide-react';
 import LanguageSelect from '@/components/LanguageSelect';
 import TimezoneSelect from '@/components/TimezoneSelect';
 import { redirect } from 'next/navigation';
+import toast, { toastConfig } from 'react-simple-toasts';
+import 'react-simple-toasts/dist/style.css';
+import 'react-simple-toasts/dist/theme/dark.css';
 
 const AccountSettings = () => {
+  toastConfig({
+      theme: 'dark',
+    });
+
   const [userProfile, setUserProfile] = useState([]);
       
   useEffect(() => {
@@ -40,6 +47,11 @@ const AccountSettings = () => {
     });
   };
 
+  function handleCopy() {
+    navigator.clipboard.writeText(userProfile.email);
+    toast('Email copied to clipboard', { maxVisibleToasts: 3 });
+  }
+
   return (
     <main className="bg-dashboard h-screen">
       <div className='px-6 flex items-center py-4'>
@@ -54,7 +66,7 @@ const AccountSettings = () => {
               <h2 className='font-semibold text-lg'>{userProfile.name}</h2>
               <div className='flex gap-2'>
                 <p className='font-light text-sm'>{userProfile.email}</p>
-                <button><Copy size={15} onClick={() => navigator.clipboard.writeText(userProfile.email)} /></button>
+                <button onClick={handleCopy}><Copy size={15} /></button>
               </div>
             </div>
           </div>

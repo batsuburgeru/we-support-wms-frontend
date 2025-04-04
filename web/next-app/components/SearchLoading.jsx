@@ -7,7 +7,7 @@ const Loading = () => {
   return (
     <div>
       <section className='flex flex-col px-6 py-4 gap-4'>
-        <h1>New Purchase Requisition</h1>
+        <h1>Search Results</h1>
         <div className='flex justify-between items-center'>
           <ProductSearch width={'[500px]'}/>
           <button>
