@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
 
-const Profile = () => {
+const Dashboard = () => {
     const router = useRouter();
     const [userName, setUserName] = useState<string>('');
 
@@ -71,4 +71,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default Dashboard;
