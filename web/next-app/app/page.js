@@ -12,9 +12,14 @@ export default function Home() {
               Welcome to Warehouse Management System! <br />
               Manage your inventory, orders, and logistics seamlessly.
             </p>
-            <Link href="/login" className='bg-brand-secondary px-8 py-2 rounded-md text-white hover:bg-brand-primary active:bg-orange-700 colorTransition'>
-              Proceed to login
-            </Link>
+            <div className='space-x-3'>
+              <Link href="/login" className='bg-white px-8 py-2 rounded-md text-black font-semibold hover:bg-neutral-200 active:bg-neutral-300 colorTransition'>
+                Login
+              </Link>
+              <Link href="/register" className='bg-brand-secondary px-8 py-2 rounded-md text-white font-semibold hover:bg-brand-primary active:bg-orange-700 colorTransition'>
+                Register
+              </Link>
+            </div>
           </div>
           <div className='flex justify-between px-10 py-4 text-sm'>
             <p>
