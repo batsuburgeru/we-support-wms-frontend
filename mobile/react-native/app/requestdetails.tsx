@@ -48,7 +48,7 @@ import {
       const fetchRequestDetails = async () => {
         try {
           setLoading(true);
-          const API_URL = `http://192.168.1.11:3002/purchaseRequests/read-purchase-requests`;
+          const API_URL = `http://192.168.1.9:3002/purchaseRequests/read-purchase-requests`;
           const response = await fetch(API_URL);
           const data = await response.json();
   
@@ -105,7 +105,7 @@ import {
       if (!modalType || !request) return;
   
       try {
-        const API_URL = `http://192.168.1.11:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
+        const API_URL = `http://192.168.1.9:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
         const payload = {
           status:
             modalType === 'Approve'
@@ -154,7 +154,7 @@ import {
     if (loading) {
       return (
         <SafeAreaView className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#EB5E28" />
           <Text className="text-lg font-semibold mt-4">Loading request details...</Text>
         </SafeAreaView>
       );
@@ -256,22 +256,17 @@ import {
           <View className="flex-row justify-around p-4 bg-white">
             <TouchableOpacity
               className="bg-primary p-3 px-7 rounded-lg"
-              onPress={() => setModalType('Approve')}
-            >
-              <Text className="text-white font-poppins-bold text-xl">
-                Approve
-              </Text>
+              onPress={() => setModalType('Approve')}>
+              <Text className="text-white font-poppins-bold text-xl">Approve</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="bg-tabs p-3 px-7 rounded-lg"
-              onPress={() => setModalType('Return')}
-            >
+              onPress={() => setModalType('Return')}>
               <Text className="font-poppins-bold text-xl">Return</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="bg-tabs p-3 px-7 rounded-lg"
-              onPress={() => setModalType('Reject')}
-            >
+              onPress={() => setModalType('Reject')}>
               <Text className="font-poppins-bold text-xl">Reject</Text>
             </TouchableOpacity>
           </View>

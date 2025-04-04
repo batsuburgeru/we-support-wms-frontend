@@ -68,7 +68,7 @@ const TabsLayout = () => {
       />
 
       <Tabs.Screen
-        name="index"
+        name="request"
         options={{
           title: "Requests",
           headerShown: false,

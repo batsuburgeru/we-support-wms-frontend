@@ -20,7 +20,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
-      router.replace('/signIn'); 
+      router.replace('/'); 
     }
   }, [fontsLoaded]);
 

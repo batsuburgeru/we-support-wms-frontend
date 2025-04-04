@@ -1,6 +1,14 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+
+interface CustomJwtPayload extends JwtPayload {
+  role: string;
+  name: string;
+  id: string;
+}
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +22,7 @@ const SignIn = () => {
     }
   
     try {
-      const response = await fetch("http://192.168.1.11:3002/users/login", {
+      const response = await fetch("http://192.168.1.9:3002/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,16 +32,32 @@ const SignIn = () => {
       });
   
       const data = await response.json();
-      console.log("Server response:", data); 
-  
+      console.log("Server response:", data);
+
       if (response.ok) {
         if (data.token) {
-          console.log("JWT Token:", data.token); 
-        } 
-        if (data.user && data.user.name) {
-          localStorage.setItem('userName', data.user.name); // Save user's name
+          console.log("JWT Token:", data.token);
+
+          const decodedToken = jwtDecode<CustomJwtPayload>(data.token);
+          console.log("Decoded Token:", decodedToken);
+
+          const userRole = decodedToken.role;
+          const userName = decodedToken.name;
+          const userId = decodedToken.id;
+
+          await AsyncStorage.setItem('token', data.token);
+          await AsyncStorage.setItem('userRole', userRole);
+          await AsyncStorage.setItem('userName', userName);
+          await AsyncStorage.setItem('userId', userId);
+
+          if (userRole === 'Supervisor' || userRole === 'WarehouseMan' || userRole === 'Admin') {
+            router.replace("/(supervisor)/profile");
+          } else if (userRole === 'Guard' || userRole === 'Admin') {
+            router.replace("/(guard)/dashboard");
+          } else {
+            alert("Unauthorized role. Please contact the admin.");
+          }
         }
-        router.replace("/profile");
       } else {
         alert(data.message || "Login failed. Check credentials.");
       }
@@ -42,7 +66,7 @@ const SignIn = () => {
       alert("Failed to connect to server.");
     }
   };
-  
+
   return (
     <View className="flex-1 justify-center items-center bg-white px-8">
       <Image 
@@ -70,7 +94,7 @@ const SignIn = () => {
       <View className="w-full mt-2">
         <Text className="text-lg font-poppins text-primary mb-1">Password</Text>
         <TextInput 
-          className="w-full h-12 bg-tabs px-3 pb-2 rounded-lg text-xl font" 
+          className="w-full h-12 bg-tabs px-3 pb-2 rounded-lg text-xl" 
           placeholder="Enter password" 
           placeholderTextColor="#A9A9A9"
           secureTextEntry
@@ -79,14 +103,11 @@ const SignIn = () => {
         />
       </View>
 
-      {/* <TouchableOpacity className="self-end mt-2">
-        <Text className="text-lg text-primary font-poppins">Forgot password?</Text>
-      </TouchableOpacity> */}
-
       {/* Sign In Button */}
       <TouchableOpacity className="w-full bg-primary p-4 rounded-lg mt-6" onPress={handleSignIn}>
         <Text className="text-white text-center font-poppins-bold text-2xl">Sign In</Text>
       </TouchableOpacity>
+      
     </View>
   );
 };
