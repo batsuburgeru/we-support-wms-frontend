@@ -28,27 +28,44 @@ import 'react-simple-toasts/dist/theme/dark.css';
 
     const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3002/users/register", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password, role }),
-      credentials: "include"
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result && result.user) {
-        const user = result.user;
-        toast('User successfully registered!');
-        props.setChangeIndicator(prevState => !prevState);
-      } else {
-        console.log('User Registration failed:', result.message);
-      }
-    })
-    .catch(error => {
-      console.log('Error during registration:', error);
-    });
+    if (!name || !email || !password || !role) {
+      toast('Registration failed. Please fill in all fields.');
+    }
+    else {
+      const payload = {
+        name: name,
+        email: email,
+        password: password,
+        role: role,
+        contact_num: "NA",
+        org_name: "NA",
+        comp_add: "NA",
+      };
+      fetch("http://localhost:3002/users/register", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        credentials: "include"
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result && result.user) {
+          toast('User successfully registered! Please inform the user to check their email for the verification link.');
+          props.setChangeIndicator(prevState => !prevState);
+          setName('');
+          setEmail('');
+          setPassword('');  
+          setRole('');
+        } else {
+          toast(`Cannot register user. ${result.error}`);
+        }
+      })
+      .catch(error => {
+        console.log('Error during registration:', error);
+      });
+    };
   };
 
     return (
@@ -67,7 +84,6 @@ import 'react-simple-toasts/dist/theme/dark.css';
                   <label htmlFor="name" className="py-3 text-black font-medium">Name</label>
                   <input 
                     type="text" 
-                    placeholder="Enter full name" 
                     value={name} 
                     onChange={(e) => setName(e.target.value)}
                     id="name" 
@@ -76,7 +92,6 @@ import 'react-simple-toasts/dist/theme/dark.css';
                   <label htmlFor="email" className="py-3 text-black font-medium">Email address</label>
                   <input 
                     type="text" 
-                    placeholder="Enter email" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     id="email" 
@@ -85,7 +100,6 @@ import 'react-simple-toasts/dist/theme/dark.css';
                   <label htmlFor="password" className="py-3 text-black font-medium">Password</label>
                   <input 
                     type="password" 
-                    placeholder="Enter password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
                     id="password" 
@@ -96,7 +110,7 @@ import 'react-simple-toasts/dist/theme/dark.css';
                     name="roles"
                     id="roles"
                     className="col-span-2 border border-borderLine rounded-md px-4 py-2 text-black"
-                    defaultValue="placeholder"
+                    defaultValue={role || "placeholder"}
                     onChange={(e) => setRole(e.target.value)}
                   >
                     <option value="placeholder" disabled>
