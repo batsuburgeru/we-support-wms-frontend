@@ -16,7 +16,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -107,7 +106,7 @@ export function UserTable(props) {
     .then(response => response.json())
     .then(result => {
       if (result && result.users) {
-          setData(result.users);
+        setData(result.users.filter(user => user.role !== "Client"));
       } else {
           console.log("Retrieve failed:", result.message || "No data property");
       }
