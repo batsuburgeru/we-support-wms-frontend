@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Mail, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
@@ -21,24 +22,48 @@ const LoginForm = () => {
   const [companyAddress, setCompanyAddress] = useState('');
   const [clientToggle, setClientToggle] = useState(false);
   const [tosAgree, setTosAgree] = useState(false);
+
   const [tosAgreePrompt, setTosAgreePrompt] = useState(false);
   const [differentPass, setDifferentPass] = useState(false);
   const [registerError, setRegisterError] = useState(false);
   const [incompleteFields, setIncompleteFields] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState(false);
+
+  console.log(password)
   
   const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (tosAgree) {
-      if (password !== confirmPass) {
-        setDifferentPass(true);
+    if (clientToggle) {
+      if (!name || !email || !password || !confirmPass || !phone || !company || !companyAddress) {
+        setIncompleteFields(true);
+        setDifferentPass(false);
+        setRegisterError(false);
         setTosAgreePrompt(false);
+        setLoadingMsg(false);
+      }
+      else if (password !== confirmPass) {
+        setDifferentPass(true);
         setIncompleteFields(false);
         setRegisterError(false);
-        return;
+        setTosAgreePrompt(false);
+        setLoadingMsg(false);
       }
-      if (clientToggle) {
+      else if (!tosAgree) {
+        setTosAgreePrompt(true);
+        setDifferentPass(false);
+        setIncompleteFields(false);
+        setRegisterError(false);
+        setLoadingMsg(false);
+      }
+      else {
+        setIncompleteFields(false);
+        setTosAgreePrompt(false);
+        setDifferentPass(false);
+        setRegisterError(false);
+        setLoadingMsg(true);
         const payload = {
           name: name,
           email: email,
@@ -64,18 +89,47 @@ const LoginForm = () => {
             setRegisterError(false);
             setDifferentPass(false);
             setTosAgreePrompt(false);
-            router.push('/email-unverified');
+            setLoadingMsg(false);
+            setSuccess(true);
           } else {
             console.log("Error during registration.");
           }
         })
         .catch(error => {
-          console.log('Error during login:', error);
+          console.log('Error during registration:', error);
           setRegisterError(true);
           setTosAgreePrompt(false);
         });
       }
-      else if (clientToggle === false) {
+    }
+    else if (clientToggle === false || !clientToggle) {
+      if (!name || !email || !password || !confirmPass) {
+        setIncompleteFields(true);
+        setDifferentPass(false);
+        setRegisterError(false);
+        setTosAgreePrompt(false);
+        setLoadingMsg(false);
+      }
+      else if (password !== confirmPass) {
+        setDifferentPass(true);
+        setIncompleteFields(false);
+        setRegisterError(false);
+        setTosAgreePrompt(false);
+        setLoadingMsg(false);
+      }
+      else if (!tosAgree) {
+        setTosAgreePrompt(true);
+        setDifferentPass(false);
+        setIncompleteFields(false);
+        setRegisterError(false);
+        setLoadingMsg(false);
+      }
+      else {
+        setIncompleteFields(false);
+        setTosAgreePrompt(false);
+        setDifferentPass(false);
+        setRegisterError(false);
+        setLoadingMsg(true);
         const payload = {
           name: name,
           email: email,
@@ -101,33 +155,34 @@ const LoginForm = () => {
             setRegisterError(false);
             setDifferentPass(false);
             setTosAgreePrompt(false);
-            router.push('/email-unverified');
-          } else {
-            setIncompleteFields(true);
+            setLoadingMsg(false);
+            setSuccess(true);
+          } else if (result.error === "Email already exists") {
+            toast("Email already exists. Please try again.", {maxVisibleToasts: 1});
+            setLoadingMsg(false);
+            setIncompleteFields(false);
+            setRegisterError(false);
+            setDifferentPass(false);
+            setTosAgreePrompt(false);
+          }
+          else {
+            console.log(`Error: ${result.error}`);
+            setLoadingMsg(false);
+            setIncompleteFields(false);
+            setRegisterError(false);
+            setDifferentPass(false);
             setTosAgreePrompt(false);
           }
         })
         .catch(error => {
-          console.log('Error during login:', error);
+          console.log('Error during registration:', error);
           setRegisterError(true);
           setTosAgreePrompt(false);
           setDifferentPass(false);
           setIncompleteFields(false);
         });
       }
-      else {
-        // setIncompleteFields(true);
-        // setTosAgreePrompt(false);
-        // setDifferentPass(false);
-        // setRegisterError(false);
-        console.log("error 1")
-      }
-    } else {
-      setTosAgreePrompt(true);
-      setDifferentPass(false);
-      setRegisterError(false);  
-      setIncompleteFields(false);
-    }    
+    }
   };
 
   return (
@@ -231,10 +286,11 @@ const LoginForm = () => {
           
           <button type="submit" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>Create Account</button>
           <div className='absolute'>
-            {differentPass && <p className='text-center text-sm text-red-600 font-medium pt-2'>Passwords do not match.</p>}
-            {incompleteFields && <p className='text-center text-sm text-red-600 font-medium pt-2'>Please fill in all required fields.</p>}
-            {registerError && <p className='text-center text-sm text-red-600 font-medium pt-2'>Sorry, we could not register you at this time. Please try again later.</p>}
-            {tosAgreePrompt && <p className='text-center text-sm text-red-600 font-medium pt-2'>Please read and agree to the Terms and Privacy Policy.</p>}
+            {differentPass && <p className='text-left text-sm text-red-600 font-medium pt-2'>Passwords do not match.</p>}
+            {incompleteFields && <p className='text-left text-sm text-red-600 font-medium pt-2'>Please fill in all required fields.</p>}
+            {registerError && <p className='text-left text-sm text-red-600 font-medium pt-2'>Sorry, we could not register you at this time. Please try again later.</p>}
+            {tosAgreePrompt && <p className='text-left text-sm text-red-600 font-medium pt-2'>Please read and agree to the Terms and Privacy Policy.</p>}
+            {loadingMsg && <p className='text-left text-sm text-orange-600 font-medium pt-2'>Creating your account. Please wait...</p>}
           </div>
           <div className='flex justify-center font-medium mt-10'>
             <span>Already have an account?</span> <Link href="/login" className='ml-1 text-brand-primary'>Login</Link>
@@ -245,6 +301,21 @@ const LoginForm = () => {
       <div className='w-1/2 h-full'>
         <img src="./login-vector.jpg" alt="Login Vector" className='w-full h-full object-cover'/>
       </div>
+
+      {/* SUCCESS MODAL */}
+      {success && <div className="flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div className='bg-white shadow-xl rounded-md p-12 w-96 flex flex-col items-center justify-center gap-6 relative'>
+          <div>
+            <X className='absolute top-4 right-4 cursor-pointer' onClick={() => setSuccess(false)} />
+          </div>
+          <Mail size={40} strokeWidth={3} color="#EB5E28" />
+          <h1 className='text-center'>Check your inbox</h1>
+          <p className='text-sm text-center'>Thank you for signing up! Before you can start using the platform, we must first verify your account. Simply click the verification link sent to your inbox to confirm your email address.</p>
+          <Link href="/login" className='w-full bg-brand-secondary text-white py-2 mt-8 rounded-md text-center hover:bg-orange-600 active:bg-orange-700 colorTransition'>
+            Proceed to login
+          </Link>
+        </div>
+      </div>}
     </main>
   );
 };

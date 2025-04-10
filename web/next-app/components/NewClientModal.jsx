@@ -29,48 +29,48 @@ export function NewClientModal({ setChangeIndicator }) {
   const [companyAddress, setCompanyAddress] = useState('');
 
   const handleSubmit = (event) => {
-  event.preventDefault();
-  if (!name || !email || !password || !phone || !company || !companyAddress) {
-    toast('Registration failed. Please fill in all fields.');
-  }
-  else {
-    const payload = {
-      name: name,
-      email: email,
-      password: password,
-      role: "Client",
-      contact_num: phone,
-      org_name: company,
-      comp_add: companyAddress,
+    event.preventDefault();
+    if (!name || !email || !password || !phone || !company || !companyAddress) {
+      toast('Registration failed. Please fill in all fields.');
+    }
+    else {
+      const payload = {
+        name: name,
+        email: email,
+        password: password,
+        role: "Client",
+        contact_num: phone,
+        org_name: company,
+        comp_add: companyAddress,
+      };
+      fetch("http://localhost:3002/users/register", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        credentials: "include"
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result && result.user) {
+          toast('Client successfully registered! Please inform the client to check their email for the verification link.');
+          setChangeIndicator(prevState => !prevState);
+          setName('');
+          setEmail('');
+          setPassword(''); 
+          setPhone('');
+          setCompany('');
+          setCompanyAddress('');
+        } else {
+          toast(`Cannot register user. ${result.error}`);
+        }
+      })
+      .catch(error => {
+        console.log('Error during registration:', error);
+      });
     };
-    fetch("http://localhost:3002/users/register", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-      credentials: "include"
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result && result.user) {
-        toast('Client successfully registered! Please inform the client to check their email for the verification link.');
-        setChangeIndicator(prevState => !prevState);
-        setName('');
-        setEmail('');
-        setPassword(''); 
-        setPhone('');
-        setCompany('');
-        setCompanyAddress('');
-      } else {
-        toast(`Cannot register user. ${result.error}`);
-      }
-    })
-    .catch(error => {
-      console.log('Error during registration:', error);
-    });
   };
-};
 
   return (
     <AlertDialog>
