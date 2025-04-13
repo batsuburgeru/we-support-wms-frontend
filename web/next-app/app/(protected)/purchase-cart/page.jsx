@@ -1,6 +1,6 @@
 "use client"
 
-import ClientPopover from "@/components/ClientPopover";
+import DataPopover from "@/components/DataPopover";
 import ProductSearch from "@/components/ProductSearch";
 import { PurchaseCartTable } from "@/components/PurchaseCartTable";
 import { useCart } from "@/context/CartContext";
@@ -101,13 +101,40 @@ const NewPurchase = () => {
     });
   };
 
+  const [clients, setClients] = useState([]);
+        
+  useEffect(() => {
+    fetch("http://localhost:3002/users/view-users", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result && result.users) {
+        setClients(result.users.filter(user => user.role === "Client"));
+        } else {
+        console.log('Retrieve failed:', result.message);
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
+
   return (
     <main>
       <div className='flex justify-center px-6 py-4 flex-col gap-4'>
         <h1>New Purchase Requisition</h1>
         <div className="flex items-center">
           <h2 className="mr-20">Client Name*</h2>
-          <ClientPopover value={approved_by} setValue={setApproved_By} />
+          <DataPopover 
+            popoverFor="client"
+            value={approved_by} 
+            setValue={setApproved_By} 
+            data={clients}
+            commandEmpty="No client found."
+            placeholder="Select a client"
+          />
         </div>
       </div>
       <hr className='border-borderLine'/>

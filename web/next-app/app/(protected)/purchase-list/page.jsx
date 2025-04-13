@@ -1,8 +1,7 @@
 
-import React from 'react'
-import { RotateCw } from 'lucide-react'
-import { PurchaseTable } from '@/components/PurchaseTable'
-import Link from 'next/link'
+import React from 'react';
+import { PurchaseTable } from '@/components/DataTable';
+import Link from 'next/link';
 
 const PurchaseList = () => {
 

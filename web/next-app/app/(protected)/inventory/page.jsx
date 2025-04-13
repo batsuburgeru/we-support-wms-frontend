@@ -1,5 +1,5 @@
 import React from 'react';
-import { InventoryTable } from '@/components/InventoryTable';
+import { InventoryTable } from '@/components/DataTable';
 import Link from 'next/link';
 import { verifySession } from '@/app/lib/dal';
 

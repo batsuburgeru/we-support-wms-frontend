@@ -17,6 +17,8 @@ const LoginForm = () => {
     event.preventDefault();
     if (!email || !password) {
       setNoCreds(true);
+      setInvalidCreds(false);
+      setLoginError(false);
     }
     else {
       setNoCreds(false);
@@ -33,6 +35,7 @@ const LoginForm = () => {
         if (result && result.token) {
           setInvalidCreds(false);
           setLoginError(false);
+          setNoCreds(false);
           setSuccess(true);
           router.push('/dashboard');
         } else if (result.error === "Account not verified. Please verify your email before logging in.") {
@@ -41,11 +44,14 @@ const LoginForm = () => {
         else {
           setInvalidCreds(true);
           setLoginError(false);
+          setNoCreds(false);
         }
       })
       .catch(error => {
         console.log('Error during login:', error);
         setLoginError(true);
+        setInvalidCreds(false);
+        setNoCreds(false);
       });
     }
   };
