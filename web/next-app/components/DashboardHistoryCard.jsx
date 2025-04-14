@@ -1,5 +1,5 @@
 import React from 'react';
-import { PurchaseTable } from '@/components/PurchaseTable';
+import { PurchaseTable } from '@/components/DataTable';
 
 const DashboardHistoryCard = () => {
   return (

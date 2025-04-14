@@ -31,7 +31,7 @@ export default function ClientPopover({ value, setValue }) {
       .then(response => response.json())
       .then(result => {
           if (result && result.users) {
-          setClients(result.users);
+          setClients(result.users.filter(user => user.role === "Client"));
           } else {
           console.log('Retrieve failed:', result.message);
           }
@@ -62,23 +62,23 @@ export default function ClientPopover({ value, setValue }) {
                 <CommandList>
                   <CommandEmpty>No client found.</CommandEmpty>
                   <CommandGroup>
-                    {clients.map((client) => (
+                    {clients.map((item) => (
                       <CommandItem
-                        key={client.id}
-                        value={client.id}
+                        key={item.id}
+                        value={item.id}
                         onSelect={(currentValue) => {
                           setValue(currentValue === value ? "" : currentValue)
                           setOpen(false)
                         }}
                       >
                         <div className="flex flex-col">
-                          <span className="font-semibold text-lg">{client.name}</span>
-                          <span className="font-light text-sm">{client.email}</span>
+                          <span className="font-semibold text-lg">{item.name}</span>
+                          <span className="font-light text-sm">{item.email}</span>
                         </div>
                         <Check
                           className={cn(
                             "ml-auto",
-                            value === client.id ? "opacity-100" : "opacity-0"
+                            value === item.id ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>
