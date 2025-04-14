@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import CategoryPopover from '@/components/CategoryPopover';
+import DataPopover from '@/components/DataPopover';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
@@ -81,7 +81,25 @@ const InventoryAdd = () => {
         alert("Error adding to inventory! Please ensure all fields are filled out correctly.");
       });
   }
-  
+  const [data, setData] = useState([]);
+      
+  useEffect(() => {
+    fetch("http://localhost:3002/categories/view-categories", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result && result.categories) {
+        setData(result.categories);
+        } else {
+        console.log('Retrieve failed:', result.message);
+        }
+    })
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
 
   return (
     <main>
@@ -131,7 +149,14 @@ const InventoryAdd = () => {
           </div>
           <div className="flex my-2 items-center justify-between">
             <h3 className="py-3 text-black mr-[125px]">Category</h3>
-            <CategoryPopover value={category_id} setValue={setCategory_id} />
+            <DataPopover 
+              popoverFor="category"
+              value={category_id} 
+              setValue={setCategory_id} 
+              data={data}
+              commandEmpty="No category found."
+              placeholder="Select a category"
+            />
           </div>
         </div>
         <div className="px-6 2xl:flex items-center hidden">

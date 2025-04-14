@@ -96,7 +96,7 @@ export default function PurchaseRequest({ params }) {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
+    };
 
     fetchData();
   }, [id]); // Add `id` as a dependency to re-fetch data if it changes
