@@ -45,41 +45,37 @@ const InventoryAdd = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("sku", sku);
+    formData.append("description", description);
+    formData.append("category_id", category_id);
+    formData.append("unit_price", price);
+    formData.append("stock_quantity", stock);
+    formData.append("image", image); // Append the image file to the form data
   
-    // Construct the JSON payload
-    const payload = {
-      name: name, // Item name
-      sku: sku, // SKU
-      description: description, // Item description
-      category_id: category_id, // Category ID
-      unit_price: parseFloat(price), // Convert price to number
-      stock_quantity: parseInt(stock, 10), // Convert stock to integer
-    };
-  
-    console.log("JSON Payload:", payload); // Debugging log for JSON payload
+    console.log("Form Data:", formData); // Debugging log for JSON payload
   
     fetch("http://localhost:3002/products/create-product", {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Ensure content type is set to JSON
-      },
-      body: JSON.stringify(payload), // Convert the payload to a JSON string
-      credentials: "include", // Include credentials for authentication
+      body: formData,
+      credentials: "include", 
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to add product to inventory");
-        }
-        return response.json();
-      })
-      .then(() => {
-        handleCancel(); // Reset form and navigate back
-        toast("Item successfully added to inventory"); // Show success notification
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Error adding to inventory! Please ensure all fields are filled out correctly.");
-      });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to add product to inventory");
+      }
+      return response.json();
+    })
+    .then(() => {
+      handleCancel(); // Reset form and navigate back
+      toast("Item successfully added to inventory"); // Show success notification
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Error adding to inventory! Please ensure all fields are filled out correctly.");
+    });
   }
   const [data, setData] = useState([]);
       

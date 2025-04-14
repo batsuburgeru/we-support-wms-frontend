@@ -3,8 +3,10 @@
 import React from 'react';
 import { Pencil, X } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const UserDetails = ({ params }) => {
+  const router = useRouter();
   const resolvedParams = React.use(params); // Unwrapping the Promise
   const { id } = resolvedParams;
   const [data, setData] = React.useState(''); // State to hold the transformed data
@@ -34,7 +36,6 @@ const UserDetails = ({ params }) => {
     fetchData();
   }, [id]);
 
-  console.log(data)
   return (
     <div>
       <p>User ID: {data.id}</p>
@@ -52,9 +53,9 @@ const UserDetails = ({ params }) => {
         <Link href={`/edit-user/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1">
           <Pencil />
         </Link>
-        <Link href="/purchase-list" className="border border-borderLine rounded-sm h-fit p-1 mx-1">
+        <button onClick={() => router.back()} className="border border-borderLine rounded-sm h-fit p-1 mx-1">
           <X />
-        </Link>
+        </button>
       </div>
       
     </div>

@@ -55,16 +55,14 @@ function ClientList({ userRole }) {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
-  
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            {userRole === "Admin" && <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal />
               </Button>
-            </DropdownMenuTrigger>
+            </DropdownMenuTrigger>}
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
                 <Link href={`/user-details/${row.original.id}`} className="w-full">
@@ -126,6 +124,7 @@ function ClientList({ userRole }) {
           setEditingId={setEditingId}
           condition={condition}
           userRole={userRole}
+          filterValue="org_name"
         />
       </section>
     </main>

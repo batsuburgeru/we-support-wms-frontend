@@ -84,6 +84,7 @@ const EditPurchase = ({ params }) => {
               return {
                 id: purchaseRequest.id,
                 approved_by_name: purchaseRequest.approved_by_name,
+                client_name: purchaseRequest.client_name,
                 note: deliveryNote.note,
                 pr_items: prItems.map((item) => ({
                   product_id: item.product_id,
@@ -176,7 +177,7 @@ const EditPurchase = ({ params }) => {
       <section className="px-6 pt-4">
         <div className="flex items-center">
           <h2 className="mr-20">Client Name*</h2>
-          <h2 className="bg-neutral-200 px-4 py-1 rounded-md mt-2 font-medium">{data.approved_by_name}</h2>
+          <h2 className="bg-neutral-200 px-4 py-1 rounded-md font-medium">{data.client_name}</h2>
         </div>
       </section>
       <section className="px-6 mt-8">

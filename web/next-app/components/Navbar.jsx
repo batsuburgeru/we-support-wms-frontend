@@ -27,14 +27,14 @@ const Navbar = ({ userRole }) => {
                     <ShoppingBasket color={pathname === "/purchase-list" || pathname.startsWith("/purchase-details") || pathname.startsWith("/edit-purchase-request") ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Purchase List</span>
                 </Link>
-                <Link href="/inventory" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/inventory" || pathname === "/inventory-add" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                {userRole !== "Client" && <Link href="/inventory" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/inventory" || pathname === "/inventory-add" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <Archive color={pathname === "/inventory" || pathname === "/inventory-add" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Inventory</span>
-                </Link>
-                <Link href="/client-list" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/client-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                </Link>}
+                {userRole !== "Client" && <Link href="/client-list" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/client-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <Building color={pathname === "/client-list" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Clients</span>
-                </Link>
+                </Link>}
                 {userRole === "Admin" && <Link href="/user-list" className={`w-fit md:w-full flex items-center py-2 my-1  rounded-md px-2 transition-colors duration-0 ${pathname === "/user-list" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <UserRound color={pathname === "/user-list" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Users</span>

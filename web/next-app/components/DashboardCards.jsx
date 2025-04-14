@@ -115,7 +115,7 @@ const DashboardCards = () => {
         },
         {
           id: 3,
-          title: 'Denied Requests',
+          title: 'Rejected Requests',
           icon: 'DeniedRequests',
           value: deniedArrayNum,
         },

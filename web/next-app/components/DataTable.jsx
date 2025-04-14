@@ -149,9 +149,9 @@ export function ClientUserTable(props) {
         </button>
         <Input
           placeholder="Filter by name..."
-          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
+          value={(table.getColumn(props.filterValue)?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn(props.filterValue)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -326,6 +326,13 @@ export function PurchaseTable() {
       cell: ({ row }) => <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>,
     },
     {
+      accessorKey: "client_name",
+      header: "Client",
+      cell: ({ row }) => (
+        <div>{row.getValue("client_name")}</div>
+      ),
+    },
+    {
       accessorKey: "created_by_name",
       header: "Created By",
       cell: ({ row }) => (
@@ -428,6 +435,7 @@ export function PurchaseTable() {
               status: item.purchaseRequest.status,
               created_at: item.purchaseRequest.created_at,
               updated_at: item.purchaseRequest.updated_at,
+              client_name: item.purchaseRequest.client_name,
               amount: totalAmount,
             };
           });
@@ -531,18 +539,36 @@ export function PurchaseTable() {
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-2">
-        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 transition-colors duration-200">
+        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 colorTransition duration-200">
           <RotateCw color="#696969" size={20} />
         </button>
         <div className="flex justify-between w-full">
           <Input
-            placeholder="Filter by status..."
-            value={(table.getColumn("status")?.getFilterValue()) ?? ""}
+            placeholder="Filter by client..."
+            value={(table.getColumn("client_name")?.getFilterValue()) ?? ""}
             onChange={(event) =>
-              table.getColumn("status")?.setFilterValue(event.target.value)
+              table.getColumn("client_name")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
+          <div className="flex gap-2">
+            {["All", "Approved", "Rejected", "Pending", "Returned", "Draft"].map((status) => (
+              <button
+                key={status}
+                onClick={() => {
+                  setFilterVal(status === "All" ? "" : status);
+                  setColumnFilters(status === "All" ? [] : [{ id: "status", value: status }]);
+                }}
+                className={`${
+                  filterVal === (status === "All" ? "" : status)
+                    ? 'bg-brand-secondary text-white px-4 hover:bg-orange-600 active:bg-orange-700'
+                    : 'px-4 text-neutral-500 bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400'
+                } rounded-md colorTransition`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       
@@ -659,10 +685,11 @@ export function InventoryTable() {
       ),
     },
     {
-      accessorKey: "images",
+      accessorKey: "img_url",
       header: "Image",
       cell: ({ row }) => (
-        <img src={`./img-box.png`} className="w-6"/>
+        // <img src={row.getValue("img_url")} className="w-6"/>
+        <div>{row.getValue("img_url")}</div>
       ),
     },
     {
