@@ -32,7 +32,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, se
         setLoading(true);
 
         try {
-            const API_URL = `http://172.16.48.90:3002/purchaseRequests/update-purchase-request-status/${id}`;
+            const API_URL = `http://192.168.1.11:3002/purchaseRequests/update-purchase-request-status/${id}`;
             const payload = {
                 status: title === "Approve" ? "Approved" : title === "Return" ? "Returned" : "Rejected",
                 note: remarks,
