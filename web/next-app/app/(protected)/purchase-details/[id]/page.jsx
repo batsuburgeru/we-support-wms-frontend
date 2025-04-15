@@ -75,6 +75,7 @@ export default function PurchaseRequest({ params }) {
                 created_by_role: purchaseRequest.created_by_role,
                 status: purchaseRequest.status,
                 approved_by_name: purchaseRequest.approved_by_name,
+                client_name: purchaseRequest.client_name,
                 created_at: purchaseRequest.created_at.slice(0,10) + " | " + purchaseRequest.created_at.slice(11,19),
                 note: deliveryNote.note,
                 pr_items: prItems.map((item) => ({
@@ -122,7 +123,7 @@ export default function PurchaseRequest({ params }) {
           </div>
           {data.approved_by_name && <hr className="h-full border border-borderLine mx-8" />}
           {data.approved_by_name && <div className="font-medium flex flex-col justify-between">
-            <h2>Assignee</h2>
+            <h2>Approved By</h2>
             <h3 className="text-sm">{data.approved_by_name}</h3>
           </div>}
         </div>
@@ -150,7 +151,7 @@ export default function PurchaseRequest({ params }) {
           </div>
           <div className="grid grid-flow-col grid-cols-2 text-left w-1/2 mb-4">
             <h3>CLIENT NAME</h3>
-            <h4>{data.approved_by_name}</h4>
+            <h4>{data.client_name}</h4>
           </div>
         </div>
         <div className="w-full">

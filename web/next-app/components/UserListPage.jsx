@@ -41,8 +41,6 @@ const ClientList = () => {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
-  
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,7 +57,9 @@ const ClientList = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                Edit
+                <Link href={`/edit-user/${row.original.id}`} className="w-full">
+                  Edit
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
@@ -99,6 +99,7 @@ const ClientList = () => {
           deletingId={deletingId}
           setDeletingId={setDeletingId}
           condition={condition}
+          filterValue="name"
         />
       </section>
     </main>
