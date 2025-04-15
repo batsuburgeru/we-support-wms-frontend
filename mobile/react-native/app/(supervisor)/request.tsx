@@ -74,7 +74,7 @@ export default function Requests() {
 
     const fetchRequests = async () => {
         try {
-            const API_URL = 'http://192.168.1.9:3002/purchaseRequests/view-purchase-requests';
+            const API_URL = 'http://192.168.1.11:3002/purchaseRequests/view-purchase-requests';
             const response = await fetch(API_URL);
             const data = await response.json();
 

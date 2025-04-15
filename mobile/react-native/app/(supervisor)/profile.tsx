@@ -30,7 +30,7 @@ const Profile = () => {
     // Fetch user information
     const fetchUserName = async () => {
         try {
-            const response = await fetch("http://192.168.1.9:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.1.11:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -72,7 +72,7 @@ const Profile = () => {
     // Fetch purchase requests
     const fetchRequests = async () => {
         try {
-            const response = await fetch("http://192.168.1.9:3002/purchaseRequests/view-purchase-requests", {
+            const response = await fetch("http://192.168.1.11:3002/purchaseRequests/view-purchase-requests", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -123,7 +123,7 @@ const Profile = () => {
     // Handle user sign-out
     const handleSignOut = async () => {
         try {
-            const response = await fetch("http://192.168.1.9:3002/users/logout", {
+            const response = await fetch("http://192.168.1.11:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
