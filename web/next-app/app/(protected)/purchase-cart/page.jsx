@@ -62,7 +62,7 @@ const NewPurchase = () => {
     const action = event.nativeEvent.submitter.value;
 
     const payload = {
-      //status: action === 'save-draft' ? "Draft" : "Pending",
+      status: action === 'save-draft' ? "Draft" : "Pending",
       client_id: client_id,
       note: note,
       items: items
