@@ -1,4 +1,4 @@
-"use category"
+"use client";
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -36,7 +36,7 @@ export default function DataPopover({ value, setValue, data, commandEmpty, place
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-96 p-0">
+        <PopoverContent className={`${popoverFor === 'status' ? 'w-52' : 'w-96'} p-0`}>
           <Command>
             <CommandInput placeholder={placeholder} className="h-9" />
             <CommandList>

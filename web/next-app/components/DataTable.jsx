@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RotateCw, ArrowUpDown, MoreHorizontal, Edit } from 'lucide-react';
+import { RotateCw, ArrowUpDown, MoreHorizontal, FileDown } from 'lucide-react';
 import Link from 'next/link';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
@@ -34,6 +34,7 @@ import 'react-simple-toasts/dist/theme/dark.css';
 import { useCart } from "@/context/CartContext";
 import EditUserModal from '@/components/EditUserModal';
 import DataPopover from "@/components/DataPopover";
+import DatePicker from '@/components/DatePicker';
 
 export function ClientUserTable(props) {
   toastConfig({
@@ -230,7 +231,7 @@ export function ClientUserTable(props) {
       </div>
       {props.showAlert && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-md w-96 text-left">
+          <div className="bg-white p-6 rounded-xl shadow-md w-96 text-left">
             <h2 className="text-md font-semibold mb-1">Are you sure you want to delete this user?</h2>
             <p className="mb-6">This action is irreversible.</p>
             <div className="space-x-2 flex justify-end">
@@ -252,7 +253,7 @@ export function ClientUserTable(props) {
       )}
       {props.showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-md w-96 text-left">
+          <div className="bg-white p-6 rounded-xl shadow-md w-96 text-left">
             <h2 className="text-md font-semibold mb-1">Edit Role</h2>
             <div className="flex justify-between items-center my-4">
               <label htmlFor="organization" className="py-3 text-black font-medium">Role</label>
@@ -452,6 +453,11 @@ export function PurchaseTable() {
   const [deletingId, setDeletingId] = React.useState(null);
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [filterVal, setFilterVal] = React.useState("All");
+  const [startDate, setStartDate] = React.useState('');
+  const [endDate, setEndDate] = React.useState('');
+  const [status, setStatus] = React.useState('');
+  const [prId, setPrId] = React.useState('');
+  const [showDownloadCSVModal, setShowDownloadCSVModal] = React.useState(false);
 
   React.useEffect(() => {
     fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
@@ -572,6 +578,64 @@ export function PurchaseTable() {
     .catch((error) => console.error("Error during syncing:", error));
   };
 
+  const cancelDownloadCSV = () => {
+    setShowDownloadCSVModal(false);
+    setStartDate("");
+    setEndDate("");
+    setStatus("");
+    setPrId("");
+  };
+  
+  const clearDownloadCSV = () => {
+    setStartDate("");
+    setEndDate("");
+    setStatus("");
+    setPrId("");
+  };
+
+  const confirmDownloadCSV = (startDate, endDate, status, prId) => {
+    // Construct query parameters dynamically
+    const queryParams = new URLSearchParams();
+
+    if (status) queryParams.append("status", status);
+    if (startDate) queryParams.append("startDate", startDate);
+    if (endDate) queryParams.append("endDate", endDate);
+    if (prId) queryParams.append("prId", prId);
+
+    // Build the full URL with query parameters
+    const url = `http://localhost:3002/sapSyncLogs/export-sap-sync-logs?${queryParams.toString()}`;
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'text/csv',
+      },
+      credentials: 'include',
+    })
+    .then((response) => {
+      if (!response.ok) {
+        toast('No SAP Sync logs found for the given filters.', {maxVisibleToasts: 1});
+      }
+      else {
+        return response.blob();
+      }
+    })
+    .then((blob) => {
+      if (blob) {
+        const objectURL = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectURL;
+        a.download = 'sap_sync_logs.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(objectURL); // Clean up
+      } 
+    })
+    .catch((error) => console.error('Error downloading CSV:', error));
+  };
+
+
   const submitFromDrafts = (id) => {
     const payload = {
       status: "Pending",
@@ -629,7 +693,7 @@ export function PurchaseTable() {
       id: "Draft",
       name: "Status: Draft",
     },
-  ]
+  ];
 
   const table = useReactTable({
     data,
@@ -667,6 +731,10 @@ export function PurchaseTable() {
             <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
               <RotateCw color="#696969" size={20} />
               SAP
+            </button>
+            <button onClick={() => setShowDownloadCSVModal(true)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
+              <FileDown color="#696969" size={20} />
+              CSV
             </button>
             <DataPopover
               popoverFor="status"
@@ -755,7 +823,7 @@ export function PurchaseTable() {
       </div>
       {showAlert && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-md shadow-md w-96 text-left">
+          <div className="bg-white p-6 rounded-xl shadow-md w-96 text-left">
             <h2 className="text-md font-semibold mb-1">Are you sure you want to delete this request?</h2>
             <p className="mb-6">This action is irreversible.</p>
             <div className="space-x-2 flex justify-end">
@@ -770,6 +838,89 @@ export function PurchaseTable() {
                 className="bg-brand-secondary text-white px-4 py-2 rounded-md hover:bg-orange-600 active:bg-orange-700"
               >
                 Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showDownloadCSVModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-md w-max text-left">
+            <h2 className="text-xl font-bold mb-4">Download Purchase Request CSV</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold text-lg">Filters</h3>
+              <Button
+                onClick={clearDownloadCSV}
+                className="bg-white border border-borderLine px-4 py-2 rounded-md hover:bg-gray-200 active:bg-gray-300 text-black"
+              >
+                Clear Filters
+              </Button>
+            </div>
+            <div className="flex items-center gap-20 mb-4">
+              <label htmlFor="prId" className="text-black font-medium text-nowrap">Purchase Request ID</label>
+              <input
+                type="text"
+                id="prId"
+                name="prId"
+                value={prId}
+                onChange={(e) => setPrId(e.target.value)}
+                className="border border-borderLine rounded-md py-1 px-2 focus:outline-none focus:border-brand-secondary w-full"
+              />
+            </div>
+            <div className="flex gap-48 mb-8">
+              <p className="py-1 text-black font-medium">Status</p>
+              <div className="flex gap-4">
+                <button 
+                  key="Success" 
+                  onClick={() => setStatus("Success")} 
+                  className={`${
+                    status === "Success"
+                      ? 'bg-brand-secondary text-white px-4 hover:bg-orange-600 active:bg-orange-700'
+                      : 'px-4 text-neutral-500 bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400'
+                  } rounded-md colorTransition`}
+                >
+                  Success
+                </button>
+                <button 
+                  key="Failed" 
+                  onClick={() => setStatus("Failed")} 
+                  className={`${
+                    status === "Failed"
+                      ? 'bg-brand-secondary text-white px-4 hover:bg-orange-600 active:bg-orange-700'
+                      : 'px-4 text-neutral-500 bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400'
+                  } rounded-md colorTransition`}
+                >
+                  Failed
+                </button>
+              </div>
+            </div>
+            <div className="flex w-full gap-6 items-center mb-4">
+              <h3 className="font-medium text-nowrap">Date Range</h3>
+              <hr className="w-full" />
+            </div>
+            <div className="flex flex-col lg:flex-row lg:gap-6 gap-2 mb-10 font-medium">
+              <div className="flex justify-between lg:justify-start items-center gap-2 mb-4">
+                <p>Start Date</p>
+                <DatePicker date={startDate} setDate={setStartDate} />
+              </div>
+              <div className="flex justify-between lg:justify-start items-center gap-2 mb-4">
+                <p>End Date</p>
+                <DatePicker date={endDate} setDate={setEndDate} />
+              </div>
+            </div>
+            <div className="space-x-2 flex justify-end">
+              <Button
+                onClick={cancelDownloadCSV}
+                className="bg-white border border-borderLine px-4 py-2 rounded-md hover:bg-gray-200 active:bg-gray-300 text-black"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => confirmDownloadCSV(startDate, endDate, status, prId)}
+                className="bg-brand-secondary text-white px-4 py-2 rounded-md hover:bg-orange-600 active:bg-orange-700"
+              >
+                <FileDown color="#FFF" size={20} />
+                Download CSV
               </Button>
             </div>
           </div>
