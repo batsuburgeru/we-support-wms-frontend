@@ -43,7 +43,7 @@ const EmailResetForm: React.FC<EmailResetFormProps> = ( ) => {
     setErrorMsg(false);
 
     try {
-      const response = await fetch(`http://192.168.1.11:3002/users/forgot-password`, {
+      const response = await fetch(`http://192.168.68.104:3002/users/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,10 +72,10 @@ const EmailResetForm: React.FC<EmailResetFormProps> = ( ) => {
         <View className="flex-1 justify-center items-center bg-white px-8">
         <Image
                     source={require('../assets/images/logo.png')}
-                    className="w-40 h-40 mb-8"
+                    className="w-40 h-40 mb-4"
                     resizeMode="contain"
         />
-          <Text className="text-5xl font-poppins-bold text-black text-center mb-4">Password Reset</Text>
+          <Text className="text-5xl font-poppins-bold text-black text-center my-8">Password Reset</Text>
           <Text className="text-lg font-poppins-medium text-black text-center mb-4">
             Enter your email address to receive a password reset link.
           </Text>

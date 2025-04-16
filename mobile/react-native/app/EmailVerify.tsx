@@ -36,7 +36,7 @@ const EmailVerificationForm: React.FC = () => {
     setErrorMsg(false);
 
     try {
-      const response = await fetch(`http://192.168.1.11:3002/users/resend-verification-email`, {
+      const response = await fetch(`http://192.168.68.104:3002/users/resend-verification-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
