@@ -26,12 +26,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RotateCw, ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { RotateCw, ArrowUpDown, MoreHorizontal, Edit } from 'lucide-react';
 import Link from 'next/link';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 import { useCart } from "@/context/CartContext";
+import EditUserModal from '@/components/EditUserModal';
+import DataPopover from "@/components/DataPopover";
 
 export function ClientUserTable(props) {
   toastConfig({
@@ -149,9 +151,9 @@ export function ClientUserTable(props) {
         </button>
         <Input
           placeholder="Filter by name..."
-          value={(table.getColumn("name")?.getFilterValue()) ?? ""}
+          value={(table.getColumn(props.filterValue)?.getFilterValue()) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn(props.filterValue)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -288,6 +290,10 @@ export function ClientUserTable(props) {
           </div>
         </div>
       )}
+      {props.showEditModal && 
+      <div className="fixed inset-0 flex justify-center items-center z-50">
+        <EditUserModal setShowEditModal={props.setShowEditModal} />
+      </div>}
     </div>
   );
 };
@@ -300,6 +306,11 @@ export function PurchaseTable() {
     Returned: "bg-bgReturned text-txtReturned text-center rounded-sm w-max px-2 py-1",
     Draft: "bg-bgDraft text-txtDraft text-center rounded-sm w-max px-2 py-1",
   };
+
+  const sapStatusStyles = {
+    "Unsynced": "bg-bgDenied text-txtDenied text-center rounded-sm w-max px-2 py-1",
+    "Synced": "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
+  }
 
   toastConfig({
     theme: 'dark',
@@ -324,6 +335,13 @@ export function PurchaseTable() {
         </Button>
       ),
       cell: ({ row }) => <div>{row.getValue("created_at").slice(0,10)} | {row.getValue("created_at").slice(11,19)}</div>,
+    },
+    {
+      accessorKey: "client_name",
+      header: "Client",
+      cell: ({ row }) => (
+        <div>{row.getValue("client_name")}</div>
+      ),
     },
     {
       accessorKey: "created_by_name",
@@ -360,11 +378,26 @@ export function PurchaseTable() {
       },
     },
     {
+      accessorKey: "sap_sync_status",
+      header: "SAP Sync Status",
+      cell: ({ row }) => {
+        const status = row.getValue("sap_sync_status") === 1 ? "Synced" : "Unsynced";
+        const statusClassName = sapStatusStyles[status] || "";
+      
+        return (
+          <div className={statusClassName}>
+            {status}
+          </div>
+        );
+      }
+    },
+    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
         const status = row.getValue("status");
         const rowId = row.getValue("id");
+        const sapSyncStatus = row.getValue("sap_sync_status");
 
         return (
           <DropdownMenu>
@@ -383,6 +416,17 @@ export function PurchaseTable() {
               <DropdownMenuSeparator />
               {status === "Draft" && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
                 Get Approval
+              </DropdownMenuItem>}
+              <DropdownMenuItem 
+                onClick={() => {
+                  navigator.clipboard.writeText(rowId) 
+                  toast("Request ID copied to clipboard.", {maxVisibleToasts: 3});
+                }}
+              >
+                  Copy Request ID
+              </DropdownMenuItem>
+              {sapSyncStatus === 0 && <DropdownMenuItem onClick={() => sapSyncIndiv(row.original.id)}>
+                SAP Sync
               </DropdownMenuItem>}
               {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem onClick={()=>clearCart()}>
                 <Link href={`/edit-purchase-request/${rowId}`} className="w-full">
@@ -407,7 +451,7 @@ export function PurchaseTable() {
   const [showAlert, setShowAlert] = React.useState(false);
   const [deletingId, setDeletingId] = React.useState(null);
   const [refreshKey, setRefreshKey] = React.useState(0);
-  const [filterVal, setFilterVal] = React.useState("");
+  const [filterVal, setFilterVal] = React.useState("All");
 
   React.useEffect(() => {
     fetch("http://localhost:3002/purchaseRequests/read-purchase-requests", {
@@ -428,6 +472,8 @@ export function PurchaseTable() {
               status: item.purchaseRequest.status,
               created_at: item.purchaseRequest.created_at,
               updated_at: item.purchaseRequest.updated_at,
+              client_name: item.purchaseRequest.client_name,
+              sap_sync_status: item.purchaseRequest.sap_sync_status,
               amount: totalAmount,
             };
           });
@@ -459,7 +505,7 @@ export function PurchaseTable() {
           setData((prevData) =>
             prevData.filter((item) => item.id !== result.purchaseRequest.id)
           );
-          toast("Item successfully deleted");
+          toast("Purchase request successfully deleted");
         } else {
           console.error("Delete failed:", result.message || "Invalid response format");
         }
@@ -474,6 +520,56 @@ export function PurchaseTable() {
   const cancelDelete = () => {
     setShowAlert(false); // Hide the confirmation dialog
     setDeletingId(null); // Reset the deleting ID
+  };
+
+  const sapSyncIndiv = (id) => {
+    fetch('http://localhost:3002/sapSyncLogs/sap-sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ "pr_id": id }),
+      credentials: 'include',
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result && result.message === "SAP sync successful") {
+        toast(`SAP Sync successfully completed for this purchase request with Transaction ID: ${result.transaction_id}`);
+        setRefreshKey((prevKey) => prevKey + 1)
+      }
+      else if (result && result.error === "SAP sync failed") {
+        toast(`SAP Sync failed for this purchase request. Please try again.`);
+      }
+      else {
+        toast("SAP Sync failed. Please try again.", {maxVisibleToasts: 1});
+      }
+    })
+    .catch((error) => console.error("Error during syncing:", error));
+  }
+
+  const sapSyncAll = () => {
+    fetch('http://localhost:3002/sapSyncLogs/sap-sync-all/', {
+      method: 'POST',
+      credentials: 'include',
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.summary && result.summary.failed === 0) {
+        toast("SAP Sync successfully completed for all purchase requests.");
+        setRefreshKey((prevKey) => prevKey + 1)
+      }
+      else if (result.summary && result.summary.failed > 0) {
+        toast(`SAP Sync completed successfully for ${result.summary.success} purchase request${result.summary.success > 1 ? "s" : ""}. ${result.summary.failed} request${result.summary.failed > 1 ? "s" : ""} failed to sync.`);
+        setRefreshKey((prevKey) => prevKey + 1)
+      }
+      else if (result.message === "No unsynced purchase requests found.") {
+        toast("All purchase requests already synced!", {maxVisibleToasts: 1});
+      }
+      else {
+        toast("SAP Sync failed. Please try again.", {maxVisibleToasts: 1});
+      }
+    })
+    .catch((error) => console.error("Error during syncing:", error));
   };
 
   const submitFromDrafts = (id) => {
@@ -492,8 +588,6 @@ export function PurchaseTable() {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log("Update Status:", result);
-  
         if (result && result.purchaseRequest) {
           toast("Draft purchase request has now been submitted for approval.")
           setData((prevData) =>
@@ -510,6 +604,32 @@ export function PurchaseTable() {
       .catch((error) => console.error("Error during submission:", error));
   };
   
+  const statusList = [
+    {
+      id: "All",
+      name: "Status: All",
+    },
+    {
+      id: "Approved",
+      name: "Status: Approved",
+    },
+    {
+      id: "Rejected",
+      name: "Status: Rejected",
+    },
+    {
+      id: "Pending",
+      name: "Status: Pending",
+    },
+    {
+      id: "Returned",
+      name: "Status: Returned",
+    },
+    {
+      id: "Draft",
+      name: "Status: Draft",
+    },
+  ]
 
   const table = useReactTable({
     data,
@@ -531,18 +651,35 @@ export function PurchaseTable() {
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-2">
-        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 transition-colors duration-200">
+        <button onClick={()=>setRefreshKey((prevKey) => prevKey + 1)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 colorTransition duration-200">
           <RotateCw color="#696969" size={20} />
         </button>
         <div className="flex justify-between w-full">
           <Input
-            placeholder="Filter by status..."
-            value={(table.getColumn("status")?.getFilterValue()) ?? ""}
+            placeholder="Filter by client..."
+            value={(table.getColumn("client_name")?.getFilterValue()) ?? ""}
             onChange={(event) =>
-              table.getColumn("status")?.setFilterValue(event.target.value)
+              table.getColumn("client_name")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
+          <div className="flex gap-4">
+            <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
+              <RotateCw color="#696969" size={20} />
+              SAP
+            </button>
+            <DataPopover
+              popoverFor="status"
+              value={filterVal}
+              setValue={(newVal) => {
+                setFilterVal(newVal);
+                table.getColumn("status")?.setFilterValue(newVal === "All" ? "" : newVal);
+              }}
+              data={statusList}
+              commandEmpty="No status available."
+              placeholder="Search status"
+            />
+          </div>
         </div>
       </div>
       
@@ -659,10 +796,11 @@ export function InventoryTable() {
       ),
     },
     {
-      accessorKey: "images",
+      accessorKey: "img_url",
       header: "Image",
       cell: ({ row }) => (
-        <img src={`./img-box.png`} className="w-6"/>
+        // <img src={row.getValue("img_url")} className="w-6"/>
+        <div>{row.getValue("img_url")}</div>
       ),
     },
     {

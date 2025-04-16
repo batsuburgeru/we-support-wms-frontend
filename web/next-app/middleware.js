@@ -25,6 +25,11 @@ const adminRoutes = [
     '/user-list',
 ];
 
+const clientRestrictedRoutes = [
+    '/client-list',
+    '/inventory'
+];
+
 // 1. Helper function to parse JWT using jose
 async function parseJwt(token) {
     try {
@@ -41,11 +46,12 @@ export default async function middleware(req) {
     const isProtectedRoute = protectedRoutes.includes(path);
     const isPublicRoute = publicRoutes.includes(path);
     const isAdminRoute = adminRoutes.includes(path);
+    const isClientRestrictedRoute = clientRestrictedRoutes.includes(path);
 
     // 2. Get token from cookies
     const token = cookies().get('token')?.value;
     if (!token) {
-        console.warn("No token found in cookies");
+        console.log("Token not found, redirecting to login.");
     }
 
     // 3. Decode the JWT token using jose
@@ -55,7 +61,7 @@ export default async function middleware(req) {
     // console.log("Middleware Debug:", { token, session, userRole, path });
 
     // 4. Redirect unauthenticated users from protected routes
-    if (isProtectedRoute && !userRole) {
+    if (isProtectedRoute && !userRole && !token) {
         return NextResponse.redirect(new URL('/login', req.url));
     }
 
@@ -65,6 +71,10 @@ export default async function middleware(req) {
     }
 
     if (isAdminRoute && userRole !== "Admin") {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    if (isClientRestrictedRoute && userRole === "Client") {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 

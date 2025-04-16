@@ -15,6 +15,8 @@ import {
 import Link from 'next/link';
 
 const ClientList = () => {
+  const [showEditModal, setShowEditModal] = React.useState(false);
+
   const columns = [
     {
       accessorKey: "name",
@@ -41,8 +43,6 @@ const ClientList = () => {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
-  
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,7 +59,9 @@ const ClientList = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                Edit
+                <button onClick={() => setShowEditModal(true)} className="w-full text-left">
+                  Edit
+                </button>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
@@ -99,6 +101,9 @@ const ClientList = () => {
           deletingId={deletingId}
           setDeletingId={setDeletingId}
           condition={condition}
+          filterValue="name"
+          setShowEditModal={setShowEditModal}
+          showEditModal={showEditModal}
         />
       </section>
     </main>

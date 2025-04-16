@@ -15,7 +15,7 @@ const NewPurchase = () => {
   });
 
   const [note, setNote] = useState('');
-  const [approved_by, setApproved_By] = useState('');
+  const [client_id, setClient_Id] = useState('');
   const { cartItems, clearCart } = useCart();
 
   const items = cartItems.map(({id, quantity, unit_price}) => ({
@@ -27,18 +27,18 @@ const NewPurchase = () => {
   useEffect(() => {
     const savedClient = localStorage.getItem("client");
     const parsedClient = savedClient ? JSON.parse(savedClient) : []; 
-    setApproved_By(parsedClient); 
+    setClient_Id(parsedClient); 
     const savedNote = localStorage.getItem("note");
     const parsedNote = savedNote ? JSON.parse(savedNote) : [];
     setNote(parsedNote)
   }, []);
   
   useEffect(() => {
-    if (approved_by || note) {
-      localStorage.setItem("client", JSON.stringify(approved_by));
+    if (client_id || note) {
+      localStorage.setItem("client", JSON.stringify(client_id));
       localStorage.setItem("note", JSON.stringify(note));
     }
-  }, [approved_by, note]);
+  }, [client_id, note]);
 
   const totalCartCost = cartItems.reduce((sum, cartItem) => {
     return sum + parseFloat(cartItem.total_price);
@@ -51,7 +51,7 @@ const NewPurchase = () => {
   function handleCancel() {
     setNote('');
     clearCart();
-    setApproved_By('');
+    setClient_Id('');
     localStorage.setItem("client", JSON.stringify(""));
     localStorage.setItem("note", JSON.stringify(""));
   };
@@ -63,8 +63,7 @@ const NewPurchase = () => {
 
     const payload = {
       status: action === 'save-draft' ? "Draft" : "Pending",
-      approved_by: approved_by,
-      sap_sync_status: 1,
+      client_id: client_id,
       note: note,
       items: items
     };
@@ -88,7 +87,7 @@ const NewPurchase = () => {
       localStorage.setItem("note", JSON.stringify(""));
       setNote(""); 
       clearCart(); 
-      setApproved_By('');
+      setClient_Id('');
       toast(
         action === "save-draft"
           ? "Purchase request saved as draft."
@@ -129,8 +128,8 @@ const NewPurchase = () => {
           <h2 className="mr-20">Client Name*</h2>
           <DataPopover 
             popoverFor="client"
-            value={approved_by} 
-            setValue={setApproved_By} 
+            value={client_id} 
+            setValue={setClient_Id} 
             data={clients}
             commandEmpty="No client found."
             placeholder="Select a client"

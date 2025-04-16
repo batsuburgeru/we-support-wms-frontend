@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +28,7 @@ export default function DataPopover({ value, setValue, data, commandEmpty, place
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-96 justify-between border-borderLine"
+            className={`${popoverFor === "status" ? "w-48" : "w-96"} justify-between border-borderLine`}
           >
             {value
               ? data.find((category) => category.id === value)?.name

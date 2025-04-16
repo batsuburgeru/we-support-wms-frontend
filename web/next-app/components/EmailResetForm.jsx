@@ -13,12 +13,14 @@ const EmailResetForm = (props) => {
   });
 
   const [email, setEmail] = React.useState('');
+
   const [successMsg, setSuccessMsg] = React.useState(false);
   const [loadingMsg, setLoadingMsg] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState(false);
   const [noEmail, setNoEmail] = React.useState(false);
   const [resendTimer, setResendTimer] = React.useState(0);
   const [resendDisabled, setResendDisabled] = React.useState(false);
+  const [verifiedMsg, setVerifiedMsg] = React.useState(false);
 
   React.useEffect(() => {
     if (resendTimer > 0) {
@@ -58,9 +60,16 @@ const EmailResetForm = (props) => {
           if (successMsg === true) {
             toast("Email sent! Please check your inbox. You can resend again in 30 seconds.")
           }
-        } else {
+        }
+        else if (result.error === "Account is already verified") {
+          setVerifiedMsg(true);
+          setLoadingMsg(false);
+          setErrorMsg(false);
+        } 
+        else {
           setErrorMsg(true);
           setLoadingMsg(false);
+          setVerifiedMsg(false);
         }
       })
       .catch(error => {
@@ -98,6 +107,7 @@ const EmailResetForm = (props) => {
             {loadingMsg && <p className='text-left text-sm text-orange-600 font-medium pt-2'>Sending email. Please wait...</p>}
             {errorMsg && <p className='text-left text-sm text-red-600 font-medium pt-2'>This email address is not associated with an existing account.</p>}
             {noEmail && <p className='text-left text-sm text-red-600 font-medium pt-2'>Please enter your email address.</p>}
+            {verifiedMsg && <p className='text-left text-sm text-orange-600 font-medium pt-2'>This account is already verified.</p>}
           </div>
           <div className='flex justify-center mt-6'>
             <Link href="/login" className='text-sm font-semibold cursor-pointer underline text-brand-primary mt-4'>
