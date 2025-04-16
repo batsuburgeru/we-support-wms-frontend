@@ -32,7 +32,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, se
         setLoading(true);
 
         try {
-            const API_URL = `http://192.168.68.104:3002/purchaseRequests/update-purchase-request-status/${id}`;
+            const API_URL = `http://192.168.68.100:3002/purchaseRequests/update-purchase-request-status/${id}`;
             const payload = {
                 status: title === "Approve" ? "Approved" : title === "Return" ? "Returned" : "Rejected",
                 note: remarks,
@@ -46,8 +46,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, se
 
             if (response.ok) {
                 console.log("Status updated successfully!");
-                // Navigate back to index.tsx after successful update
-                router.push('/');
+                router.push('/request');
             } else {
                 alert("Failed to update status. Please try again.");
             }
