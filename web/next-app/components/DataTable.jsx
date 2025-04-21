@@ -32,7 +32,6 @@ import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 import { useCart } from "@/context/CartContext";
-import EditUserModal from '@/components/EditUserModal';
 import DataPopover from "@/components/DataPopover";
 import DatePicker from '@/components/DatePicker';
 
@@ -291,15 +290,11 @@ export function ClientUserTable(props) {
           </div>
         </div>
       )}
-      {props.showEditModal && 
-      <div className="fixed inset-0 flex justify-center items-center z-50">
-        <EditUserModal setShowEditModal={props.setShowEditModal} />
-      </div>}
     </div>
   );
 };
 
-export function PurchaseTable() {
+export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
   const statusStyles = {
     Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
     Pending: "bg-bgPending text-txtPending text-center rounded-sm w-max px-2 py-1",
@@ -367,7 +362,7 @@ export function PurchaseTable() {
     },
     {
       accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
+      header: "Amount",
       cell: ({ row }) => {
         const amount = parseFloat(row.getValue("amount"));
         const formatted = new Intl.NumberFormat("en-PH", {
@@ -375,7 +370,7 @@ export function PurchaseTable() {
           currency: "PHP",
         }).format(amount);
     
-        return <div className="text-right font-medium">{formatted}</div>;
+        return <div>{formatted}</div>;
       },
     },
     {
@@ -491,7 +486,7 @@ export function PurchaseTable() {
       .catch((error) => {
         console.log("Error:", error);
       });
-  }, [refreshKey]);
+  }, [refreshKey, refresh]);
 
   const handleDelete = (id) => {
     setDeletingId(id); // Set the ID for the row being deleted
@@ -712,6 +707,15 @@ export function PurchaseTable() {
     },
   });
 
+  React.useEffect(() => {
+    if (forUserRole === "Client") {
+      table.getColumn("client_name")?.setFilterValue(forUser);
+    }
+    else {
+      table.getColumn("created_by_name")?.setFilterValue(forUser);
+    }
+  }, [forUser, table]);
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-2">
@@ -721,21 +725,23 @@ export function PurchaseTable() {
         <div className="flex justify-between w-full">
           <Input
             placeholder="Filter by client..."
-            value={(table.getColumn("client_name")?.getFilterValue()) ?? ""}
+            value={((table.getColumn("client_name")?.getFilterValue()) ?? "")}
             onChange={(event) =>
               table.getColumn("client_name")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className={`max-w-sm ${tableFor === "userDetails" ? "hidden" : ""}`}
           />
           <div className="flex gap-4">
-            <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
-              <RotateCw color="#696969" size={20} />
-              SAP
-            </button>
-            <button onClick={() => setShowDownloadCSVModal(true)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
-              <FileDown color="#696969" size={20} />
-              CSV
-            </button>
+            {tableFor !== "userDetails" && (<div className="flex gap-2">
+              <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
+                <RotateCw color="#696969" size={20} />
+                SAP
+              </button>
+              <button onClick={() => setShowDownloadCSVModal(true)} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
+                <FileDown color="#696969" size={20} />
+                CSV
+              </button>
+            </div>)}
             <DataPopover
               popoverFor="status"
               value={filterVal}

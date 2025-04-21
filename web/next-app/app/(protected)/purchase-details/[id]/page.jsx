@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -41,6 +42,7 @@ export default function PurchaseRequest({ params }) {
   const { id } = resolvedParams; // Accessing the unwrapped params object
   const [data, setData] = useState([]); // State to hold the transformed data
   const { clearCart } = useCart();
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     async function fetchData() {
@@ -131,7 +133,7 @@ export default function PurchaseRequest({ params }) {
           {(data.status === "Pending" || data.status === "Draft"|| data.status === "Returned") && <Link href={`/edit-purchase-request/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1" onClick={()=>clearCart()}>
             <Pencil />
           </Link>}
-          <Link href="/purchase-list" className="border border-borderLine rounded-sm h-fit p-1 mx-1"><X /></Link>
+          <button onClick={() => router.back()} className="border border-borderLine rounded-sm h-fit p-1 mx-1"><X /></button>
         </div>
       </div>
       <hr />

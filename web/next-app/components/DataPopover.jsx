@@ -54,7 +54,7 @@ export default function DataPopover({ value, setValue, data, commandEmpty, place
                     <div className="flex flex-col">
                       <span className="font-semibold text-lg">{item.name}</span>
                       <span className="font-light text-sm text-ellipsis overflow-hidden txtOverflowPopover">
-                        {popoverFor === "client" && item.email}
+                        {popoverFor === "client" && item.org_name}
                         {popoverFor === "category" && item.description}
                       </span>
                     </div>
