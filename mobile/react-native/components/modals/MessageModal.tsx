@@ -12,9 +12,16 @@ interface MessageModalProps {
     id: string;
 }
 
-const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, setRemarks, onClose, id }) => {
+const MessageModal: React.FC<MessageModalProps> = ({
+    visible,
+    title,
+    remarks,
+    setRemarks,
+    onClose,
+    id,
+}) => {
     const [loading, setLoading] = useState(false);
-    const router = useRouter(); 
+    const router = useRouter();
 
     const subtitle =
         title === "Approve"
@@ -31,25 +38,40 @@ const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, se
 
         setLoading(true);
 
+        const status =
+            title === "Approve"
+                ? "Approved"
+                : title === "Return"
+                ? "Returned"
+                : "Rejected";
+
+        const payload = {
+            status,
+            note: remarks, 
+        };
+
+        console.log("Updating status for ID:", id);
+        console.log("Payload:", payload);
+
         try {
-            const API_URL = `http://192.168.68.104:3002/purchaseRequests/update-purchase-request-status/${id}`;
-            const payload = {
-                status: title === "Approve" ? "Approved" : title === "Return" ? "Returned" : "Rejected",
-                note: remarks,
-            };
+            const API_URL = `http://192.168.1.8:3002/purchaseRequests/update-purchase-request-status/${id}`;
 
             const response = await fetch(API_URL, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(payload),
             });
 
             if (response.ok) {
-                console.log("Status updated successfully!");
-                // Navigate back to index.tsx after successful update
-                router.push('/');
+                const result = await response.json();
+                console.log("Status updated successfully:", result);
+                router.push('/request');
             } else {
-                alert("Failed to update status. Please try again.");
+                const errorText = await response.text();
+                console.error("Server responded with:", errorText);
+                alert("Failed to update status. Server responded with: " + errorText);
             }
         } catch (error) {
             alert("An error occurred. Please check your connection and try again.");
@@ -104,7 +126,10 @@ const MessageModal: React.FC<MessageModalProps> = ({ visible, title, remarks, se
                                 {loading ? "Processing..." : "Confirm"}
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={onClose} className="bg-tabs px-8 py-3 rounded-lg mr-10">
+                        <TouchableOpacity
+                            onPress={onClose}
+                            className="bg-tabs px-8 py-3 rounded-lg mr-10"
+                        >
                             <Text className="font-poppins-bold text-lg">Cancel</Text>
                         </TouchableOpacity>
                     </View>
