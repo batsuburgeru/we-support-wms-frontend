@@ -95,7 +95,7 @@ export default function Requests() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState<boolean>(false);
 
-    const API_BASE = 'http://192.168.68.100:3002';
+    const API_BASE = 'http://192.168.1.8:3002';
 
     const fetchRequests = async () => {
         try {

@@ -48,7 +48,7 @@ import {
       const fetchRequestDetails = async () => {
         try {
           setLoading(true);
-          const API_URL = `http://192.168.68.100:3002/purchaseRequests/read-purchase-requests`;
+          const API_URL = `http://192.168.1.8:3002/purchaseRequests/read-purchase-requests`;
           const response = await fetch(API_URL);
           const data = await response.json();
   
@@ -105,7 +105,7 @@ import {
       if (!modalType || !request) return;
   
       try {
-        const API_URL = `http://192.168.68.100:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
+        const API_URL = `http://192.168.1.8:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
         const payload = {
           status:
             modalType === 'Approve'

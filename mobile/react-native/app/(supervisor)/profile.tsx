@@ -32,7 +32,7 @@ const Profile = () => {
     // Fetch user information
     const fetchUserName = async () => {
         try {
-            const response = await fetch("http://192.168.68.100:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.1.8:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -62,7 +62,7 @@ const Profile = () => {
     // Fetch purchase requests count
     const fetchRequests = async () => {
         try {
-            const response = await fetch("http://192.168.68.100:3002/purchaseRequests/count-purchase-requests", {
+            const response = await fetch("http://192.168.1.8:3002/purchaseRequests/count-purchase-requests", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -110,7 +110,7 @@ const Profile = () => {
     // Handle user sign-out
     const handleSignOut = async () => {
         try {
-            const response = await fetch("http://192.168.68.100:3002/users/logout", {
+            const response = await fetch("http://192.168.1.8:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

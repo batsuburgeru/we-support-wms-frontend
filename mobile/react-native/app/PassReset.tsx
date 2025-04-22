@@ -43,7 +43,7 @@ const EmailResetForm: React.FC<EmailResetFormProps> = ( ) => {
     setErrorMsg(false);
 
     try {
-      const response = await fetch(`http://192.168.68.100:3002/users/forgot-password`, {
+      const response = await fetch(`http://192.168.1.8:3002/users/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
