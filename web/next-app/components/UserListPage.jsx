@@ -15,8 +15,6 @@ import {
 import Link from 'next/link';
 
 const ClientList = () => {
-  const [showEditModal, setShowEditModal] = React.useState(false);
-
   const columns = [
     {
       accessorKey: "name",
@@ -58,11 +56,6 @@ const ClientList = () => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <button onClick={() => setShowEditModal(true)} className="w-full text-left">
-                  Edit
-                </button>
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
               </DropdownMenuItem>
@@ -102,8 +95,6 @@ const ClientList = () => {
           setDeletingId={setDeletingId}
           condition={condition}
           filterValue="name"
-          setShowEditModal={setShowEditModal}
-          showEditModal={showEditModal}
         />
       </section>
     </main>

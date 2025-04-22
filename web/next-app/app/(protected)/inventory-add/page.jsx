@@ -54,9 +54,7 @@ const InventoryAdd = () => {
     formData.append("unit_price", price);
     formData.append("stock_quantity", stock);
     formData.append("image", image); // Append the image file to the form data
-  
-    console.log("Form Data:", formData); // Debugging log for JSON payload
-  
+    
     fetch("http://localhost:3002/products/create-product", {
       method: 'POST',
       body: formData,
