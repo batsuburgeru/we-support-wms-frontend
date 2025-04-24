@@ -68,7 +68,7 @@ export default function RequestDetails(): JSX.Element {
               id: matchedRequest.purchaseRequest.id,
               type: 'Purchase Request',
               status: matchedRequest.purchaseRequest.status,
-              requester: matchedRequest.purchaseRequest.created_by_name || 'Unknown',
+              requester: matchedRequest.purchaseRequest.client_name || 'Unknown',
               date: new Date(matchedRequest.purchaseRequest.created_at).toLocaleDateString(),
               time: new Date(matchedRequest.purchaseRequest.created_at).toLocaleTimeString(),
               sum: totalCartCost,
@@ -96,6 +96,24 @@ export default function RequestDetails(): JSX.Element {
 
     fetchRequestDetails();
   }, [id]);
+
+  const parseNote = (note: string) => {
+    const lines = note.split('\n'); 
+    return lines.map((line) => {
+      const colonIndex = line.indexOf(':'); 
+      if (colonIndex > -1) {
+        return {
+          sender: line.substring(0, colonIndex).trim(), 
+          message: line.substring(colonIndex + 1).trim(), 
+        };
+      } else {
+        return {
+          sender: 'Unknown', 
+          message: line.trim(), 
+        };
+      }
+    });
+  };
 
   const handleConfirm = async () => {
     if (!modalType || !request) return;
@@ -237,13 +255,36 @@ export default function RequestDetails(): JSX.Element {
           </View>
 
           {request.note && (
-            <View className="mt-4 p-4 bg-white rounded-lg">
-              <Text className="font-poppins-bold text-lg">Note:</Text>
-              <Text className="font-poppins text-black mt-1">
-                {request.note}
-              </Text>
-            </View>
-          )}
+          <View className="mt-4 bg-white rounded-lg flex-1">
+            <Text className="font-poppins-bold text-lg mb-2">Notes:</Text>
+            <ScrollView className="flex-1">
+              {request.note.split('\n').map((line, index) => (
+                <View key={index} className="mb-4">
+                  <Text className={`${
+                    index % 2 === 0 ? 'text-left text-sm text-gray-500 ml-2' : 'text-right text-sm text-gray-500 mr-2'
+                  }`}>
+                    {index % 2 === 0 ? request.requester : parseNote(request.note)[index].sender}
+                  </Text>
+                  
+                  {/* Chat bubble */}
+                  <View
+                    className={`${
+                      index % 2 === 0 ? 'self-start bg-tabs' : 'self-end bg-primary'
+                    } p-3 rounded-lg max-w-[80%]`}
+                  >
+                    <Text
+                      className={`${
+                        index % 2 === 0 ? 'text-black' : 'text-white'
+                      } font-poppins`}
+                    >
+                      {line}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
         </ScrollView>
       </View>
 
