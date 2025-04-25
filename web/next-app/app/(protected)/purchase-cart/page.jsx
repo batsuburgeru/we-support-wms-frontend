@@ -1,29 +1,41 @@
-"use client"
+"use client";
 
+// ReactJS Imports
+import { useCart } from "@/context/CartContext";
+import { useState, useEffect } from 'react';
+
+// Component Imports
 import DataPopover from "@/components/DataPopover";
 import ProductSearch from "@/components/ProductSearch";
 import { PurchaseCartTable } from "@/components/PurchaseCartTable";
-import { useCart } from "@/context/CartContext";
-import { useState, useEffect } from 'react';
+
+// Import from react-simple-toasts
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 
 const NewPurchase = () => {
+  // Initialize toast from react-simple-toasts
   toastConfig({
     theme: 'dark',
   });
 
+  // Initialize state for the cart items, client, and delivery note for data storage before submission
   const [note, setNote] = useState('');
   const [client_id, setClient_Id] = useState('');
   const { cartItems, clearCart } = useCart();
+  // Initialize clients state to store data from the /view-users route
+  const [clients, setClients] = useState([]);
 
+
+  // Store cartItems to items
   const items = cartItems.map(({id, quantity, unit_price}) => ({
     product_id: id,
     quantity,
     unit_price: parseFloat(unit_price)
   }));
 
+  // Retrieve and parse client and delivery note input from local storage to retrieve progress
   useEffect(() => {
     const savedClient = localStorage.getItem("client");
     const parsedClient = savedClient ? JSON.parse(savedClient) : []; 
@@ -33,6 +45,7 @@ const NewPurchase = () => {
     setNote(parsedNote)
   }, []);
   
+  // Save client and delivery note data to local storage to save progress when the user leaves the page
   useEffect(() => {
     if (client_id || note) {
       localStorage.setItem("client", JSON.stringify(client_id));
@@ -40,14 +53,17 @@ const NewPurchase = () => {
     }
   }, [client_id, note]);
 
+  // Calculate total cost of all items in the cart for display
   const totalCartCost = cartItems.reduce((sum, cartItem) => {
     return sum + parseFloat(cartItem.total_price);
   }, 0);
 
+  // Calculate total number of items in the cart for display
   const totalCartQty = cartItems.reduce((sum, cartItem) => {
     return sum + parseFloat(cartItem.quantity);
   }, 0);cartItems
 
+  // Clear all data in the cart when the user cancels the purchase requisition
   function handleCancel() {
     setNote('');
     clearCart();
@@ -56,18 +72,22 @@ const NewPurchase = () => {
     localStorage.setItem("note", JSON.stringify(""));
   };
   
+  // Submits the form
   function handleSubmit(event) {
     event.preventDefault(); 
   
+    // Initialize action variable to determine what to do when the user either Submits the purchase request or saves it to draft
     const action = event.nativeEvent.submitter.value;
 
+    // Save all submission data to payload
     const payload = {
-      status: action === 'save-draft' ? "Draft" : "Pending",
+      status: action === 'save-draft' ? "Draft" : "Pending", // Save request as draft or pending depending on the action
       client_id: client_id,
       note: note,
       items: items
     };
 
+    // Post the purchase request to the database
     fetch("http://localhost:3002/purchaseRequests/create-purchase-request", {
       method: 'POST',
       headers: {
@@ -91,7 +111,7 @@ const NewPurchase = () => {
       toast(
         action === "save-draft"
           ? "Purchase request saved as draft."
-          : "Purchase request submitted for approval."
+          : "Purchase request submitted for approval." // Generate a different toast depending on the action
       );
     })
     .catch((error) => {
@@ -99,9 +119,8 @@ const NewPurchase = () => {
       toast("⚠️ Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.", { maxVisibleToasts: 3 });
     });
   };
-
-  const [clients, setClients] = useState([]);
-        
+  
+  // Fetch clients data using the /view-users route
   useEffect(() => {
     fetch("http://localhost:3002/users/view-users", {
         method: 'GET',
@@ -110,7 +129,7 @@ const NewPurchase = () => {
     .then(response => response.json())
     .then(result => {
         if (result && result.users) {
-        setClients(result.users.filter(user => user.role === "Client"));
+        setClients(result.users.filter(user => user.role === "Client")); // Filter for Clients
         } else {
         console.log('Retrieve failed:', result.message);
         }
@@ -120,6 +139,7 @@ const NewPurchase = () => {
     });
   }, []);
 
+  // This page serves as the main purchase requisition page for the Warehouse Man which can be accessed thru the "New Purchase" button on the Sidebar
   return (
     <main>
       <div className='flex justify-center px-6 py-4 flex-col gap-4'>

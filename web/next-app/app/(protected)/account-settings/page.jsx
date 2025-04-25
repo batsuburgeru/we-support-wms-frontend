@@ -1,20 +1,32 @@
 "use client";
 
+// ReactJS and NextJS imports
 import { useState, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+
+// Icon imports from lucide-react
 import { Copy } from 'lucide-react';
+
+// Component Imports
 import LanguageSelect from '@/components/LanguageSelect';
 import TimezoneSelect from '@/components/TimezoneSelect';
-import { redirect } from 'next/navigation';
+
+// Importing simple-react-toasts
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 
-const AccountSettings = () => {
-  toastConfig({
-      theme: 'dark',
-    });
 
+const AccountSettings = () => {
+  // Initialize the toast
+  toastConfig({
+    theme: 'dark',
+  });
+
+  // State to store the data from /display-user-info
   const [userProfile, setUserProfile] = useState([]);
+
+  // State to store the data that will be used to edit/update the account
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
@@ -23,8 +35,11 @@ const AccountSettings = () => {
   const [companyAddress, setCompanyAddress] = useState('');
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  // State to control the fetching of data
   const [refresh, setRefresh] = useState(0);
 
+  // Fetch the data from /display-user-info and store the data to userProfile
   useEffect(() => {
     fetch("http://localhost:3002/users/display-user-info", {
         method: 'GET',
@@ -43,6 +58,7 @@ const AccountSettings = () => {
     });
   }, [refresh]);
 
+  // Handles the log out button
   const handleLogout = (event) => {
     event.preventDefault();
     fetch("http://localhost:3002/users/logout", {
@@ -56,12 +72,14 @@ const AccountSettings = () => {
     });
   };
 
+  // Handles the copy button which copies the email of the currently logged-in user
   function handleCopy() {
     navigator.clipboard.writeText(userProfile.email);
     toast('Email copied to clipboard', { maxVisibleToasts: 3 });
   };
 
-  const cancelEdit = () => {
+  // Cleans up the form after submission
+  const cleanUpForm = () => {
     setName('');
     setEmail('');
     setRole('');
@@ -71,6 +89,7 @@ const AccountSettings = () => {
     setImage(null);
   }; 
 
+  // Confirms the editing of the user info
   const confirmEdit = () => {
     const formData = new FormData();
     formData.append("name", name);
@@ -90,7 +109,7 @@ const AccountSettings = () => {
     .then((result) => {
       if (result && result.message === "User updated successfully") {
         toast(`User ${result.updatedUser.name} updated successfully`, {maxVisibleToasts: 1});
-        cancelEdit();
+        cleanUpForm();
         setRefresh(prevData => prevData + 1);
         console.log([...formData.entries()]);
       }
@@ -101,6 +120,7 @@ const AccountSettings = () => {
     .catch((error) => console.error("Error during update:", error))
   };
 
+  // Handles image uploading by taking the uploaded image file and setting it as the image in the image state and the URL for the previewUrl state to display the image after uploading
   function handleImageUpload(event) {
     const file = event.target.files[0]; 
     if (file) {
@@ -109,6 +129,7 @@ const AccountSettings = () => {
     }
   };
 
+  // This page is used to view and edit personal account information
   return (
     <main className="bg-dashboard h-full">
       <div className='px-6 flex items-center py-4'>

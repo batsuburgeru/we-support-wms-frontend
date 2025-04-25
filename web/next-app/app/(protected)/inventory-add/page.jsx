@@ -1,19 +1,27 @@
 "use client";
 
+// ReactJS and NextJS Imports
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
+// Component Imports
 import DataPopover from '@/components/DataPopover';
+
+// Import from react-simple-toasts
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/style.css';
 import 'react-simple-toasts/dist/theme/dark.css';
 
 const InventoryAdd = () => {
+  // Initialize toast from react-simple-toasts
   toastConfig({
     theme: 'dark',
   });
 
+  // Initialize router
   const router = useRouter();
 
+  // State variables to store the data in the forms before submission
   const [name, setName] = useState('');
   const [sku, setSku] = useState('');
   const [category_id, setCategory_id] = useState('');
@@ -23,6 +31,7 @@ const InventoryAdd = () => {
   const [image, setImage] = useState(null); // State for uploaded image
   const [previewUrl, setPreviewUrl] = useState(null); // State for image preview
 
+  // Clears form and goes back
   function handleCancel() {
     setName('');
     setSku('');
@@ -35,6 +44,7 @@ const InventoryAdd = () => {
     router.back();
   };
 
+  // Handles image uploading by taking the uploaded image file and setting it as the image in the image state and the URL for the previewUrl state to display the image after uploading
   function handleImageUpload(event) {
     const file = event.target.files[0]; 
     if (file) {
@@ -43,6 +53,7 @@ const InventoryAdd = () => {
     }
   };
 
+  // Handles form submission to the /create-product route
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -76,7 +87,8 @@ const InventoryAdd = () => {
     });
   }
   const [data, setData] = useState([]);
-      
+
+  // Fetches date from the /view-categories route to be used in the category popover component
   useEffect(() => {
     fetch("http://localhost:3002/categories/view-categories", {
         method: 'GET',
@@ -95,6 +107,7 @@ const InventoryAdd = () => {
     });
   }, []);
 
+  // This page appears when adding a new product to inventory
   return (
     <main>
       <div className="flex justify-between items-center px-6 py-4">

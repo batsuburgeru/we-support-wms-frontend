@@ -1,10 +1,15 @@
 "use client"; 
 
+// ReactJS and NextJS Imports
 import React, { useState, useEffect } from 'react';
-import { PurchaseTable } from '@/components/DataTable';
 import Link from 'next/link';
 
+// Component Import
+import { PurchaseTable } from '@/components/DataTable';
+
 const PurchaseList = () => {
+
+  // Fetch data from /display-user-info and store it in userProfile state
   const [userProfile, setUserProfile] = useState([]);
     
   useEffect(() => {
@@ -25,6 +30,7 @@ const PurchaseList = () => {
     });
   }, []);
 
+  // Serves as the page for displaying the purchase request table
   return (
     <main>
       <div className='flex justify-between items-center px-6 py-4'>

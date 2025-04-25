@@ -1,8 +1,6 @@
 import Link from 'next/link';
 
 export default function Home() {
-  
-
   return (
       <main className="bg-[url(../public/landing-bg.png)] bg-cover bg-center h-screen">
         <div className='w-full h-full bg-black/60 backdrop-blur-md grid grid-flow-row grid-rows-12'>

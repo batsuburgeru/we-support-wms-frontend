@@ -8,6 +8,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+
+  // This layout.js file is where the Navbar and Header components get rendered.
   return (
         <div className="flex">
           <NavContainer />
