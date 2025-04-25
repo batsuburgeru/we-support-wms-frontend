@@ -59,7 +59,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
                 console.log("Payload:", payload);
             
                 try {
-                    const API_URL = `http://192.168.16.220:3002/purchaseRequests/update-purchase-request-status/${id}`;
+                    const API_URL = `http://192.168.26.52:3002/purchaseRequests/update-purchase-request-status/${id}`;
             
                     const response = await fetch(API_URL, {
                         method: 'PUT',

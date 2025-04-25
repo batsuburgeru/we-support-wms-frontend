@@ -52,7 +52,7 @@ export default function RequestDetails(): JSX.Element {
     const fetchRequestDetails = async () => {
       try {
         setLoading(true);
-        const API_URL = `http://192.168.16.220:3002/purchaseRequests/read-purchase-requests`;
+        const API_URL = `http://192.168.26.52:3002/purchaseRequests/read-purchase-requests`;
         const response = await fetch(API_URL);
         const data = await response.json();
 
@@ -132,7 +132,7 @@ export default function RequestDetails(): JSX.Element {
     if (!modalType || !request) return;
 
     try {
-      const API_URL = `http://192.168.16.220:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
+      const API_URL = `http://192.168.26.52:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
       const payload = {
         status:
           modalType === 'Approve'
@@ -240,7 +240,7 @@ export default function RequestDetails(): JSX.Element {
               <Image
                 source={{
                   uri: item.product_img_url
-                    ? `http://192.168.16.220:3002${item.product_img_url}`
+                    ? `http://192.168.26.52:3002${item.product_img_url}?t=${new Date().getTime()}`
                     : 'fallback-image-url',
                 }}
                 className="w-28 h-28 mr-2 rounded-sm"
