@@ -99,7 +99,7 @@ import {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState<boolean>(false);
   
-    const API_BASE = 'http://192.168.16.220:3002';
+    const API_BASE = 'http://192.168.26.52:3002';
   
     const fetchRequests = async () => {
       try {
