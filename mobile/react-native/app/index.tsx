@@ -22,7 +22,7 @@ const SignIn = () => {
     }
   
     try {
-      const response = await fetch('http://192.168.1.8:3002/users/login', {
+      const response = await fetch('http://192.168.16.220:3002/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

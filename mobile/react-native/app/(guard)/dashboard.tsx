@@ -12,7 +12,7 @@ const Dashboard = () => {
     // Fetch user information
     const fetchUserName = async () => {
         try {
-            const response = await fetch("http://192.168.1.8:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.16.220:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -46,7 +46,7 @@ const Dashboard = () => {
     // Handle user sign-out
     const handleSignOut = async () => {
         try {
-            const response = await fetch("http://192.168.1.8:3002/users/logout", {
+            const response = await fetch("http://192.168.16.220:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

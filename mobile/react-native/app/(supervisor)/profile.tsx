@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '@/constants/images';
 import { Arrow, CancelledRequest, DeniedRequest, ApprovedRequest, PendingRequest, TotalRequest } from '@/assets/svg/iconsvg';
 
+// Define types for data
 interface RequestStatusCounts {
     Approved: number;
     Returned: number;
@@ -12,9 +13,16 @@ interface RequestStatusCounts {
     Pending: number;
 }
 
+interface UserInfo {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    img_url: string;
+}
+
 interface SettingsItemProps {
-    icon?: ImageSourcePropType;
-    iconComponent?: JSX.Element;
+    icon?: JSX.Element;
     title: string;
     count: number;
     bgColor: string;
@@ -23,16 +31,17 @@ interface SettingsItemProps {
     onPress?: () => void;
 }
 
-const Profile = () => {
+const Profile: React.FC = () => {
     const router = useRouter();
     const [userName, setUserName] = useState<string>('');
     const [statusCounts, setStatusCounts] = useState<RequestStatusCounts>({ Approved: 0, Returned: 0, Rejected: 0, Pending: 0 });
+    const [userData, setUserData] = useState<UserInfo | null>(null);
     const [refreshing, setRefreshing] = useState(false);
 
     // Fetch user information
-    const fetchUserName = async () => {
+    const fetchUserInfo = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.1.8:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.16.220:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -46,7 +55,8 @@ const Profile = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.userInfo && data.userInfo.name) {
+                if (data.userInfo) {
+                    setUserData(data.userInfo);
                     setUserName(data.userInfo.name);
                 } else {
                     console.error("No user information found");
@@ -58,11 +68,11 @@ const Profile = () => {
             console.error("Error fetching user information:", error);
         }
     };
-    
+
     // Fetch purchase requests count
-    const fetchRequests = async () => {
+    const fetchRequests = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.1.8:3002/purchaseRequests/count-purchase-requests", {
+            const response = await fetch("http://192.168.16.220:3002/purchaseRequests/count-purchase-requests", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -97,7 +107,7 @@ const Profile = () => {
 
     // Periodically refresh requests
     useEffect(() => {
-        fetchUserName();
+        fetchUserInfo();
         fetchRequests();
 
         const interval = setInterval(() => {
@@ -108,9 +118,9 @@ const Profile = () => {
     }, []);
 
     // Handle user sign-out
-    const handleSignOut = async () => {
+    const handleSignOut = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.1.8:3002/users/logout", {
+            const response = await fetch("http://192.168.16.220:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -141,7 +151,10 @@ const Profile = () => {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
                 <View className="flex-row items-center bg-white flex-1 pt-5">
-                    <Image source={images.avatar} className="w-12 h-12 mx-5 my-5 rounded-full" />
+                    <Image 
+                        source={{ uri: userData ? `http://192.168.16.220:3002${userData.img_url}` : 'fallback-image-url' }} 
+                        className="w-12 h-12 mx-5 my-5 rounded-full" 
+                    />
                     <Text className="text-2xl font-poppins-bold">Hi, {userName}</Text>
                 </View>
 
@@ -149,15 +162,15 @@ const Profile = () => {
                     <Text className="text-2xl font-poppins-bold mb-4">Your Activity</Text>
 
                     {[{
-                        title: "Total requests", count: totalCount, iconComponent: <TotalRequest />,
+                        title: "Total requests", count: totalCount, icon: <TotalRequest />,
                     }, {
-                        title: "Pending requests", count: Pending, iconComponent: <PendingRequest />, onPress: () => router.push('/request')
+                        title: "Pending requests", count: Pending, icon: <PendingRequest />, onPress: () => router.push('/request'),
                     }, {
-                        title: "Approved requests", count: Approved, iconComponent: <ApprovedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Approved" } })
+                        title: "Approved requests", count: Approved, icon: <ApprovedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Approved" } }),
                     }, {
-                        title: "Returned requests", count: Returned, iconComponent: <DeniedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Returned" } })
+                        title: "Returned requests", count: Returned, icon: <DeniedRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Returned" } }),
                     }, {
-                        title: "Rejected requests", count: Rejected, iconComponent: <CancelledRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Rejected" } })
+                        title: "Rejected requests", count: Rejected, icon: <CancelledRequest />, onPress: () => router.push({ pathname: "/history", params: { status: "Rejected" } }),
                     }].map((item, index) => (
                         <View key={index} className="p-2 rounded-lg">
                             <SettingsItem {...item} bgColor="bg-white" textColor="text-primary" hideArrow={!item.onPress} />
@@ -175,7 +188,6 @@ const Profile = () => {
 
 const SettingsItem: React.FC<SettingsItemProps> = ({
     icon,
-    iconComponent,
     title,
     count,
     bgColor,
@@ -185,7 +197,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
 }) => (
     <TouchableOpacity onPress={onPress} disabled={!onPress} className={`flex flex-row items-center justify-between p-4 rounded-lg ${bgColor} shadow-lg`}>
         <View className="flex-row items-center gap-3">
-            {iconComponent ? <View className="w-6 h-6">{iconComponent}</View> : icon && <Image source={icon} className="w-6 h-6 opacity-70" />}
+            {icon && <View className="w-6 h-6">{icon}</View>}
             <View>
                 <Text className={`text-3xl font-poppins-bold ${textColor}`}>{count}</Text>
                 <Text className="text-lg font-poppins-medium text-black opacity-80">{title}</Text>

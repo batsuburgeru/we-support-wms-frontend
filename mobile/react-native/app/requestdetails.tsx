@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
@@ -17,6 +18,7 @@ interface RequestItem {
   price: string;
   total_price: string;
   image?: string | null;
+  product_img_url?: string | null;
 }
 
 interface RequestDetails {
@@ -24,11 +26,13 @@ interface RequestDetails {
   type: string;
   status: string;
   requester: string;
+  approved: string;
   date: string;
   time: string;
   sum: number;
   items: RequestItem[];
   note: string;
+  product_img_url?: string | null;
 }
 
 interface CartItem {
@@ -48,7 +52,7 @@ export default function RequestDetails(): JSX.Element {
     const fetchRequestDetails = async () => {
       try {
         setLoading(true);
-        const API_URL = `http://192.168.1.8:3002/purchaseRequests/read-purchase-requests`;
+        const API_URL = `http://192.168.16.220:3002/purchaseRequests/read-purchase-requests`;
         const response = await fetch(API_URL);
         const data = await response.json();
 
@@ -68,6 +72,7 @@ export default function RequestDetails(): JSX.Element {
               id: matchedRequest.purchaseRequest.id,
               type: 'Purchase Request',
               status: matchedRequest.purchaseRequest.status,
+              approved: matchedRequest.purchaseRequest.approved_by_name,
               requester: matchedRequest.purchaseRequest.client_name || 'Unknown',
               date: new Date(matchedRequest.purchaseRequest.created_at).toLocaleDateString(),
               time: new Date(matchedRequest.purchaseRequest.created_at).toLocaleTimeString(),
@@ -78,8 +83,10 @@ export default function RequestDetails(): JSX.Element {
                 price: `₱${item.unit_price}`,
                 total_price: `₱${item.total_price}`,
                 image: null,
+                product_img_url: item.product_img_url || null,
               })),
               note: matchedRequest.deliveryNote?.note || '',
+              product_img_url: matchedRequest.purchaseRequest.product_img_url || null,
             });
           } else {
             console.error(`No matching request found for ID: ${id}`);
@@ -98,18 +105,24 @@ export default function RequestDetails(): JSX.Element {
   }, [id]);
 
   const parseNote = (note: string) => {
-    const lines = note.split('\n'); 
+    if (!request) {
+      console.error('Request object is null or undefined.');
+      return [];
+    }
+  
+    const lines = note.split('\n');
     return lines.map((line) => {
-      const colonIndex = line.indexOf(':'); 
+      const lineToParse = `${request.approved} ${request.status} Purchase Request`;
+      const colonIndex = line.indexOf(lineToParse);
       if (colonIndex > -1) {
         return {
-          sender: line.substring(0, colonIndex).trim(), 
-          message: line.substring(colonIndex + 1).trim(), 
+          sender: line.substring(0, colonIndex).trim(),
+          message: line.substring(colonIndex + 1).trim(),
         };
       } else {
         return {
-          sender: 'Unknown', 
-          message: line.trim(), 
+          sender: 'Unknown',
+          message: line.trim(),
         };
       }
     });
@@ -119,7 +132,7 @@ export default function RequestDetails(): JSX.Element {
     if (!modalType || !request) return;
 
     try {
-      const API_URL = `http://192.168.1.8:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
+      const API_URL = `http://192.168.16.220:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
       const payload = {
         status:
           modalType === 'Approve'
@@ -192,14 +205,12 @@ export default function RequestDetails(): JSX.Element {
 
   return (
     <SafeAreaView className="flex-1 bg-tabs">
-      {/* Header */}
       <View className="bg-tabs p-4 flex-row items-center pt-5">
         <TouchableOpacity onPress={() => router.back()} className="mr-2">
           <Back width={30} height={30} />
         </TouchableOpacity>
       </View>
 
-      {/* Request Details */}
       <View className="pl-14">
         <Text className="text-2xl font-poppins-bold">{request.type}</Text>
         <Text className="text-primary font-poppins-semibold">
@@ -211,8 +222,7 @@ export default function RequestDetails(): JSX.Element {
           Status: {request.status || 'Unknown'}
         </Text>
       </View>
-
-      {/* Items and Notes */}
+      <ScrollView>
       <View className="bg-white rounded-lg flex-1 p-10">
         <Text className="font-poppins-semibold text-lg">
           Requested by: {request.requester}
@@ -227,16 +237,22 @@ export default function RequestDetails(): JSX.Element {
               key={index}
               className="mt-4 p-4 rounded-lg bg-tabs flex-row items-center"
             >
-              <View className="flex-1">
-                <View className="flex-row justify-between mt-2">
-                  <Text className="font-poppins-semibold">
+              <Image
+                source={{
+                  uri: item.product_img_url
+                    ? `http://192.168.16.220:3002${item.product_img_url}`
+                    : 'fallback-image-url',
+                }}
+                className="w-28 h-28 mr-2 rounded-sm"
+                onError={() => console.error('Image failed to load')}
+              />
+                <View className="flex justify-between">
+                  <Text className="font-poppins-bold text-lg">
                     {item.name}
                   </Text>
                   <Text className="font-poppins-semibold">
                     Unit Price: {item.price}
                   </Text>
-                </View>
-                <View className="flex-row justify-between mt-2">
                   <Text className="font-poppins-semibold">
                     Quantity: {item.quantity}
                   </Text>
@@ -245,50 +261,47 @@ export default function RequestDetails(): JSX.Element {
                   </Text>
                 </View>
               </View>
-            </View>
           ))}
 
           <View className="flex justify-center mt-2 w-full pr-4">
-            <Text className="font-poppins-semibold text-right">
+            <Text className="font-poppins-bold text-right text-lg">
               Total Price: ₱{request.sum.toFixed(2)}
             </Text>
           </View>
 
           {request.note && (
-          <View className="mt-4 bg-white rounded-lg flex-1">
-            <Text className="font-poppins-bold text-lg mb-2">Notes:</Text>
-            <ScrollView className="flex-1">
-              {request.note.split('\n').map((line, index) => (
-                <View key={index} className="mb-4">
-                  <Text className={`${
-                    index % 2 === 0 ? 'text-left text-sm text-gray-500 ml-2' : 'text-right text-sm text-gray-500 mr-2'
-                  }`}>
-                    {index % 2 === 0 ? request.requester : parseNote(request.note)[index].sender}
-                  </Text>
-                  
-                  {/* Chat bubble */}
-                  <View
-                    className={`${
-                      index % 2 === 0 ? 'self-start bg-tabs' : 'self-end bg-primary'
-                    } p-3 rounded-lg max-w-[80%]`}
-                  >
-                    <Text
-                      className={`${
-                        index % 2 === 0 ? 'text-black' : 'text-white'
-                      } font-poppins`}
-                    >
-                      {line}
+            <View className="mt-4 bg-white rounded-lg flex-1">
+              <Text className="font-poppins-bold text-lg mb-2">Notes:</Text>
+              <ScrollView className="flex-1">
+                {request.note.split('\n').map((line, index) => (
+                  <View key={index} className="mb-4">
+                    <Text className={`${
+                      index % 2 === 0 ? 'text-left text-sm text-gray-500 ml-2' : 'text-right text-sm text-gray-500 mr-2'
+                    }`}>
+                      {index % 2 === 0 ? request.requester : request.approved}
                     </Text>
+                    
+                    <View
+                      className={`${
+                        index % 2 === 0 ? 'self-start bg-tabs' : 'self-end bg-primary'
+                      } p-3 rounded-lg max-w-[80%]`}
+                    >
+                      <Text
+                        className={`${
+                          index % 2 === 0 ? 'text-black' : 'text-white'
+                        } font-poppins`}
+                      >
+                        {line}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+                ))}
+              </ScrollView>
+            </View>
+          )}
         </ScrollView>
       </View>
 
-      {/* Action Buttons */}
       {request.status === 'Pending' && (
         <View className="flex-row justify-around p-4 bg-white">
           <TouchableOpacity
@@ -308,8 +321,7 @@ export default function RequestDetails(): JSX.Element {
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Confirmation Modal */}
+      </ScrollView>
       {modalType && (
         <MessageModal
           visible={!!modalType}

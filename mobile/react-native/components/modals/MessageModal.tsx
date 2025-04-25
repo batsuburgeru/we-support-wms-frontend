@@ -30,56 +30,62 @@ const MessageModal: React.FC<MessageModalProps> = ({
             ? "Return this request?"
             : "Reject this request?";
 
-    const handleConfirm = async () => {
-        if (!remarks.trim()) {
-            alert("Please provide remarks before confirming.");
-            return;
-        }
-
-        setLoading(true);
-
-        const status =
-            title === "Approve"
-                ? "Approved"
-                : title === "Return"
-                ? "Returned"
-                : "Rejected";
-
-        const payload = {
-            status,
-            note: remarks, 
-        };
-
-        console.log("Updating status for ID:", id);
-        console.log("Payload:", payload);
-
-        try {
-            const API_URL = `http://192.168.1.8:3002/purchaseRequests/update-purchase-request-status/${id}`;
-
-            const response = await fetch(API_URL, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log("Status updated successfully:", result);
-                router.push('/request');
-            } else {
-                const errorText = await response.text();
-                console.error("Server responded with:", errorText);
-                alert("Failed to update status. Server responded with: " + errorText);
-            }
-        } catch (error) {
-            alert("An error occurred. Please check your connection and try again.");
-            console.error("Error occurred while updating status:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+            const handleConfirm = async () => {
+                // Set default remarks if the input is empty
+                const defaultRemarks = 
+                    title === "Approve"
+                        ? "Approved without additional comments."
+                        : title === "Return"
+                        ? "Returned without specific notes."
+                        : "Rejected without further explanation.";
+            
+                const finalRemarks = remarks.trim() || defaultRemarks;
+            
+                setLoading(true);
+            
+                const status = 
+                    title === "Approve"
+                        ? "Approved"
+                        : title === "Return"
+                        ? "Returned"
+                        : "Rejected";
+            
+                const payload = {
+                    status,
+                    note: finalRemarks,
+                };
+            
+                console.log("Updating status for ID:", id);
+                console.log("Payload:", payload);
+            
+                try {
+                    const API_URL = `http://192.168.16.220:3002/purchaseRequests/update-purchase-request-status/${id}`;
+            
+                    const response = await fetch(API_URL, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+            
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log("Status updated successfully:", result);
+                        router.push('/request');
+                    } else {
+                        const errorText = await response.text();
+                        console.error("Server responded with:", errorText);
+                        alert("Failed to update status. Server responded with: " + errorText);
+                    }
+                } catch (error) {
+                    alert("An error occurred. Please check your connection and try again.");
+                    console.error("Error occurred while updating status:", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            
 
     return (
         <Modal transparent visible={visible} animationType="fade">
