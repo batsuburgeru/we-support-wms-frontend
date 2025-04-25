@@ -28,8 +28,13 @@ const adminRoutes = [
 const clientRestrictedRoutes = [
     '/client-list',
     '/inventory',
-    '/purchase-cart'
+    '/purchase-cart',
+    '/dashboard'
 ];
+
+const SupervisorRestrictedRoutes = [
+    '/purchase-cart'
+]
 
 // 1. Helper function to parse JWT using jose
 async function parseJwt(token) {
@@ -48,6 +53,7 @@ export default async function middleware(req) {
     const isPublicRoute = publicRoutes.includes(path);
     const isAdminRoute = adminRoutes.includes(path);
     const isClientRestrictedRoute = clientRestrictedRoutes.includes(path);
+    const isSupervisorRestrictedRoute = SupervisorRestrictedRoutes.includes(path);
 
     // 2. Get token from cookies
     const token = cookies().get('token')?.value;
@@ -75,7 +81,11 @@ export default async function middleware(req) {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 
-    if (isClientRestrictedRoute && userRole === "Client") {
+    if (isClientRestrictedRoute && (userRole === "Client" || userRole === "Guard" || userRole === "PlantOfficer")) {
+        return NextResponse.redirect(new URL('/purchase-list', req.url));
+    }
+
+    if (isSupervisorRestrictedRoute && userRole === "Supervisor") {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
 

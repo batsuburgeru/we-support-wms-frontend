@@ -57,7 +57,7 @@ const DashboardUpcomingRestockCard = () => {
   
   return (
     <div>
-      <h2 className='font-medium text-lg mb-3'>Upcoming Restocks</h2>
+      <h2 className='font-medium text-lg mb-3'>Pending Purchased Items</h2>
       <ul className=''>
         {listOfRestock}
       </ul>

@@ -306,11 +306,31 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
   const sapStatusStyles = {
     "Unsynced": "bg-bgDenied text-txtDenied text-center rounded-sm w-max px-2 py-1",
     "Synced": "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1",
-  }
+  };
 
   toastConfig({
     theme: 'dark',
   });
+
+  const [userProfile, setUserProfile] = React.useState([]);
+      
+  React.useEffect(() => {
+    fetch("http://localhost:3002/users/display-user-info", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result && result.userInfo) {
+          setUserProfile(result.userInfo);
+      } else {
+          console.log("Retrieve failed:", result.message || "No user profile property");
+      }
+    })  
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
 
   const purchaseHistoryColumns = [
     {
@@ -410,7 +430,7 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {status === "Draft" && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
+              {status === "Draft" && (userProfile.role === "WarehouseMan" || userProfile.role === "Admin") && <DropdownMenuItem onClick={() => submitFromDrafts(row.original.id)}>
                 Get Approval
               </DropdownMenuItem>}
               <DropdownMenuItem 
@@ -421,17 +441,17 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
               >
                   Copy Request ID
               </DropdownMenuItem>
-              {sapSyncStatus === 0 && <DropdownMenuItem onClick={() => sapSyncIndiv(row.original.id)}>
+              {sapSyncStatus === 0 && (userProfile.role === "Supervisor" || userProfile.role === "Admin") && <DropdownMenuItem onClick={() => sapSyncIndiv(row.original.id)}>
                 SAP Sync
               </DropdownMenuItem>}
-              {(status === "Pending" || status === "Returned" || status === "Draft") && <DropdownMenuItem onClick={()=>clearCart()}>
+              {(status === "Pending" || status === "Returned" || status === "Draft") && (userProfile.role === "WarehouseMan" || userProfile.role === "Admin") && <DropdownMenuItem onClick={()=>clearCart()}>
                 <Link href={`/edit-purchase-request/${rowId}`} className="w-full">
                   Edit
                 </Link>
               </DropdownMenuItem>}
-              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+              {(userProfile.role === "WarehouseMan" || userProfile.role === "Admin") && <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
-              </DropdownMenuItem>
+              </DropdownMenuItem>}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -708,13 +728,17 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
   });
 
   React.useEffect(() => {
-    if (forUserRole === "Client") {
+    if (userProfile.role === "Client") {
+      table.getColumn("client_name")?.setFilterValue(userProfile.name);
+      console.log("a")
+    }
+    else if (forUserRole === "Client") { 
       table.getColumn("client_name")?.setFilterValue(forUser);
     }
     else {
       table.getColumn("created_by_name")?.setFilterValue(forUser);
     }
-  }, [forUser, table]);
+  }, [forUser, userProfile, table]);
 
   return (
     <div className="w-full">
@@ -723,16 +747,16 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
           <RotateCw color="#696969" size={20} />
         </button>
         <div className="flex justify-between w-full">
-          <Input
+          {userProfile.role !== "Client" && <Input
             placeholder="Filter by client..."
             value={((table.getColumn("client_name")?.getFilterValue()) ?? "")}
             onChange={(event) =>
               table.getColumn("client_name")?.setFilterValue(event.target.value)
             }
             className={`max-w-sm ${tableFor === "userDetails" || tableFor === "dashboard" ? "hidden" : ""}`}
-          />
+          />}
           <div className="flex gap-4">
-            {tableFor === "purchaseList" && (<div className="flex gap-2">
+            {tableFor === "purchaseList" && (userProfile.role === "Supervisor" || userProfile.role === "Admin") && (<div className="flex gap-2">
               <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
                 <RotateCw color="#696969" size={20} />
                 SAP

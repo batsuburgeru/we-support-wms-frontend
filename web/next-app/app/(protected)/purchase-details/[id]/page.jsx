@@ -44,6 +44,26 @@ export default function PurchaseRequest({ params }) {
   const { clearCart } = useCart();
   const router = useRouter(); // Initialize the router
 
+  const [userProfile, setUserProfile] = React.useState([]);
+        
+  React.useEffect(() => {
+    fetch("http://localhost:3002/users/display-user-info", {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result && result.userInfo) {
+          setUserProfile(result.userInfo);
+      } else {
+          console.log("Retrieve failed:", result.message || "No user profile property");
+      }
+    })  
+    .catch(error => {
+        console.log('Error:', error);
+    });
+  }, []);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -130,7 +150,7 @@ export default function PurchaseRequest({ params }) {
           </div>}
         </div>
         <div className="flex">
-          {(data.status === "Pending" || data.status === "Draft"|| data.status === "Returned") && <Link href={`/edit-purchase-request/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1" onClick={()=>clearCart()}>
+          {(data.status === "Pending" || data.status === "Draft"|| data.status === "Returned") && (userProfile.role === "WarehouseMan" || userProfile.role === "Admin") && <Link href={`/edit-purchase-request/${data.id}`} className="border border-borderLine rounded-sm h-fit p-1 mx-1" onClick={()=>clearCart()}>
             <Pencil />
           </Link>}
           <button onClick={() => router.back()} className="border border-borderLine rounded-sm h-fit p-1 mx-1"><X /></button>

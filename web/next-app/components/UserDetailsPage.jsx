@@ -125,7 +125,7 @@ const UserDetailsPage = ({ params }) => {
           </h3>
           <hr className='my-4' />
           <div className='flex flex-col items-center gap-2'>
-            <img src={`http://localhost:3002${data.img_url}`} className='w-20 h-20 mb-2 rounded-full'/>
+            <img src={`http://localhost:3002${data.img_url}`} className='w-20 h-20 object-cover mb-2 rounded-full'/>
             <p className='font-semibold'>{data.name}</p>
             <p>{data.email}</p>
             {data.role === "Client" && <p className='flex gap-1 items-center'><Phone size={18}/>{data.contact_num}</p>}
