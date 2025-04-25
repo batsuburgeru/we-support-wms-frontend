@@ -19,10 +19,10 @@ const Navbar = ({ userRole }) => {
                     <House color={pathname === "/dashboard" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Home</span>
                 </Link>
-                <Link onClick={() => clearCart()} href="/purchase-cart" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
+                {userRole !== "Client" && <Link onClick={() => clearCart()} href="/purchase-cart" className={`flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-cart" || pathname === "/purchase-cart" || pathname === "/search-results" ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <PackagePlus color={pathname === "/purchase-cart" ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>New Purchase</span>
-                </Link>
+                </Link>}
                 <Link href="/purchase-list" className={`w-fit md:w-full flex items-center py-2 my-1 rounded-md px-2 transition-colors duration-0 ${pathname === "/purchase-list" || pathname.startsWith("/purchase-details") || pathname.startsWith("/edit-purchase-request") ? 'bg-brand-secondary text-white' : 'bg-none hover:bg-neutral-200'}`}>
                     <ShoppingBasket color={pathname === "/purchase-list" || pathname.startsWith("/purchase-details") || pathname.startsWith("/edit-purchase-request") ? '#FFF' : '#282828'} className='md:pr-3 pr-0 md:pl-1 w-max'/>
                     <span className='hidden md:block'>Purchase List</span>

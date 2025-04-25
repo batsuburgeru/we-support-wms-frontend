@@ -27,7 +27,8 @@ const adminRoutes = [
 
 const clientRestrictedRoutes = [
     '/client-list',
-    '/inventory'
+    '/inventory',
+    '/purchase-cart'
 ];
 
 // 1. Helper function to parse JWT using jose

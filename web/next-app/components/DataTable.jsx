@@ -956,8 +956,7 @@ export function InventoryTable() {
       accessorKey: "img_url",
       header: "Image",
       cell: ({ row }) => (
-        // <img src={row.getValue("img_url")} className="w-6"/>
-        <div>{row.getValue("img_url")}</div>
+        <img src={`http://localhost:3002${row.getValue("img_url")}`} className="w-6"/>
       ),
     },
     {

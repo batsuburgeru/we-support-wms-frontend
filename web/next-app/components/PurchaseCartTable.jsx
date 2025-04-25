@@ -14,6 +14,13 @@ import { Trash2 } from 'lucide-react'
 
 const columns = [
   {
+    accessorKey: "img_url",
+    header: "Image",
+    cell: ({ row }) => (
+      <img src={`http://localhost:3002${row.getValue("img_url")}`} className="w-6"/>
+    ),
+  },
+  {
     accessorKey: "name",
     header: "Item Name",
     cell: ({ row }) => <div>{row.getValue("name")}</div>,
