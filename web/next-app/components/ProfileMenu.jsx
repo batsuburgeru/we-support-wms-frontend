@@ -50,7 +50,7 @@ export default function ProfileMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className='flex items-center'>
-            <img src={`http://localhost:3002${userProfile.img_url}`} className='h-16 mr-3 ml-6 rounded-full'/>
+            <img src={`http://localhost:3002${userProfile.img_url}`} className='h-16 w-16 object-cover mr-3 ml-6 rounded-full'/>
             <div className='text-left flex flex-col justify-center'>
                 <h1 className='text-xl font-medium'>{userProfile.name}</h1>
                 <p className='text-sm font-light'>{userProfile.role}</p>
@@ -65,10 +65,6 @@ export default function ProfileMenu() {
                 Account Settings
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>
-            <Globe />
-            Language
-          </DropdownMenuItem>
           <Link href="/login">
             <button onClick={logOut} className="w-full">
             <DropdownMenuItem>
