@@ -21,13 +21,13 @@ const chooseIcon = (iconType) => {
 const DashboardCard = (props) => {
   const IconComponent = chooseIcon(props.icon)
   return (
-    <div className='bg-white rounded-2xl p-4 2xl:p-6'>
+    <div className='bg-white rounded-2xl p-4 2xl:p-6 flex-col justify-between'>
       <div className='flex items-center gap-3 mb-5'>
         <IconComponent />
         <h2>{props.title}</h2>
       </div>
       <div className='flex justify-between'>
-      <h1 className='font-semibold'>{props.value}</h1>
+        <h1 className='font-semibold'>{props.value}</h1>
       </div>
     </div>
   )
