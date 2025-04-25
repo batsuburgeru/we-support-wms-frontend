@@ -86,6 +86,7 @@ const EditPurchase = ({ params }) => {
                 approved_by_name: purchaseRequest.approved_by_name,
                 client_name: purchaseRequest.client_name,
                 note: deliveryNote.note,
+                status: purchaseRequest.status,
                 pr_items: prItems.map((item) => ({
                   product_id: item.product_id,
                   quantity: item.quantity,
@@ -138,17 +139,21 @@ const EditPurchase = ({ params }) => {
   function handleSubmit(event) {
     event.preventDefault(); 
   
-    const payload = {
+    const payloadOne = {
       note: data.note,
       items: items
     };
+
+    const payloadTwo = {
+      status: "Pending"
+    }
 
     fetch(`http://localhost:3002/purchaseRequests/update-purchase-request/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payloadOne),
       credentials: "include"
     })
     .then((response) => {
@@ -158,13 +163,33 @@ const EditPurchase = ({ params }) => {
       return response.json();
     })
     .then(() => {
-      toast("Changes saved successfully.");
+      if (data.status === "Returned") {
+        toast("Request resubmitted successfully.");
+        router.back();
+      }
+      else {
+        toast("Changes saved successfully.");
+        router.back();
+      }
       router.back();
     })
     .catch((error) => {
       console.error("Error:", error);
       alert("Purchase request error! Please ensure that there are items in your cart and that all required fields are filled.");
     });
+
+    if (data.status === "Returned") {
+      fetch(`http://localhost:3002/purchaseRequests/update-purchase-request-status/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payloadTwo),
+        credentials: "include",
+      })
+      .then((response) => response.json())
+      .catch((error) => console.error("Error during submission:", error));
+    };
   };
 
   return (
@@ -276,7 +301,7 @@ const EditPurchase = ({ params }) => {
           name="action"
           className="bg-brand-secondary text-white px-4 py-2 rounded-md hover:bg-orange-600 active:bg-orange-700 colorTransition"
         >
-          Save Changes
+          {data.status === "Returned" ? "Resubmit Request" : "Save Changes"}
         </button>
         <button
           onClick={handleCancel}

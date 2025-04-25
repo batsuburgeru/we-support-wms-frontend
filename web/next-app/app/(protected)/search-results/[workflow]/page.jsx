@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchLoading from '@/components/SearchLoading';
 import { ShoppingCart } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
+import { useCart } from "@/context/CartContext";
 
 const SearchResults = () => {
   const router = useRouter(); // Get the router object
@@ -15,7 +16,12 @@ const SearchResults = () => {
   const [products, setProducts] = useState([]); // Initialize products state to store the fetched products
   const [query, setQuery] = useState(''); // Initialize query state for storing the search query
   const [noResult, setNoResult] = useState(false); // noResult state to be used for displaying text when no results are found
+  const { cartItems } = useCart();
 
+  const totalCartQty = cartItems.reduce((sum, cartItem) => {
+    return sum + parseFloat(cartItem.quantity);
+  }, 0);cartItems
+  
   // Resolve the params Promise
   useEffect(() => {
     async function resolveParams() {
@@ -63,7 +69,8 @@ const SearchResults = () => {
         <div className="flex justify-between items-center">
           <ProductSearch workflow={workflow} width="[500px]" />
           <button onClick={backToCart}>
-            <ShoppingCart size={30} />
+            <ShoppingCart size={30} className='relative' />
+            <p className='absolute top-[155px] right-3 rounded-full bg-brand-primary text-white min-w-6 max-w-8'>{totalCartQty}</p>
           </button>
         </div>
       </section>
