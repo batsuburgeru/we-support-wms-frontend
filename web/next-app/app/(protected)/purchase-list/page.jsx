@@ -17,7 +17,9 @@ const PurchaseList = () => {
       </div>
       <hr className='border-borderLine'/>
       <section className='px-6'>
-        <PurchaseTable />
+        <PurchaseTable
+          tableFor = "purchaseList"
+        />
       </section>
     </main>
   )

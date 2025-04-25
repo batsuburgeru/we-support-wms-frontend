@@ -45,8 +45,6 @@ export function CartProvider({ children }) {
       }
     });
   };
-  
-
 
   const incrementQuantity = (id) => {
     setCartItems((prevcartItems) =>

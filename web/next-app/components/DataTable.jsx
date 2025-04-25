@@ -644,7 +644,7 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
       },
       body: JSON.stringify(payload),
       credentials: "include",
-    })
+      })
       .then((response) => response.json())
       .then((result) => {
         if (result && result.purchaseRequest) {
@@ -729,10 +729,10 @@ export function PurchaseTable({ tableFor, forUser, forUserRole, refresh }) {
             onChange={(event) =>
               table.getColumn("client_name")?.setFilterValue(event.target.value)
             }
-            className={`max-w-sm ${tableFor === "userDetails" ? "hidden" : ""}`}
+            className={`max-w-sm ${tableFor === "userDetails" || tableFor === "dashboard" ? "hidden" : ""}`}
           />
           <div className="flex gap-4">
-            {tableFor !== "userDetails" && (<div className="flex gap-2">
+            {tableFor === "purchaseList" && (<div className="flex gap-2">
               <button onClick={sapSyncAll} className="hover:bg-buttonBG rounded-md p-2 active:bg-neutral-300 text-neutral-600 text-xs text-nowrap flex gap-1 items-center w-max colorTransition duration-200">
                 <RotateCw color="#696969" size={20} />
                 SAP
@@ -956,8 +956,7 @@ export function InventoryTable() {
       accessorKey: "img_url",
       header: "Image",
       cell: ({ row }) => (
-        // <img src={row.getValue("img_url")} className="w-6"/>
-        <div>{row.getValue("img_url")}</div>
+        <img src={`http://localhost:3002${row.getValue("img_url")}`} className="w-6"/>
       ),
     },
     {
