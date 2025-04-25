@@ -23,6 +23,7 @@ const ProductCard = (props) => {
 
   return (
     <div className="border border-borderLine rounded-2xl p-4 w-[238px] flex-col flex justify-between">
+      <img src={`http://localhost:3002${props.img_url}`} className="w-full h-40 object-contain" />
       <h1 className="text-lg mt-2 text-ellipsis overflow-hidden txtOverflow">{props.name}</h1>
       <p className="text-sm text-neutral-500 text-ellipsis overflow-hidden txtOverflow">{props.description}</p>
       <h2 className="py-2 font-medium">₱{props.unit_price}</h2>

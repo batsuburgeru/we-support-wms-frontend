@@ -71,8 +71,8 @@ const UserDetailsPage = ({ params }) => {
     setCompany('');
     setCompanyAddress('');
     setImage(null);
-  };
-
+  }; 
+  
   const confirmEdit = () => {
     const formData = new FormData();
     formData.append("name", name);
@@ -81,7 +81,7 @@ const UserDetailsPage = ({ params }) => {
     formData.append("contact_num", phone);
     formData.append("org_name", company);
     formData.append("comp_add", companyAddress);
-    formData.append("img_url", image)
+    formData.append("image", image);
 
     fetch(`http://localhost:3002/users/update-user/${data.id}`, {
       method: 'PUT',
@@ -94,6 +94,7 @@ const UserDetailsPage = ({ params }) => {
         toast(`User ${result.updatedUser.name} updated successfully`, {maxVisibleToasts: 1});
         cancelEdit();
         setRefresh(prevData => prevData + 1);
+        console.log([...formData.entries()]);
       }
       else {
         toast(`Failed to update user. Please try again later. ${result.error}`, {maxVisibleToasts: 1});
@@ -124,7 +125,7 @@ const UserDetailsPage = ({ params }) => {
           </h3>
           <hr className='my-4' />
           <div className='flex flex-col items-center gap-2'>
-            <img src={'/profile.png'} className='w-20 h-20 mb-2'/>
+            <img src={`http://localhost:3002${data.img_url}`} className='w-20 h-20 mb-2 rounded-full'/>
             <p className='font-semibold'>{data.name}</p>
             <p>{data.email}</p>
             {data.role === "Client" && <p className='flex gap-1 items-center'><Phone size={18}/>{data.contact_num}</p>}
@@ -165,7 +166,7 @@ const UserDetailsPage = ({ params }) => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className='font-medium text-xl mb-8'>Edit {data.role === "Client" ? "Client" : "User"} Info</h2>
           <div className='flex items-center gap-4'>
-            <img src={data.img_url || image ? previewUrl : `/profile.png`} className='w-20 h-20 rounded-full'/>
+            <img src={image ? previewUrl : `http://localhost:3002${data.img_url}`} className='w-20 h-20 rounded-full'/>
             <input
                 type="file"
                 accept="image/*"
