@@ -1,9 +1,12 @@
+// Component Imports
 import DashboardCards from '@/components/DashboardCards';
 import DashboardStockLvlCard from '@/components/DashboardStockLvlCard';
 import DashboardUpcomingRestockCard from '@/components/DashboardUpcomingRestockCard';
 import DashboardHistoryCard from '@/components/DashboardHistoryCard';
 
 export default function Dashboard() {
+  
+  // This page is the dashboard of the user which appears whenever the user clicks the Home button on the Navbar
   return (
       <main className="bg-dashboard h-fit">
         <div className='px-6 flex items-center py-4'>

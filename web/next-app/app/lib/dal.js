@@ -1,6 +1,8 @@
-import 'server-only'
+// Mainly used to export the role of the currently logged in user to specific pages
+
+import 'server-only';
  
-import { cookies } from 'next/headers'
+import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 import { cache } from 'react';
 

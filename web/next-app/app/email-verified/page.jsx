@@ -3,6 +3,8 @@ import { MailCheck } from 'lucide-react';
 import Link from 'next/link';
 
 const EmailVerified = () => {
+  // This page appears after the user has clicked the confirmation link sent to their emails.
+  
   return (
     <main className='flex justify-center items-center w-screen h-screen'>
       <div className='shadow-xl shadow-neutral-300 rounded-md p-12 w-96 flex flex-col items-center justify-center gap-6'>

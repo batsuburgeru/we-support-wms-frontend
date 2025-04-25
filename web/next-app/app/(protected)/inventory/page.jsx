@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { verifySession } from '@/app/lib/dal';
 
 async function Inventory() {
-  const session = await verifySession();
+  const session = await verifySession(); // Store session data to be used as props and determine the role of the currently logged-in user
   
   return (
     <main>

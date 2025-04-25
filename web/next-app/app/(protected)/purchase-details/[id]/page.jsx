@@ -1,8 +1,14 @@
 "use client";
 
+// ReactJS and NextJS Imports
 import React, { useState, useEffect, use } from "react";
-import { Pencil, X } from 'lucide-react';
+import { useRouter } from "next/navigation";
 import Link from 'next/link';
+
+// Icon imports from lucide-react
+import { Pencil, X } from 'lucide-react';
+
+// Component import from shadcn/ui
 import {
   Table,
   TableBody,
@@ -11,9 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCart } from "@/context/CartContext";
-import { useRouter } from "next/navigation";
 
+// Import Cart context
+import { useCart } from "@/context/CartContext";
+
+// Columns for the purchase details table 
 const columns = [
   {
     accessorKey: "name",
@@ -41,12 +49,13 @@ export default function PurchaseRequest({ params }) {
   const resolvedParams = use(params); // Unwrapping the Promise
   const { id } = resolvedParams; // Accessing the unwrapped params object
   const [data, setData] = useState([]); // State to hold the transformed data
-  const { clearCart } = useCart();
+  const { clearCart } = useCart(); // Destructure clearCart from Cart Context
   const router = useRouter(); // Initialize the router
 
-  const [userProfile, setUserProfile] = React.useState([]);
-        
-  React.useEffect(() => {
+  const [userProfile, setUserProfile] = React.useState([]); // State to store the user profile from the /display-user-info
+  
+  // Fetch data about the currently logged-in user
+  useEffect(() => {
     fetch("http://localhost:3002/users/display-user-info", {
         method: 'GET',
         credentials: 'include'
@@ -64,6 +73,7 @@ export default function PurchaseRequest({ params }) {
     });
   }, []);
 
+  // Fetch data about the selected purchase request
   useEffect(() => {
     async function fetchData() {
       try {
@@ -124,6 +134,7 @@ export default function PurchaseRequest({ params }) {
     fetchData();
   }, [id]); // Add `id` as a dependency to re-fetch data if it changes
 
+  // Define styles for the status of the currently displayed purchase request
   const statusStyles = {
     Approved: "bg-bgApproved text-txtApproved text-center rounded-sm w-max px-2 py-1 border border-txtApproved",
     Pending: "bg-bgPending text-txtPending text-center rounded-sm w-max px-2 py-1 border border-txtPending",
@@ -131,10 +142,10 @@ export default function PurchaseRequest({ params }) {
     Returned: "bg-bgReturned text-txtReturned text-center rounded-sm w-max px-2 py-1 border border-txtReturned",
     Draft: "bg-bgDraft text-txtDraft text-center rounded-sm w-max px-2 py-1 border border-txtDraft",
   };
-
   const status = data.status;
   const statusClassName = statusStyles[status] || "";
 
+  // This page serves as the purchase request details
   return (
     <main>
       <div className="flex justify-between px-6 py-6">
