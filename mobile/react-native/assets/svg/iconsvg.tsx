@@ -605,3 +605,100 @@ export const QRScan = (props) => (
     </Defs>
   </Svg>
 );
+
+
+//DashboardIcon QRScan
+
+export const DQRScan = (props) => (
+  <Svg
+    width={50}
+    height={50}
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <Path
+      d="M20.8333 0H0V20.8333H20.8333V0ZM4.16667 4.16667H16.6667V16.6667H4.16667V4.16667ZM12.5 37.5H8.33333V41.6667H12.5V37.5Z"
+      fill="black"
+    />
+    <Path
+      d="M20.8333 29.1666H0V50H20.8333V29.1666ZM4.16667 33.3333H16.6667V45.8333H4.16667V33.3333ZM37.5 8.33331H41.6667V12.5H37.5V8.33331Z"
+      fill="black"
+    />
+    <Path
+      d="M29.1667 0H50V20.8333H29.1667V0ZM33.3333 4.16667V16.6667H45.8333V4.16667H33.3333ZM25 25V33.3333H29.1667V37.5H25V41.6667H33.3333V33.3333H37.5V41.6667H41.6667V37.5H50V33.3333H37.5V25H25ZM33.3333 33.3333H29.1667V29.1667H33.3333V33.3333ZM50 41.6667H45.8333V45.8333H37.5V50H50V41.6667ZM33.3333 50V45.8333H25V50H33.3333Z"
+      fill="black"
+    />
+    <Circle cx={10.3703} cy={10.3704} r={2.40741} fill="black" />
+  </Svg>
+);
+
+//DashboardIcon QRHistory
+export const DQRHistory = (props) => (
+  <Svg
+    width={50}
+    height={50}
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <Path
+      d="M6.25 25C6.25 28.7084 7.34967 32.3335 9.40995 35.4169C11.4702 38.5004 14.3986 40.9036 17.8247 42.3227C21.2508 43.7419 25.0208 44.1132 28.6579 43.3897C32.2951 42.6663 35.636 40.8805 38.2582 38.2582C40.8805 35.636 42.6663 32.2951 43.3897 28.6579C44.1132 25.0208 43.7419 21.2508 42.3227 17.8247C40.9036 14.3986 38.5004 11.4702 35.4169 9.40995C32.3335 7.34967 28.7084 6.25 25 6.25C19.7582 6.26972 14.727 8.31505 10.9583 11.9583L6.25 16.6667"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M6.25 6.25V16.6667H16.6667"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M25 14.5833V25L33.3333 29.1666"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+//DashboardIcon DLogout
+export const DLogout = (props) => (
+  <Svg
+    width={50}
+    height={50}
+    viewBox="0 0 50 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <Path
+      d="M18.75 43.75H10.4167C9.3116 43.75 8.25179 43.311 7.47039 42.5296C6.68899 41.7482 6.25 40.6884 6.25 39.5833V10.4167C6.25 9.3116 6.68899 8.25179 7.47039 7.47039C8.25179 6.68899 9.3116 6.25 10.4167 6.25H18.75"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M33.3333 35.4166L43.7499 25L33.3333 14.5833"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M43.75 25H18.75"
+      stroke="black"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
