@@ -67,35 +67,34 @@ const MessageModal: React.FC<MessageModalProps> = ({
 
         try {
             // API URL for updating the purchase request status
-            const API_URL = `http://192.168.26.52:3002/purchaseRequests/update-purchase-request-status/${id}`;
+            const API_URL = `http://192.168.1.19:3002/purchaseRequests/update-purchase-request-status/${id}`;
 
             // Make a PUT request to update the status
             const response = await fetch(API_URL, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json', // Specify JSON content type
+                    'Content-Type': 'application/json', 
                 },
-                body: JSON.stringify(payload), // Convert payload to JSON string
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
-                const result = await response.json(); // Parse server response
-                console.log("Status updated successfully:", result); // Log success message
-                router.push('/request'); // Navigate to the '/request' page
+                const result = await response.json(); 
+                console.log("Status updated successfully:", result); 
+                router.push('/request'); 
             } else {
-                const errorText = await response.text(); // Get error message from server
-                console.error("Server responded with:", errorText); // Log error details
-                alert("Failed to update status. Server responded with: " + errorText); // Show error alert
+                const errorText = await response.text();
+                console.error("Server responded with:", errorText);
+                alert("Failed to update status. Server responded with: " + errorText); 
             }
         } catch (error) {
-            alert("An error occurred. Please check your connection and try again."); // Show general error alert
-            console.error("Error occurred while updating status:", error); // Log the error details
+            alert("An error occurred. Please check your connection and try again."); 
+            console.error("Error occurred while updating status:", error); 
         } finally {
-            setLoading(false); // Reset loading state after the process
+            setLoading(false); 
         }
     };
 
-    // Render the modal
     return (
         <Modal transparent visible={visible} animationType="fade">
             <View className="flex-1 justify-center items-center bg-black/50">

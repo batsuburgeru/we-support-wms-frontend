@@ -50,7 +50,7 @@ const EmailResetForm: React.FC<EmailResetFormProps> = () => {
 
     try {
       // API request to send the password reset email
-      const response = await fetch(`http://192.168.26.52:3002/users/forgot-password`, {
+      const response = await fetch(`http://192.168.1.19:3002/users/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Indicate JSON content
