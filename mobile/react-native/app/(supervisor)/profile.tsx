@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
     // Fetch user information
     const fetchUserInfo = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.26.52:3002/users/display-user-info", {
+            const response = await fetch("http://192.168.1.19:3002/users/display-user-info", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -72,7 +72,7 @@ const Profile: React.FC = () => {
     // Fetch purchase requests count
     const fetchRequests = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.26.52:3002/purchaseRequests/count-purchase-requests", {
+            const response = await fetch("http://192.168.1.19:3002/purchaseRequests/count-purchase-requests", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -120,14 +120,14 @@ const Profile: React.FC = () => {
     // Handle user sign-out
     const handleSignOut = async (): Promise<void> => {
         try {
-            const response = await fetch("http://192.168.26.52:3002/users/logout", {
+            const response = await fetch("http://192.168.1.19:3002/users/logout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
 
             if (response.ok) {
-                console.log("Logout successful");
+                console.log("Logout successful"); 
                 router.replace("/");
             } else {
                 console.error("Logout failed:", await response.text());
@@ -152,7 +152,7 @@ const Profile: React.FC = () => {
             >
                 <View className="flex-row items-center bg-white flex-1 pt-5">
                 <Image 
-                    source={{ uri: userData ? `http://192.168.26.52:3002${userData.img_url}?t=${new Date().getTime()}` : 'fallback-image-url' }} 
+                    source={{ uri: userData ? `http://192.168.1.19:3002${userData.img_url}?t=${new Date().getTime()}` : 'fallback-image-url' }} 
                     className="w-12 h-12 mx-5 my-5 rounded-full" 
                 />
                     <Text className="text-2xl font-poppins-bold">Hi, {userName}</Text>
