@@ -67,7 +67,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
 
         try {
             // API URL for updating the purchase request status
-            const API_URL = `http://192.168.1.19:3002/purchaseRequests/update-purchase-request-status/${id}`;
+            const API_URL = `http://192.168.1.22:3002/purchaseRequests/update-purchase-request-status/${id}`;
 
             // Make a PUT request to update the status
             const response = await fetch(API_URL, {

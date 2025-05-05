@@ -52,10 +52,10 @@ export default function RequestDetails(): JSX.Element {
   useEffect(() => {
     const fetchRequestDetails = async () => {
       try {
-        setLoading(true);
-        const API_URL = `http://192.168.1.19:3002/purchaseRequests/read-purchase-requests`;
-        const response = await fetch(API_URL);
-        const data = await response.json();
+        setLoading(true); // Show loading indicator
+        const API_URL = `http://192.168.1.22:3002/purchaseRequests/read-purchase-requests`; // API URL to fetch request details
+        const response = await fetch(API_URL); // Fetch data from the server
+        const data = await response.json(); // Parse response JSON
 
         if (Array.isArray(data)) {
           const matchedRequest = data.find(
@@ -133,7 +133,7 @@ export default function RequestDetails(): JSX.Element {
     if (!modalType || !request) return;
 
     try {
-      const API_URL = `http://192.168.1.19:3002/purchaseRequests/update-purchase-request-status/${request.id}`;
+      const API_URL = `http://192.168.1.22:3002/purchaseRequests/update-purchase-request-status/${request.id}`; // API URL for updating request status
       const payload = {
         status:
           modalType === 'Approve'
@@ -232,21 +232,21 @@ export default function RequestDetails(): JSX.Element {
           {request.date}, {request.time}
         </Text>
 
-        <ScrollView className="border-t mt-2 pt-2">
-          {request.items.map((item, index) => (
-            <View
-              key={index}
-              className="mt-4 p-4 rounded-lg bg-tabs flex-row items-center"
-            >
-              <Image
-                source={{
-                  uri: item.product_img_url
-                    ? `http://192.168.1.19:3002${item.product_img_url}`
-                    : 'fallback-image-url',
-                }}
-                className="w-28 h-28 mr-2 rounded-sm"
-                onError={() => console.error('Image failed to load')}
-              />
+          <ScrollView className="border-t mt-2 pt-2">
+            {request.items.map((item, index) => (
+              <View
+                key={index} // Map over the items in the request to display each one
+                className="mt-4 p-4 rounded-lg bg-tabs flex-row items-center"
+              >
+                <Image
+                  source={{
+                    uri: item.product_img_url
+                      ? `http://192.168.1.22:3002${item.product_img_url}?t=${new Date().getTime()}` // Display the product image, if available
+                      : 'fallback-image-url', // Fallback image if URL is missing
+                  }}
+                  className="w-28 h-28 mr-2 rounded-sm"
+                  onError={() => console.error('Image failed to load')} // Log errors if the image fails to load
+                />
                 <View className="flex justify-between">
                   <Text className="font-poppins-bold text-lg">
                     {item.name}

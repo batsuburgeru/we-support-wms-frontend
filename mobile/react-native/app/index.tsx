@@ -28,7 +28,7 @@ const SignIn = () => {
 
     try {
       // Make a POST request to the login API
-      const response = await fetch('http://192.168.1.19:3002/users/login', {
+      const response = await fetch('http://192.168.1.22:3002/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Specify content type as JSON

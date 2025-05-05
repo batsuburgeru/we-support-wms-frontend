@@ -42,7 +42,7 @@ const EmailVerificationForm: React.FC = () => {
 
     try {
       // Make a POST request to the email verification endpoint
-      const response = await fetch(`http://192.168.1.19:3002/users/resend-verification-email`, {
+      const response = await fetch(`http://192.168.1.22:3002/users/resend-verification-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Specify content type as JSON

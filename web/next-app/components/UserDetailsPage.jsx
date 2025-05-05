@@ -166,7 +166,7 @@ const UserDetailsPage = ({ params }) => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className='font-medium text-xl mb-8'>Edit {data.role === "Client" ? "Client" : "User"} Info</h2>
           <div className='flex items-center gap-4'>
-            <img src={image ? previewUrl : `http://localhost:3002${data.img_url}`} className='w-20 h-20 rounded-full'/>
+            <img src={image ? previewUrl : `http://localhost:3002${data.img_url}`} className='w-20 h-20 rounded-full object-cover'/>
             <input
                 type="file"
                 accept="image/*"

@@ -97,6 +97,9 @@ export default function Requests() {
 
     const API_BASE = 'http://192.168.1.19:3002';
 
+    const API_BASE = 'http://192.168.1.22:3002'; // Local backend API base URL
+
+    // Function to fetch all purchase requests and filter them based on client and status
     const fetchRequests = async () => {
         try {
             const url = `${API_BASE}/purchaseRequests/read-purchase-requests`;

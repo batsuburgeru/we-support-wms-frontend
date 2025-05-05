@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from 'next/navigation';
-import { LogOut, UserRound, Globe } from 'lucide-react';
+import { LogOut, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import {
   DropdownMenu,
