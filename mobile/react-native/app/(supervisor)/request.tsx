@@ -95,8 +95,6 @@ export default function Requests() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState<boolean>(false);
 
-    const API_BASE = 'http://192.168.1.19:3002';
-
     const API_BASE = 'http://192.168.1.22:3002'; // Local backend API base URL
 
     // Function to fetch all purchase requests and filter them based on client and status
